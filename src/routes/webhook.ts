@@ -29,7 +29,21 @@ webhookRouter.post("/webhook", (req, res) => {
 
   const parsed = extractInboundTextMessage(req.body);
   if (!parsed?.messageText) {
-    logger.info("webhook_post_ignored_non_text");
+    const entry = Array.isArray(req.body?.entry) ? req.body.entry[0] : undefined;
+    const change = Array.isArray(entry?.changes) ? entry.changes[0] : undefined;
+    const value = change?.value;
+    const firstMessage = Array.isArray(value?.messages) ? value.messages[0] : undefined;
+    const firstStatus = Array.isArray(value?.statuses) ? value.statuses[0] : undefined;
+
+    logger.info("webhook_post_ignored_non_text", {
+      hasEntry: Array.isArray(req.body?.entry),
+      hasChanges: Array.isArray(entry?.changes),
+      hasMessagesArray: Array.isArray(value?.messages),
+      hasStatusesArray: Array.isArray(value?.statuses),
+      firstMessageType: firstMessage?.type,
+      firstStatus: firstStatus?.status,
+      messagingProduct: value?.messaging_product
+    });
     return;
   }
 
