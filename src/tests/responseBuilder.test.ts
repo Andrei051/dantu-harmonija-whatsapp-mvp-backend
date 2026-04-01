@@ -125,4 +125,14 @@ describe("responseBuilder", () => {
     expect(result.reply).toContain("Main services offered");
     expect(result.reply).toContain("https://");
   });
+
+  it("prefixes Taip for LT service availability yes-no", () => {
+    const result = buildResponse("lt", {
+      intent: "service_info",
+      serviceId: "teeth_whitening",
+      serviceAvailabilityYesNo: true
+    });
+    expect(result.reply).toMatch(/^Taip, atliekame\. /);
+    expect(result.reply).toContain("balinimas");
+  });
 });

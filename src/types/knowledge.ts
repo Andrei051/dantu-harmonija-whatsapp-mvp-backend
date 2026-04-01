@@ -61,4 +61,6 @@ export interface IntentResult {
   aboutFocus?: AboutClinicFocus;
   /** Vague "full price list" style question — short redirect, no dump */
   broadPriceList?: boolean;
+  /** LT "ar darote …?" / EN "do you offer …?" — prefix reply with yes + service blurb */
+  serviceAvailabilityYesNo?: boolean;
 }

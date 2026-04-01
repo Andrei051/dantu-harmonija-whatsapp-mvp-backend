@@ -140,7 +140,25 @@ export const buildResponse = (
 
     case "service_info": {
       const service = serviceById(services, intentResult.serviceId);
+      const yesAvail =
+        intentResult.serviceAvailabilityYesNo === true
+          ? language === "lt"
+            ? "Taip, atliekame. "
+            : "Yes, we offer this. "
+          : "";
+
       if (!service) {
+        if (intentResult.serviceAvailabilityYesNo) {
+          return {
+            language,
+            intent: "service_info",
+            reply:
+              language === "lt"
+                ? `Si procedura neisvardinta musu trumpoje informacijoje. Daugiau: ${profile.website}, tel. ${profile.phone}.`
+                : `That procedure is not listed in our short information. More: ${profile.website}, phone ${profile.phone}.`,
+            escalated: false
+          };
+        }
         return {
           language,
           intent: "service_info",
@@ -154,8 +172,8 @@ export const buildResponse = (
         intent: "service_info",
         reply:
           language === "lt"
-            ? `${service.name.lt}: ${service.description.lt}`
-            : `${service.name.en}: ${service.description.en}`,
+            ? `${yesAvail}${service.name.lt}: ${service.description.lt}`
+            : `${yesAvail}${service.name.en}: ${service.description.en}`,
         escalated: false
       };
     }

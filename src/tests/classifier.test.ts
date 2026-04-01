@@ -124,7 +124,35 @@ describe("classifier", () => {
 
   it("classifies informal location and compressed first-visit phrasing", () => {
     expect(classifyIntent("where u located send pin", services).intent).toBe("clinic_location");
+    expect(classifyIntent("kur jus", services).intent).toBe("clinic_location");
+    expect(classifyIntent("atsiusk pin", services).intent).toBe("clinic_location");
     expect(classifyIntent("first time what need bring", services).intent).toBe("first_appointment_prep");
+    expect(classifyIntent("pirma karta ka reikia", services).intent).toBe("first_appointment_prep");
+  });
+
+  it("LT kiek shorthand and comparative pigiau+ar route to price correctly", () => {
+    expect(classifyIntent("kiek implantas?", services)).toMatchObject({ intent: "price_info", serviceId: "implants" });
+    expect(classifyIntent("ar pigiau implantai ar breketai", services)).toEqual({
+      intent: "price_info",
+      broadPriceList: true
+    });
+  });
+
+  it("escalates LT ar geriau / ar verta comparative suitability", () => {
+    expect(classifyIntent("Ar implantai geriau nei tiltas?", services).intent).toBe("clinical_or_urgent");
+    expect(classifyIntent("implantai ar verta", services).intent).toBe("clinical_or_urgent");
+  });
+
+  it("classifies ar darote as service_info with availability flag when service known", () => {
+    expect(classifyIntent("Ar darote balinima?", services)).toMatchObject({
+      intent: "service_info",
+      serviceId: "teeth_whitening",
+      serviceAvailabilityYesNo: true
+    });
+  });
+
+  it("kaip vyksta pirmas vizitas is expectations not prep", () => {
+    expect(classifyIntent("Kaip vyksta pirmas vizitas?", services).intent).toBe("first_visit_expectations");
   });
 
   it("classifies price slang with service as price_info", () => {
@@ -132,6 +160,7 @@ describe("classifier", () => {
     expect(r.intent).toBe("price_info");
     expect(r.broadPriceList).toBeUndefined();
     expect(r.serviceId).toBeDefined();
+    expect(classifyIntent("pigus breketai?", services).intent).toBe("price_info");
   });
 
   it("escalates decision-seeking treatment questions instead of service_info", () => {

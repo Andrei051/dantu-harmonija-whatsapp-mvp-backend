@@ -29,6 +29,10 @@ const keywordMap: Record<MessageIntent, string[]> = {
     "where are u",
     "send pin",
     "drop pin",
+    "atsiusk pin",
+    "atsiuskite pin",
+    "atsiuskite lokacija",
+    "siuskite lokacija",
     "google maps",
     "maps",
     "zemelapis",
@@ -70,7 +74,9 @@ const keywordMap: Record<MessageIntent, string[]> = {
     "low cost",
     "pigiau",
     "pigiausia",
-    "nebrangu"
+    "nebrangu",
+    "pigus",
+    "pigiausi"
   ],
   language_switch: ["english", "anglu", "in english", "lietuviskai", "lithuanian"],
   first_appointment_prep: [],
@@ -151,7 +157,10 @@ const matchesFirstVisitExpectations = (normalized: string): boolean => {
     normalized.includes("plan") ||
     normalized.includes("price") ||
     normalized.includes("kaina") ||
-    normalized.includes("discuss")
+    normalized.includes("discuss") ||
+    normalized.includes("vyksta") ||
+    normalized.includes("eiga") ||
+    normalized.includes("nutinka")
   );
 };
 
@@ -229,6 +238,10 @@ const matchesFirstAppointmentPrep = (normalized: string): boolean => {
     (normalized.includes("what need") || normalized.includes("what bring")) &&
     normalized.includes("bring")
   ) {
+    return true;
+  }
+
+  if (normalized.includes("pirma karta") && normalized.includes("reikia")) {
     return true;
   }
 
@@ -337,7 +350,10 @@ const matchesDecisionSeekingQuestion = (normalized: string): boolean => {
     normalized.includes("kas geriau") ||
     normalized.includes("kuri geriau") ||
     normalized.includes("whats better") ||
-    normalized.includes("what s better")
+    normalized.includes("what s better") ||
+    normalized.includes("geriau nei") ||
+    normalized.includes("ar geriau") ||
+    normalized.includes("ar verta")
   ) {
     return true;
   }
@@ -478,6 +494,14 @@ const matchesComparativePriceQuestion = (normalized: string): boolean => {
     return true;
   }
 
+  // "ar pigiau implantai ar breketai" — comparative cost, not single-service price
+  if (
+    normalized.includes(" ar ") &&
+    (normalized.includes("pigiau") || normalized.includes("pigesnis") || normalized.includes("pigesne"))
+  ) {
+    return true;
+  }
+
   return false;
 };
 
@@ -490,8 +514,43 @@ const looksLikeLocationQuery = (normalized: string): boolean => {
     return true;
   }
 
+  // "kur jus" without matching "kur jusu …" (e.g. kaina)
+  if (/(^|\s)kur jus(\s|$)/.test(normalized)) {
+    return true;
+  }
+
   return false;
 };
+
+/** LT "kiek implantas?" — price shorthand without "kainuoja" */
+const matchesKiekPriceShorthand = (normalized: string): boolean => {
+  if (!normalized.includes("kiek")) {
+    return false;
+  }
+  if (
+    normalized.includes("kiek laiko") ||
+    normalized.includes("kiek ilgai") ||
+    normalized.includes("kiek kartu") ||
+    normalized.includes("kiek dienu") ||
+    normalized.includes("kiek valand")
+  ) {
+    return false;
+  }
+  return true;
+};
+
+const matchesServiceAvailabilityYesNo = (normalized: string): boolean =>
+  normalized.includes("ar darote") ||
+  normalized.includes("ar atliekate") ||
+  normalized.includes("ar teikiate") ||
+  normalized.includes("do you offer") ||
+  normalized.includes("do you do") ||
+  (normalized.includes("do you have") &&
+    (normalized.includes("whitening") ||
+      normalized.includes("implant") ||
+      normalized.includes("brace") ||
+      normalized.includes("filling") ||
+      normalized.includes("cleaning")));
 
 const detectService = (normalizedMessage: string, services: ServiceItem[]): string | undefined => {
   for (const service of services) {
@@ -561,6 +620,13 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
     return { intent: "price_info", broadPriceList: true };
   }
 
+  if (matchesKiekPriceShorthand(normalized)) {
+    const kiekServiceId = detectService(normalized, services);
+    if (kiekServiceId) {
+      return { intent: "price_info", serviceId: kiekServiceId };
+    }
+  }
+
   if (keywordMap.price_info.some((keyword) => normalized.includes(normalizeText(keyword)))) {
     if (matchesBroadPriceList(normalized)) {
       return { intent: "price_info", broadPriceList: true };
@@ -568,6 +634,11 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
 
     const serviceId = detectService(normalized, services);
     return { intent: "price_info", serviceId };
+  }
+
+  if (matchesServiceAvailabilityYesNo(normalized)) {
+    const availabilityServiceId = detectService(normalized, services);
+    return { intent: "service_info", serviceId: availabilityServiceId, serviceAvailabilityYesNo: true };
   }
 
   if (keywordMap.service_info.some((keyword) => normalized.includes(normalizeText(keyword)))) {

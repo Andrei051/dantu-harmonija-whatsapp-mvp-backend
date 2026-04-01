@@ -55,7 +55,7 @@
       "en": "Cosmetic procedure to lighten tooth colour; can use trays or in-clinic treatment."
     },
     "keywords": {
-      "lt": ["balinimas", "dantu balinimas", "zoom"],
+      "lt": ["balinimas", "balinima", "balinimo", "dantu balinimas", "zoom"],
       "en": ["whitening", "teeth whitening", "zoom whitening"]
     }
   },
@@ -70,7 +70,7 @@
       "en": "Helps with jaw pain, tension, clicking; improves muscle function."
     },
     "keywords": {
-      "lt": ["fizioterapija", "zandikaulis", "temporomandibulinis"],
+      "lt": ["fizioterapija", "kineziterapija", "zandikaulis", "temporomandibulinis"],
       "en": ["physiotherapy", "jaw therapy", "tmj", "tmj treatment", "myofunctional", "myofunctional therapy"]
     }
   },
@@ -220,7 +220,7 @@
       "en": "Local and general anaesthesia used to ensure comfort during procedures."
     },
     "keywords": {
-      "lt": ["nejautra", "narkoze", "bendroji narkoze", "sedacija"],
+      "lt": ["nejautra", "narkoze", "bendroji narkoze", "sedacija", "nuskausminima", "nuskausminimo"],
       "en": ["anaesthesia", "anesthesia", "sedation", "general anaesthesia", "general anesthesia"]
     }
   },
