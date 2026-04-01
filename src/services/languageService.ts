@@ -4,9 +4,11 @@ import { SupportedLanguage } from "../types/message";
 const ENGLISH_HINTS = [
   "hello",
   "hi",
-  "ok",
   "english",
   "do you",
+  "can you",
+  "explain",
+  "pricing",
   "what",
   "working",
   "where",
@@ -50,6 +52,9 @@ const LITHUANIAN_HINTS = [
   "adresas",
   "valandos",
   "kaina",
+  "kainos",
+  "kokios",
+  "jusu",
   "paslaug",
   "klinika",
   "telefonas",
@@ -80,6 +85,11 @@ export const detectLanguage = (message: string): SupportedLanguage => {
     if (normalized.includes(token)) {
       enScore += 1;
     }
+  }
+
+  // Whole token only — avoids "ok" inside "kokios"
+  if (/(^|\s)ok(\s|$)/.test(normalized)) {
+    enScore += 1;
   }
 
   if (normalized.includes("im in") || normalized.includes("i m in")) {

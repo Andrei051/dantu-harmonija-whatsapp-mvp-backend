@@ -47,4 +47,12 @@ describe("languageService", () => {
     expect(detectLanguage("Kokia kalba kalbate?")).toBe("lt");
     expect(detectLanguage("Kokiomis kalbomis kalbate?")).toBe("lt");
   });
+
+  it("detects English for price-meta phrasing", () => {
+    expect(detectLanguage("Can you explain your pricing?")).toBe("en");
+  });
+
+  it("detects Lithuanian for kokios jusu kainos (no false ok in kokios)", () => {
+    expect(detectLanguage("Kokios jusu kainos?")).toBe("lt");
+  });
 });
