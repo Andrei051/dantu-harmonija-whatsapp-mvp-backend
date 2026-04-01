@@ -61,4 +61,15 @@ describe("classifier", () => {
     const result = classifyIntent("Kokia implantu kaina? Severe pain now", services);
     expect(result.intent).toBe("clinical_or_urgent");
   });
+
+  it("classifies clinical phrases in English", () => {
+    expect(classifyIntent("Im in a lot of pain", services).intent).toBe("clinical_or_urgent");
+    expect(classifyIntent("My gum is swollen", services).intent).toBe("clinical_or_urgent");
+    expect(classifyIntent("Child has tooth pain", services).intent).toBe("clinical_or_urgent");
+    expect(classifyIntent("Possible infection in gum", services).intent).toBe("clinical_or_urgent");
+  });
+
+  it("classifies booking_request with registracijos inflection", () => {
+    expect(classifyIntent("Noriu registracijos rytoj", services).intent).toBe("booking_request");
+  });
 });

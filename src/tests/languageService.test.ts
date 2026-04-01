@@ -29,4 +29,12 @@ describe("languageService", () => {
   it("keeps clearly English parking question in English", () => {
     expect(detectLanguage("Do you have parking?")).toBe("en");
   });
+
+  it("detects English for Im in a lot of pain", () => {
+    expect(detectLanguage("Im in a lot of pain")).toBe("en");
+  });
+
+  it("detects English for ok alone", () => {
+    expect(detectLanguage("ok")).toBe("en");
+  });
 });

@@ -85,9 +85,11 @@ describe("responseBuilder", () => {
     expect(result.escalated).toBe(true);
   });
 
-  it("escalates when service_info has missing service id", () => {
+  it("builds generic service_info when no specific service id", () => {
     const result = buildResponse("en", { intent: "service_info" });
-    expect(result.intent).toBe("unknown");
-    expect(result.escalated).toBe(true);
+    expect(result.intent).toBe("service_info");
+    expect(result.escalated).toBe(false);
+    expect(result.reply).toContain("Main services offered");
+    expect(result.reply).toContain("https://");
   });
 });

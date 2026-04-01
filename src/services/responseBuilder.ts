@@ -15,6 +15,17 @@ const serviceById = (services: ServiceItem[], id?: string): ServiceItem | undefi
 const priceByServiceId = (prices: PriceItem[], serviceId?: string): PriceItem | undefined =>
   serviceId ? prices.find((price) => price.serviceId === serviceId) : undefined;
 
+const genericServicesReply = (language: SupportedLanguage, services: ServiceItem[], website: string): string => {
+  const labels = services.map((s) => (language === "lt" ? s.name.lt : s.name.en));
+  const list = labels.join(language === "lt" ? "; " : "; ");
+
+  if (language === "lt") {
+    return `Klinikoje teikiamos pagrindines paslaugos (is oficialios informacijos): ${list}. Daugiau: ${website}`;
+  }
+
+  return `Main services offered (from official information): ${list}. More: ${website}`;
+};
+
 export const buildResponse = (
   language: SupportedLanguage,
   intentResult: IntentResult
@@ -80,7 +91,12 @@ export const buildResponse = (
     case "service_info": {
       const service = serviceById(services, intentResult.serviceId);
       if (!service) {
-        return fallbackWith(language, "unknown");
+        return {
+          language,
+          intent: "service_info",
+          reply: genericServicesReply(language, services, profile.website),
+          escalated: false
+        };
       }
 
       return {

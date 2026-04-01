@@ -41,3 +41,7 @@ Some rows are **hypotheses** (especially Phase 2–4). If actual intent differs 
 
 - **`full_kb`**: Not escalated; outbound body is the full `reply` string.
 - **`option_c_ack`**: Escalated; outbound body is the short acknowledgment only (Option C).
+
+## Future (not implemented)
+
+- **Multi-intent in one message** (e.g. hours + address + phone in a single line): the classifier returns one intent; a later improvement could detect multiple intents or ask a follow-up. Tracked as **P4-04** in the CSV.
