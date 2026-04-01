@@ -180,6 +180,27 @@ const matchesFirstAppointmentPrep = (normalized: string): boolean => {
     return true;
   }
 
+  // First visit orientation (prep / what to expect before going) — beats generic "appointment" booking match
+  const hasFirstVisitCue =
+    normalized.includes("first appointment") ||
+    normalized.includes("first visit") ||
+    normalized.includes("pirmas vizitas") ||
+    normalized.includes("pirmo vizito");
+
+  if (hasFirstVisitCue) {
+    const looksLikeCancelOrRescheduleOnly =
+      (normalized.includes("cancel") || normalized.includes("reschedule") || normalized.includes("atšaukti") || normalized.includes("atsaukti")) &&
+      !normalized.includes("what") &&
+      !normalized.includes("bring") &&
+      !normalized.includes("prepare");
+
+    if (looksLikeCancelOrRescheduleOnly) {
+      return false;
+    }
+
+    return true;
+  }
+
   return false;
 };
 
@@ -196,6 +217,22 @@ const resolveAboutClinic = (normalized: string): { intent: "about_clinic"; about
     normalized.includes("kas jus") ||
     normalized.includes("what kind of clinic") ||
     normalized.includes("koki klinika") ||
+    normalized.includes("tell me about you") ||
+    normalized.includes("learn about your clinic") ||
+    normalized.includes("learn more about your clinic") ||
+    normalized.includes("about your practice") ||
+    normalized.includes("about your dental practice") ||
+    normalized.includes("describe your clinic") ||
+    normalized.includes("what is your clinic like") ||
+    normalized.includes("what s your clinic like") ||
+    normalized.includes("kokia jusu klinika") ||
+    normalized.includes("kokia klinika esate") ||
+    (normalized.includes("apie jus") &&
+      (normalized.includes("klinik") ||
+        normalized.includes("dent") ||
+        normalized.includes("stomatolog") ||
+        normalized.includes("dant") ||
+        normalized.includes("gydytoj"))) ||
     (normalized.includes("tell me about") && normalized.includes("clinic")) ||
     (normalized.includes("tell me about") && normalized.includes("you")) ||
     (normalized.includes("about you") && normalized.includes("clinic"));
@@ -260,6 +297,91 @@ const resolveAboutClinic = (normalized: string): { intent: "about_clinic"; about
   return null;
 };
 
+/** Comparative / suitability / “do I need X” — escalate; do not answer from service descriptions */
+const matchesDecisionSeekingQuestion = (normalized: string): boolean => {
+  if (
+    normalized.includes("which is better") ||
+    normalized.includes("which would be better") ||
+    normalized.includes("which option is better") ||
+    normalized.includes("kas geriau") ||
+    normalized.includes("kuri geriau") ||
+    normalized.includes("whats better") ||
+    normalized.includes("what s better")
+  ) {
+    return true;
+  }
+
+  if (normalized.includes("do i need")) {
+    if (
+      normalized.includes("how much") ||
+      normalized.includes("how long") ||
+      normalized.includes("how many") ||
+      normalized.includes("how often")
+    ) {
+      return false;
+    }
+    if (
+      normalized.includes("do i need to pay") ||
+      normalized.includes("do i need to bring") ||
+      normalized.includes("do i need to book") ||
+      normalized.includes("do i need to call") ||
+      normalized.includes("do i need to cancel") ||
+      normalized.includes("do i need to arrive") ||
+      normalized.includes("do i need to schedule")
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  if (normalized.includes("ar man reikia")) {
+    if (normalized.includes("kiek")) {
+      return false;
+    }
+    if (
+      normalized.includes("sumoketi") ||
+      normalized.includes("atsinesti") ||
+      normalized.includes("uzsiregistruoti") ||
+      normalized.includes("paskambinti")
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  if (normalized.includes("should i get") || normalized.includes("should i have")) {
+    if (
+      normalized.includes("should i call") ||
+      normalized.includes("should i contact") ||
+      normalized.includes("should i phone") ||
+      normalized.includes("should i email")
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  if (normalized.includes("am i a candidate")) {
+    return true;
+  }
+
+  // "Is whitening right for me?" — not "is it right for me"
+  if (normalized.includes("right for me")) {
+    if (
+      normalized.includes("price") ||
+      normalized.includes("kaina") ||
+      normalized.includes("cost") ||
+      normalized.includes("quote") ||
+      normalized.includes("how much")
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  return false;
+};
+
 const matchesBroadPriceList = (normalized: string): boolean => {
   const phrases = [
     "what are your prices",
@@ -311,6 +433,10 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
     if (normalized.includes(normalizeText(keyword))) {
       return { intent: "clinical_or_urgent" };
     }
+  }
+
+  if (matchesDecisionSeekingQuestion(normalized)) {
+    return { intent: "clinical_or_urgent" };
   }
 
   if (keywordMap.language_switch.some((keyword) => normalized.includes(normalizeText(keyword)))) {

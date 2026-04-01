@@ -42,6 +42,10 @@ Some rows are **hypotheses** (especially Phase 2–4). If actual intent differs 
 - **`full_kb`**: Not escalated; outbound body is the full `reply` string.
 - **`option_c_ack`**: Escalated; outbound body is the short acknowledgment only (Option C).
 
+## Known limitation (v1, not a blocker)
+
+- **Single intent per message.** Combined questions such as “address and working hours?” or “where are you + parking?” are intentionally handled as one intent (first matching rule in the classifier). Multi-intent or merged replies are **not** implemented yet. Tracked as **P4-04** in the CSV.
+
 ## Future (not implemented)
 
-- **Multi-intent in one message** (e.g. hours + address + phone in a single line): the classifier returns one intent; a later improvement could detect multiple intents or ask a follow-up. Tracked as **P4-04** in the CSV.
+- **Multi-intent in one message** (e.g. hours + address + phone in a single line): a later improvement could detect multiple intents, merge KB snippets, or ask a follow-up.

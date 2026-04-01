@@ -85,10 +85,14 @@ describe("classifier", () => {
     expect(classifyIntent("What should I bring to my first appointment?", services).intent).toBe(
       "first_appointment_prep"
     );
+    expect(classifyIntent("What should I bring first time?", services).intent).toBe("first_appointment_prep");
     expect(classifyIntent("How early should I arrive?", services).intent).toBe("first_appointment_prep");
+    expect(classifyIntent("I have a first appointment coming up", services).intent).toBe("first_appointment_prep");
+    expect(classifyIntent("First appointment", services).intent).toBe("first_appointment_prep");
   });
 
   it("classifies first_visit_expectations before service_info", () => {
+    expect(classifyIntent("What happens at first visit?", services).intent).toBe("first_visit_expectations");
     expect(classifyIntent("What happens during the first visit?", services).intent).toBe("first_visit_expectations");
     expect(classifyIntent("Will I get a treatment plan at my first visit?", services).intent).toBe(
       "first_visit_expectations"
@@ -101,6 +105,19 @@ describe("classifier", () => {
       broadPriceList: true
     });
     expect(classifyIntent("Kokia implantu kaina?", services).intent).toBe("price_info");
+  });
+
+  it("escalates decision-seeking treatment questions instead of service_info", () => {
+    expect(classifyIntent("Do I need root canal?", services).intent).toBe("clinical_or_urgent");
+    expect(classifyIntent("Which is better veneers or filling?", services).intent).toBe("clinical_or_urgent");
+    expect(classifyIntent("Ar man reikia kanalu gydymo?", services).intent).toBe("clinical_or_urgent");
+    expect(classifyIntent("Should I get veneers?", services).intent).toBe("clinical_or_urgent");
+    expect(classifyIntent("Is whitening right for me?", services).intent).toBe("clinical_or_urgent");
+    expect(classifyIntent("Do I need braces?", services).intent).toBe("clinical_or_urgent");
+  });
+
+  it("does not treat administrative do i need to as clinical decision", () => {
+    expect(classifyIntent("How much do I need to pay?", services).intent).toBe("price_info");
   });
 
   it("classifies about_clinic with focus", () => {
@@ -119,6 +136,18 @@ describe("classifier", () => {
     expect(classifyIntent("Is everything under one roof?", services)).toEqual({
       intent: "about_clinic",
       aboutFocus: "fullService"
+    });
+    expect(classifyIntent("Learn about your clinic", services)).toEqual({
+      intent: "about_clinic",
+      aboutFocus: "default"
+    });
+    expect(classifyIntent("Tell me about you", services)).toEqual({
+      intent: "about_clinic",
+      aboutFocus: "default"
+    });
+    expect(classifyIntent("What kind of clinic are you?", services)).toEqual({
+      intent: "about_clinic",
+      aboutFocus: "default"
     });
   });
 });
