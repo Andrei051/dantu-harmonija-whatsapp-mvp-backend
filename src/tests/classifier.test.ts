@@ -116,6 +116,22 @@ describe("classifier", () => {
       intent: "price_info",
       broadPriceList: true
     });
+    expect(classifyIntent("how much veneers vs filling", services)).toEqual({
+      intent: "price_info",
+      broadPriceList: true
+    });
+  });
+
+  it("classifies informal location and compressed first-visit phrasing", () => {
+    expect(classifyIntent("where u located send pin", services).intent).toBe("clinic_location");
+    expect(classifyIntent("first time what need bring", services).intent).toBe("first_appointment_prep");
+  });
+
+  it("classifies price slang with service as price_info", () => {
+    const r = classifyIntent("cheap braces?", services);
+    expect(r.intent).toBe("price_info");
+    expect(r.broadPriceList).toBeUndefined();
+    expect(r.serviceId).toBeDefined();
   });
 
   it("escalates decision-seeking treatment questions instead of service_info", () => {

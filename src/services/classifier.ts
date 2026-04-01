@@ -25,6 +25,10 @@ const keywordMap: Record<MessageIntent, string[]> = {
     "address",
     "where are you",
     "where are you located",
+    "where u located",
+    "where are u",
+    "send pin",
+    "drop pin",
     "google maps",
     "maps",
     "zemelapis",
@@ -52,7 +56,22 @@ const keywordMap: Record<MessageIntent, string[]> = {
     "need appointment"
   ],
   service_info: ["paslaug", "gydym", "implant", "higiena", "ortodont", "service", "treatment", "services"],
-  price_info: ["kaina", "kainos", "price", "cost", "kainuoja", "how much"],
+  price_info: [
+    "kaina",
+    "kainos",
+    "price",
+    "cost",
+    "kainuoja",
+    "how much",
+    "cheap",
+    "cheapest",
+    "budget",
+    "affordable",
+    "low cost",
+    "pigiau",
+    "pigiausia",
+    "nebrangu"
+  ],
   language_switch: ["english", "anglu", "in english", "lietuviskai", "lithuanian"],
   first_appointment_prep: [],
   first_visit_expectations: [],
@@ -198,6 +217,18 @@ const matchesFirstAppointmentPrep = (normalized: string): boolean => {
       return false;
     }
 
+    return true;
+  }
+
+  // Informal / compressed: "first time what need bring"
+  if (normalized.includes("first time") && (normalized.includes("bring") || normalized.includes("need"))) {
+    return true;
+  }
+
+  if (
+    (normalized.includes("what need") || normalized.includes("what bring")) &&
+    normalized.includes("bring")
+  ) {
     return true;
   }
 
@@ -423,11 +454,39 @@ const matchesComparativePriceQuestion = (normalized: string): boolean => {
     "kainuoja pigiau"
   ];
 
-  return phrases.some((phrase) => normalized.includes(normalizeText(phrase)));
+  if (phrases.some((phrase) => normalized.includes(normalizeText(phrase)))) {
+    return true;
+  }
+
+  // "how much veneers vs filling", "price X vs Y"
+  if (
+    normalized.includes(" vs ") &&
+    (normalized.includes("how much") ||
+      normalized.includes("price") ||
+      normalized.includes("cost") ||
+      normalized.includes("kaina") ||
+      normalized.includes("kiek"))
+  ) {
+    return true;
+  }
+
+  // LT: "... implantu ar plombai ... kaina" style comparisons
+  if (
+    normalized.includes(" ar ") &&
+    (normalized.includes("kaina") || normalized.includes("kiek") || normalized.includes("kainuoja"))
+  ) {
+    return true;
+  }
+
+  return false;
 };
 
 const looksLikeLocationQuery = (normalized: string): boolean => {
   if (normalized.includes("kur") && (normalized.includes("randat") || normalized.includes("esate"))) {
+    return true;
+  }
+
+  if (normalized.includes("where") && (normalized.includes("located") || normalized.includes("locate"))) {
     return true;
   }
 
