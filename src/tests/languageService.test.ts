@@ -37,4 +37,14 @@ describe("languageService", () => {
   it("detects English for ok alone", () => {
     expect(detectLanguage("ok")).toBe("en");
   });
+
+  it("detects English for meta capability phrasing", () => {
+    expect(detectLanguage("How can you help?")).toBe("en");
+    expect(detectLanguage("What languages do you speak?")).toBe("en");
+  });
+
+  it("detects Lithuanian for language-meta phrasing", () => {
+    expect(detectLanguage("Kokia kalba kalbate?")).toBe("lt");
+    expect(detectLanguage("Kokiomis kalbomis kalbate?")).toBe("lt");
+  });
 });

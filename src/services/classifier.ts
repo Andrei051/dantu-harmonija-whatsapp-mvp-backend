@@ -553,7 +553,9 @@ const matchesAssistantCapabilities = (normalized: string): boolean => {
     "kuo galite padeti",
     "ka jus darote",
     "kokia kalba kalbate",
-    "kokia kalba jus kalbate"
+    "kokia kalba jus kalbate",
+    "kokiomis kalbomis kalbate",
+    "kokiomis kalbomis"
   ];
 
   return phrases.some((phrase) => normalized.includes(normalizeText(phrase)));

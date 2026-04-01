@@ -36,7 +36,12 @@ const ENGLISH_HINTS = [
   "lot",
   "infection",
   "swollen",
-  "bleeding"
+  "bleeding",
+  "how",
+  "help",
+  "speak",
+  "language",
+  "languages"
 ];
 
 const LITHUANIAN_HINTS = [
@@ -49,7 +54,17 @@ const LITHUANIAN_HINTS = [
   "klinika",
   "telefonas",
   "el pastas",
-  "darbo"
+  "darbo",
+  "kalbate",
+  "kalba",
+  "kalbomis",
+  "kokiomis",
+  "kokia",
+  "padeti",
+  "galite",
+  "gali",
+  "kuo",
+  "tu gali"
 ];
 
 const LT_PRIORITY_CUES = ["ar", "yra", "kur", "jusu", "kokios"];

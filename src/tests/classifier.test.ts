@@ -69,6 +69,7 @@ describe("classifier", () => {
     expect(classifyIntent("What can you do?", services).intent).toBe("assistant_capabilities");
     expect(classifyIntent("What language do you speak?", services).intent).toBe("assistant_capabilities");
     expect(classifyIntent("Kuo galite padeti?", services).intent).toBe("assistant_capabilities");
+    expect(classifyIntent("Kokiomis kalbomis kalbate?", services).intent).toBe("assistant_capabilities");
   });
 
   it("prioritizes urgent over other intents", () => {
