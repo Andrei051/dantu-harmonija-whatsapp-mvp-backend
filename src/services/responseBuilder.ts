@@ -222,6 +222,14 @@ export const buildResponse = (
         escalated: false
       };
 
+    case "assistant_capabilities":
+      return {
+        language,
+        intent: "assistant_capabilities",
+        reply: knowledgeService.getAssistantCapabilitiesReply()[language],
+        escalated: false
+      };
+
     case "clinical_or_urgent":
       return fallbackWith(language, "clinicalOrUrgent");
 

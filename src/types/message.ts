@@ -13,6 +13,7 @@ export type MessageIntent =
   | "first_appointment_prep"
   | "first_visit_expectations"
   | "about_clinic"
+  | "assistant_capabilities"
   | "unknown";
 
 export interface TestMessageRequest {

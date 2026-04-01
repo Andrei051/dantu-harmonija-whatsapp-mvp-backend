@@ -65,6 +65,12 @@ describe("classifier", () => {
     expect(classifyIntent("asdkjhasd qweoiu zxcmn", services).intent).toBe("unknown");
   });
 
+  it("classifies assistant meta questions as assistant_capabilities", () => {
+    expect(classifyIntent("What can you do?", services).intent).toBe("assistant_capabilities");
+    expect(classifyIntent("What language do you speak?", services).intent).toBe("assistant_capabilities");
+    expect(classifyIntent("Kuo galite padeti?", services).intent).toBe("assistant_capabilities");
+  });
+
   it("prioritizes urgent over other intents", () => {
     const result = classifyIntent("Kokia implantu kaina? Severe pain now", services);
     expect(result.intent).toBe("clinical_or_urgent");

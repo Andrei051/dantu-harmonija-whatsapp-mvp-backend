@@ -6,6 +6,7 @@ import fallbackData from "../data/fallback.json";
 import firstVisitPatientData from "../data/first-visit-patient.json";
 import aboutClinicData from "../data/about-clinic.json";
 import priceBroadData from "../data/price-broad.json";
+import assistantCapabilitiesData from "../data/assistant-capabilities.json";
 import {
   AboutClinicData,
   ClinicProfile,
@@ -25,5 +26,6 @@ export const knowledgeService = {
   getFallback: (): FallbackData => fallbackData as FallbackData,
   getFirstVisitPatient: (): FirstVisitPatientData => firstVisitPatientData as FirstVisitPatientData,
   getAboutClinic: (): AboutClinicData => aboutClinicData as AboutClinicData,
-  getPriceBroadReply: (): LocalizedText => priceBroadData as LocalizedText
+  getPriceBroadReply: (): LocalizedText => priceBroadData as LocalizedText,
+  getAssistantCapabilitiesReply: (): LocalizedText => assistantCapabilitiesData as LocalizedText
 };

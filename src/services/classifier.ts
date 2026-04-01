@@ -82,6 +82,7 @@ const keywordMap: Record<MessageIntent, string[]> = {
   first_appointment_prep: [],
   first_visit_expectations: [],
   about_clinic: [],
+  assistant_capabilities: [],
   clinical_or_urgent: [
     "stiprus skausmas",
     "skauda",
@@ -539,6 +540,25 @@ const matchesKiekPriceShorthand = (normalized: string): boolean => {
   return true;
 };
 
+const matchesAssistantCapabilities = (normalized: string): boolean => {
+  const phrases = [
+    "what can you do",
+    "what do you do",
+    "how can you help",
+    "what is this",
+    "what languages do you speak",
+    "what language do you speak",
+    "ka tu gali",
+    "ka galite",
+    "kuo galite padeti",
+    "ka jus darote",
+    "kokia kalba kalbate",
+    "kokia kalba jus kalbate"
+  ];
+
+  return phrases.some((phrase) => normalized.includes(normalizeText(phrase)));
+};
+
 const matchesServiceAvailabilityYesNo = (normalized: string): boolean =>
   normalized.includes("ar darote") ||
   normalized.includes("ar atliekate") ||
@@ -578,6 +598,10 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
 
   if (keywordMap.language_switch.some((keyword) => normalized.includes(normalizeText(keyword)))) {
     return { intent: "language_switch" };
+  }
+
+  if (matchesAssistantCapabilities(normalized)) {
+    return { intent: "assistant_capabilities" };
   }
 
   if (matchesFirstVisitExpectations(normalized)) {

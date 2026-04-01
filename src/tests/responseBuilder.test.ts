@@ -126,6 +126,16 @@ describe("responseBuilder", () => {
     expect(result.reply).toContain("https://");
   });
 
+  it("builds assistant_capabilities reply without escalation", () => {
+    const en = buildResponse("en", { intent: "assistant_capabilities" });
+    expect(en.intent).toBe("assistant_capabilities");
+    expect(en.escalated).toBe(false);
+    expect(en.reply).toContain("general information");
+    const lt = buildResponse("lt", { intent: "assistant_capabilities" });
+    expect(lt.escalated).toBe(false);
+    expect(lt.reply).toContain("klinika");
+  });
+
   it("prefixes Taip for LT service availability yes-no", () => {
     const result = buildResponse("lt", {
       intent: "service_info",
