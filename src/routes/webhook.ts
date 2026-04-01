@@ -66,8 +66,14 @@ webhookRouter.post("/webhook", (req, res) => {
       return;
     }
 
-    if (!process.env.WHATSAPP_ACCESS_TOKEN || !process.env.WHATSAPP_PHONE_NUMBER_ID) {
-      logger.info("outbound_skipped_missing_credentials");
+    const hasAccessToken = Boolean(process.env.WHATSAPP_ACCESS_TOKEN?.trim());
+    const hasPhoneNumberId = Boolean(process.env.WHATSAPP_PHONE_NUMBER_ID?.trim());
+
+    if (!hasAccessToken || !hasPhoneNumberId) {
+      logger.info("outbound_skipped_missing_credentials", {
+        hasAccessToken,
+        hasPhoneNumberId
+      });
       return;
     }
 
