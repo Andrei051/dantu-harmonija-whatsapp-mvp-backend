@@ -36,6 +36,7 @@ Small deterministic backend for a WhatsApp assistant that answers patient questi
   - `classifier`
   - `languageService`
   - `responseBuilder`
+  - `whatsappOutbound` (Option C body selection)
   - `webhook` routes (`GET /webhook`, `POST /webhook`)
 
 ## Webhook endpoints (Meta Cloud API ready)
@@ -76,6 +77,7 @@ Meta webhook verification requires a public HTTPS URL. For local development, ex
   - `clinic_location`
   - `parking`
   - `contact`
+  - `booking_request`
   - `service_info`
   - `price_info`
   - `language_switch`
@@ -87,7 +89,7 @@ Meta webhook verification requires a public HTTPS URL. For local development, ex
 ## Limitations
 
 - Keyword-based classification can miss nuanced messages
-- Placeholder data still needs exact extraction/verification from the clinic website
+- JSON knowledge should stay aligned with the clinic website (manual updates)
 - Outbound replies require Graph API credentials in environment variables
 - No persistent conversation state yet
 

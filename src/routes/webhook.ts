@@ -2,6 +2,7 @@ import { Router } from "express";
 import { runAssistantPipeline } from "../services/assistantPipeline";
 import { getOutboundBodyOptionC, sendWhatsAppTextMessage } from "../services/whatsappOutbound";
 import { logger } from "../utils/logger";
+import { isDuplicateInboundMessageId } from "../utils/inboundMessageDedup";
 import { extractInboundTextMessage } from "../utils/webhookParser";
 
 export const webhookRouter = Router();
@@ -45,6 +46,11 @@ webhookRouter.post("/webhook", (req, res) => {
       firstStatus: firstStatus?.status,
       messagingProduct: value?.messaging_product
     });
+    return;
+  }
+
+  if (isDuplicateInboundMessageId(parsed.messageId)) {
+    logger.info("webhook_inbound_duplicate_skipped", { messageId: parsed.messageId });
     return;
   }
 

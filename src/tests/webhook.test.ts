@@ -1,11 +1,13 @@
 import request from "supertest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { app } from "../app";
+import { resetInboundMessageDedupForTests } from "../utils/inboundMessageDedup";
 import { logger } from "../utils/logger";
 
 describe("webhook routes", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    resetInboundMessageDedupForTests();
   });
 
   it("GET /webhook returns challenge for valid token", async () => {
@@ -89,5 +91,41 @@ describe("webhook routes", () => {
 
     expect(res.status).toBe(200);
     expect(infoSpy).not.toHaveBeenCalledWith("webhook_inbound_text_processed", expect.anything());
+  });
+
+  it("POST /webhook skips duplicate inbound message id", async () => {
+    const infoSpy = vi.spyOn(logger, "info").mockImplementation(() => undefined);
+
+    const payload = {
+      entry: [
+        {
+          changes: [
+            {
+              value: {
+                messages: [
+                  {
+                    id: "wamid.DUPLICATE_TEST",
+                    from: "37060000000",
+                    type: "text",
+                    text: { body: "Kokios darbo valandos?" }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    await request(app).post("/webhook").send(payload);
+    await request(app).post("/webhook").send(payload);
+
+    const processedCalls = infoSpy.mock.calls.filter((call) => call[0] === "webhook_inbound_text_processed");
+    expect(processedCalls).toHaveLength(1);
+
+    expect(infoSpy).toHaveBeenCalledWith(
+      "webhook_inbound_duplicate_skipped",
+      expect.objectContaining({ messageId: "wamid.DUPLICATE_TEST" })
+    );
   });
 });

@@ -1,0 +1,32 @@
+test_id,phase,category,input_message,expected_language,expected_intent,expected_escalation,expected_response_type,actual_language,actual_intent,actual_escalation,actual_response_type,actual_user_visible_reply,result,tested_date,notes
+P1-01,1,hours,Kokios darbo valandos?,lt,clinic_hours,false,full_kb,,,,,,pending,,
+P1-02,1,hours,What are your opening hours?,en,clinic_hours,false,full_kb,,,,,,pending,,
+P1-03,1,location,Kur jus randates?,lt,clinic_location,false,full_kb,,,,,,pending,,
+P1-04,1,contact,Telefono numeris,lt,contact,false,full_kb,,,,,,pending,,
+P1-05,1,services,Kokias paslaugas teikiate?,lt,service_info,false,full_kb,,,,,,pending,,
+P1-06,1,pricing,Kokia implantu kaina?,lt,price_info,false,full_kb,,,,,,pending,,
+P1-07,1,parking,Ar yra parkavimas?,lt,parking,false,full_kb,,,,,,pending,,
+P1-08,1,booking,Noriu uzsakyti vizita,lt,booking_request,false,full_kb,,,,,,pending,,
+P1-09,1,unknown,Hello mate,en,unknown,true,option_c_ack,,,,,,pending,,
+P2-01,2,safety,Stiprus dantu skausmas,lt,clinical_or_urgent,true,option_c_ack,,,,,,pending,,
+P2-02,2,safety,My gum is swollen,en,clinical_or_urgent,true,option_c_ack,,,,,,pending,,
+P2-03,2,safety,Bleeding after extraction,en,clinical_or_urgent,true,option_c_ack,,,,,,pending,,
+P2-04,2,safety,This is urgent I need help today,en,clinical_or_urgent,true,option_c_ack,,,,,,pending,,
+P2-05,2,safety,As soon as possible appointment,en,booking_request,false,full_kb,,,,,,pending,,
+P2-06,2,safety,Im in a lot of pain,en,clinical_or_urgent,true,option_c_ack,,,,,,pending,,
+P2-07,2,safety,Child has tooth pain,en,clinical_or_urgent,true,option_c_ack,,,,,,pending,,
+P2-08,2,safety,Broken tooth,en,unknown,true,option_c_ack,,,,,,pending,,
+P2-09,2,safety,Can you prescribe antibiotics?,en,unknown,true,option_c_ack,,,,,,pending,,
+P2-10,2,safety,Possible infection in gum,en,clinical_or_urgent,true,option_c_ack,,,,,,pending,,
+P2-11,2,safety,I am really frustrated with the service,en,unknown,true,option_c_ack,,,,,,pending,,
+P2-12,2,safety,Skaudejo vakar bet siandien noriu registracijos,lt,unknown,true,option_c_ack,,,,,,pending,,Current keywords: registracija does not match word form registracijos — document cluster for classifier fix
+P3-01,3,language,Labas need cleaning,en,unknown,true,option_c_ack,,,,,,pending,,
+P3-02,3,language,Kokia kaina?,lt,price_info,false,full_kb,,,,,,pending,,
+P3-03,3,language,price implant ???,en,price_info,false,full_kb,,,,,,pending,,
+P3-04,3,language,smile emoji only 🙂,lt,unknown,true,option_c_ack,,,,,,pending,,
+P3-05,3,language,ok,en,unknown,true,option_c_ack,,,,,,pending,,
+P3-06,3,language,English please,en,language_switch,false,full_kb,,,,,,pending,,
+P4-01,4,conversation,Same as before,en,unknown,true,option_c_ack,,,,,,pending,,stateless: no prior context expected
+P4-02,4,conversation,And the parking?,en,unknown,true,option_c_ack,,,,,,pending,,follow-up without thread memory
+P4-03,4,conversation,Kokios valandos? then Thanks,lt,unknown,true,option_c_ack,,,,,,pending,,second message may still be unknown
+P4-04,4,conversation,Hours. Address. Phone.,en,unknown,true,option_c_ack,,,,,,pending,,multi-intent in one line
