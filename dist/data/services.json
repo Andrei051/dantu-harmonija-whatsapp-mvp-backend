@@ -1,0 +1,47 @@
+[
+    {
+        "id": "professional_hygiene",
+        "name": {
+            "lt": "Profesionali burnos higiena",
+            "en": "Professional oral hygiene"
+        },
+        "description": {
+            "lt": "Auksto lygio burnos higienos paslauga. Tikslus aprasas turi buti patvirtintas pagal svetaine.",
+            "en": "High-level oral hygiene service. Exact description must be verified against the website."
+        },
+        "keywords": {
+            "lt": ["higiena", "burnos higiena", "profesionali higiena"],
+            "en": ["hygiene", "oral hygiene", "professional cleaning"]
+        }
+    },
+    {
+        "id": "implants",
+        "name": {
+            "lt": "Dantu implantacija",
+            "en": "Dental implants"
+        },
+        "description": {
+            "lt": "Dantu implantacijos paslaugos auksto lygio apzvalga. Tikslinti pagal svetaine.",
+            "en": "High-level overview of dental implant services. Verify exact details from website."
+        },
+        "keywords": {
+            "lt": ["implant", "implantacija", "dantu implantai"],
+            "en": ["implant", "implants", "dental implant"]
+        }
+    },
+    {
+        "id": "orthodontics",
+        "name": {
+            "lt": "Ortodontinis gydymas",
+            "en": "Orthodontic treatment"
+        },
+        "description": {
+            "lt": "Ortodontinio gydymo paslaugu auksto lygio informacija. Tikslinti pagal svetaine.",
+            "en": "High-level orthodontic service information. Verify exact wording from website."
+        },
+        "keywords": {
+            "lt": ["ortodont", "breket", "kapos"],
+            "en": ["orthodontics", "braces", "aligners"]
+        }
+    }
+]

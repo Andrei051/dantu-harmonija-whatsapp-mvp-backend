@@ -1,0 +1,138 @@
+import { AssistantResponse, SupportedLanguage } from "../types/message";
+import { IntentResult, PriceItem, ServiceItem } from "../types/knowledge";
+import { knowledgeService } from "./knowledgeService";
+
+const fallbackWith = (language: SupportedLanguage, key: "unknown" | "clinicalOrUrgent"): AssistantResponse => ({
+  language,
+  intent: key === "unknown" ? "unknown" : "clinical_or_urgent",
+  reply: knowledgeService.getFallback()[key][language],
+  escalated: true
+});
+
+const serviceById = (services: ServiceItem[], id?: string): ServiceItem | undefined =>
+  id ? services.find((service) => service.id === id) : undefined;
+
+const priceByServiceId = (prices: PriceItem[], serviceId?: string): PriceItem | undefined =>
+  serviceId ? prices.find((price) => price.serviceId === serviceId) : undefined;
+
+export const buildResponse = (
+  language: SupportedLanguage,
+  intentResult: IntentResult
+): AssistantResponse => {
+  const profile = knowledgeService.getClinicProfile();
+  const services = knowledgeService.getServices();
+  const prices = knowledgeService.getPrices();
+  const fallback = knowledgeService.getFallback();
+
+  switch (intentResult.intent) {
+    case "clinic_hours":
+      return {
+        language,
+        intent: "clinic_hours",
+        reply:
+          language === "lt"
+            ? `Musu darbo laikas: ${profile.workingHours.lt}. Jei norite, galiu padeti rasti tinkamiausia kita zingsni.`
+            : `Our working hours: ${profile.workingHours.en}. If you want, I can guide you to the next step.`,
+        escalated: false
+      };
+
+    case "clinic_location":
+      return {
+        language,
+        intent: "clinic_location",
+        reply:
+          language === "lt"
+            ? `Musu adresas: ${profile.address.lt}. Daugiau informacijos rasite: ${profile.website}`
+            : `Our address: ${profile.address.en}. More information: ${profile.website}`,
+        escalated: false
+      };
+
+    case "parking":
+      return {
+        language,
+        intent: "parking",
+        reply: language === "lt" ? profile.parking.lt : profile.parking.en,
+        escalated: false
+      };
+
+    case "contact":
+      return {
+        language,
+        intent: "contact",
+        reply:
+          language === "lt"
+            ? `Susisiekti galite el. pastu ${profile.email} arba telefonu ${profile.phone}. Svetaine: ${profile.website}`
+            : `You can contact us via email ${profile.email} or phone ${profile.phone}. Website: ${profile.website}`,
+        escalated: false
+      };
+
+    case "booking_request":
+      return {
+        language,
+        intent: "booking_request",
+        reply:
+          language === "lt"
+            ? `Per si kanala vizitu neuzsakau ir kalendoriaus nenaudoju. Registruokites arba susisiekite su klinika iprastu budu: ${profile.website}, tel. ${profile.phone}, el. pastas ${profile.email}.`
+            : `I do not book appointments or use calendars here. To schedule a visit, please follow the clinic's usual process: ${profile.website}, phone ${profile.phone}, email ${profile.email}.`,
+        escalated: false
+      };
+
+    case "service_info": {
+      const service = serviceById(services, intentResult.serviceId);
+      if (!service) {
+        return fallbackWith(language, "unknown");
+      }
+
+      return {
+        language,
+        intent: "service_info",
+        reply:
+          language === "lt"
+            ? `${service.name.lt}: ${service.description.lt}`
+            : `${service.name.en}: ${service.description.en}`,
+        escalated: false
+      };
+    }
+
+    case "price_info": {
+      const service = serviceById(services, intentResult.serviceId);
+      const price = priceByServiceId(prices, intentResult.serviceId);
+
+      if (!service || !price) {
+        return {
+          language,
+          intent: "price_info",
+          reply:
+            language === "lt"
+              ? "Kainos pateikiamos tik toms paslaugoms, kurios yra musu strukturuotoje informacijoje. Del tiksliu ikainiu susisiekite su klinika."
+              : "Prices are provided only for services available in our structured information. Please contact the clinic for exact fees.",
+          escalated: false
+        };
+      }
+
+      return {
+        language,
+        intent: "price_info",
+        reply:
+          language === "lt"
+            ? `${price.label.lt}: ${price.amountText.lt}${price.notes ? ` (${price.notes.lt})` : ""}`
+            : `${price.label.en}: ${price.amountText.en}${price.notes ? ` (${price.notes.en})` : ""}`,
+        escalated: false
+      };
+    }
+
+    case "language_switch":
+      return {
+        language,
+        intent: "language_switch",
+        reply: fallback.languageSwitch[language],
+        escalated: false
+      };
+
+    case "clinical_or_urgent":
+      return fallbackWith(language, "clinicalOrUrgent");
+
+    default:
+      return fallbackWith(language, "unknown");
+  }
+};

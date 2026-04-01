@@ -1,0 +1,47 @@
+[
+  {
+    "id": "professional_hygiene",
+    "name": {
+      "lt": "Profesionali burnos higiena",
+      "en": "Professional oral hygiene"
+    },
+    "description": {
+      "lt": "Burnos higienos paslauga atliekama klinikoje kaip dantu gydymo prieziuros dalis.",
+      "en": "Oral hygiene service provided in the clinic as part of dental care."
+    },
+    "keywords": {
+      "lt": ["higiena", "burnos higiena", "profesionali higiena"],
+      "en": ["hygiene", "oral hygiene", "professional cleaning"]
+    }
+  },
+  {
+    "id": "implants",
+    "name": {
+      "lt": "Dantu implantacija",
+      "en": "Dental implants"
+    },
+    "description": {
+      "lt": "Dantu implantavimo paslaugos, iskaitant skirtingas implantu sistemas pagal klinikos teikiama informacija.",
+      "en": "Dental implant services, including different implant systems listed by the clinic."
+    },
+    "keywords": {
+      "lt": ["implant", "implantacija", "dantu implantai"],
+      "en": ["implant", "implants", "dental implant"]
+    }
+  },
+  {
+    "id": "orthodontics",
+    "name": {
+      "lt": "Ortodontinis gydymas",
+      "en": "Orthodontic treatment"
+    },
+    "description": {
+      "lt": "Ortodontinio gydymo paslaugos, iskaitant dantu tiesinima breketais ir kapomis.",
+      "en": "Orthodontic treatment services, including teeth alignment with braces and aligners."
+    },
+    "keywords": {
+      "lt": ["ortodont", "breket", "kapos"],
+      "en": ["orthodontics", "braces", "aligners"]
+    }
+  }
+]
