@@ -107,6 +107,17 @@ describe("classifier", () => {
     expect(classifyIntent("Kokia implantu kaina?", services).intent).toBe("price_info");
   });
 
+  it("classifies comparative price questions as broad price guidance", () => {
+    expect(classifyIntent("Which is cheaper veneers or filling?", services)).toEqual({
+      intent: "price_info",
+      broadPriceList: true
+    });
+    expect(classifyIntent("Kas pigiau implantai ar tiltas?", services)).toEqual({
+      intent: "price_info",
+      broadPriceList: true
+    });
+  });
+
   it("escalates decision-seeking treatment questions instead of service_info", () => {
     expect(classifyIntent("Do I need root canal?", services).intent).toBe("clinical_or_urgent");
     expect(classifyIntent("Which is better veneers or filling?", services).intent).toBe("clinical_or_urgent");

@@ -407,6 +407,25 @@ const matchesBroadPriceList = (normalized: string): boolean => {
   return phrases.some((phrase) => normalized.includes(normalizeText(phrase)));
 };
 
+/** Comparative price questions — avoid picking one service; use broad price guidance */
+const matchesComparativePriceQuestion = (normalized: string): boolean => {
+  const phrases = [
+    "which is cheaper",
+    "what is cheaper",
+    "which costs less",
+    "what costs less",
+    "cheaper than",
+    "which one is cheaper",
+    "kas pigiau",
+    "kuris pigesnis",
+    "kuri pigesne",
+    "kas kainuoja maziau",
+    "kainuoja pigiau"
+  ];
+
+  return phrases.some((phrase) => normalized.includes(normalizeText(phrase)));
+};
+
 const looksLikeLocationQuery = (normalized: string): boolean => {
   if (normalized.includes("kur") && (normalized.includes("randat") || normalized.includes("esate"))) {
     return true;
@@ -477,6 +496,10 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
 
   if (keywordMap.contact.some((keyword) => normalized.includes(normalizeText(keyword)))) {
     return { intent: "contact" };
+  }
+
+  if (matchesComparativePriceQuestion(normalized)) {
+    return { intent: "price_info", broadPriceList: true };
   }
 
   if (keywordMap.price_info.some((keyword) => normalized.includes(normalizeText(keyword)))) {
