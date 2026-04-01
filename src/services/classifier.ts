@@ -540,6 +540,36 @@ const matchesKiekPriceShorthand = (normalized: string): boolean => {
   return true;
 };
 
+/** About-style wording + price topic — before about_clinic (avoids "tell me about your prices" -> about via "your"/you) */
+const matchesAboutPhrasingWithPriceTopic = (normalized: string): boolean => {
+  const hasPrice =
+    normalized.includes("price") ||
+    normalized.includes("pricing") ||
+    normalized.includes("cost") ||
+    normalized.includes("kaina") ||
+    normalized.includes("kainos") ||
+    (normalized.includes("kiek") && normalized.includes("kainuoja"));
+
+  if (!hasPrice) {
+    return false;
+  }
+
+  if (normalized.includes("tell me about")) {
+    return true;
+  }
+
+  return (
+    normalized.includes("explain your pricing") ||
+    normalized.includes("explain the pricing") ||
+    normalized.includes("what are your prices like") ||
+    normalized.includes("can you explain your pricing") ||
+    normalized.includes("kokios jusu kainos") ||
+    normalized.includes("kokia jusu kaina") ||
+    normalized.includes("papasakokite apie kainas") ||
+    normalized.includes("pasakykite apie kainas")
+  );
+};
+
 const matchesAssistantCapabilities = (normalized: string): boolean => {
   const phrases = [
     "what can you do",
@@ -612,6 +642,10 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
 
   if (matchesFirstAppointmentPrep(normalized)) {
     return { intent: "first_appointment_prep" };
+  }
+
+  if (matchesAboutPhrasingWithPriceTopic(normalized)) {
+    return { intent: "price_info", broadPriceList: true };
   }
 
   const about = resolveAboutClinic(normalized);

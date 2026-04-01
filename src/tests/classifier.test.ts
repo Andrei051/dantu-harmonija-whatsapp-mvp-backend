@@ -114,6 +114,17 @@ describe("classifier", () => {
     expect(classifyIntent("Kokia implantu kaina?", services).intent).toBe("price_info");
   });
 
+  it("routes tell me about your prices to broad price not about_clinic", () => {
+    expect(classifyIntent("Tell me about your prices", services)).toEqual({
+      intent: "price_info",
+      broadPriceList: true
+    });
+    expect(classifyIntent("Can you explain your pricing?", services)).toEqual({
+      intent: "price_info",
+      broadPriceList: true
+    });
+  });
+
   it("classifies comparative price questions as broad price guidance", () => {
     expect(classifyIntent("Which is cheaper veneers or filling?", services)).toEqual({
       intent: "price_info",
