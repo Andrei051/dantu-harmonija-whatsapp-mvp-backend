@@ -10,6 +10,9 @@ export type MessageIntent =
   | "price_info"
   | "language_switch"
   | "clinical_or_urgent"
+  | "first_appointment_prep"
+  | "first_visit_expectations"
+  | "about_clinic"
   | "unknown";
 
 export interface TestMessageRequest {

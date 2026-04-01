@@ -16,6 +16,16 @@ describe("responseBuilder", () => {
     expect(result.language).toBe("en");
     expect(result.escalated).toBe(false);
     expect(result.reply).toContain("Our address");
+    expect(result.reply).toContain("Google Maps");
+    expect(result.reply).toContain("google.com/maps");
+  });
+
+  it("builds Lithuanian clinic_location with address and maps from KB", () => {
+    const result = buildResponse("lt", { intent: "clinic_location" });
+    expect(result.reply).toContain("Olimpiečių str. 1A-9");
+    expect(result.reply).toContain("LT-09235");
+    expect(result.reply).not.toContain("1A-24");
+    expect(result.reply).toContain("Google Maps");
   });
 
   it("builds parking response", () => {
@@ -83,6 +93,29 @@ describe("responseBuilder", () => {
     const result = buildResponse("lt", { intent: "unknown" });
     expect(result.intent).toBe("unknown");
     expect(result.escalated).toBe(true);
+  });
+
+  it("builds first_appointment_prep from knowledge", () => {
+    const result = buildResponse("en", { intent: "first_appointment_prep" });
+    expect(result.intent).toBe("first_appointment_prep");
+    expect(result.escalated).toBe(false);
+    expect(result.reply).toContain("10-15");
+  });
+
+  it("builds first_visit_expectations from knowledge", () => {
+    const result = buildResponse("lt", { intent: "first_visit_expectations" });
+    expect(result.intent).toBe("first_visit_expectations");
+    expect(result.escalated).toBe(false);
+    expect(result.reply).toContain("Registraturoje");
+  });
+
+  it("builds about_clinic default and family focus", () => {
+    const def = buildResponse("en", { intent: "about_clinic", aboutFocus: "default" });
+    expect(def.reply).toContain("Dental clinic");
+
+    const fam = buildResponse("en", { intent: "about_clinic", aboutFocus: "family" });
+    expect(fam.reply).toContain("adults and children");
+    expect(fam.reply.length).toBeLessThan(def.reply.length);
   });
 
   it("builds generic service_info when no specific service id", () => {

@@ -17,6 +17,14 @@ describe("classifier", () => {
     expect(classifyIntent("Kur jus randatės?", services).intent).toBe("clinic_location");
   });
 
+  it("classifies clinic_location for Google Maps / directions phrasing", () => {
+    expect(classifyIntent("Can you send a Google Maps link?", services).intent).toBe("clinic_location");
+  });
+
+  it("classifies clinic_location for Kaip jus rasti", () => {
+    expect(classifyIntent("Kaip jus rasti?", services).intent).toBe("clinic_location");
+  });
+
   it("classifies booking_request", () => {
     expect(classifyIntent("I need appointment tomorrow", services).intent).toBe("booking_request");
   });
@@ -71,5 +79,46 @@ describe("classifier", () => {
 
   it("classifies booking_request with registracijos inflection", () => {
     expect(classifyIntent("Noriu registracijos rytoj", services).intent).toBe("booking_request");
+  });
+
+  it("classifies first_appointment_prep", () => {
+    expect(classifyIntent("What should I bring to my first appointment?", services).intent).toBe(
+      "first_appointment_prep"
+    );
+    expect(classifyIntent("How early should I arrive?", services).intent).toBe("first_appointment_prep");
+  });
+
+  it("classifies first_visit_expectations before service_info", () => {
+    expect(classifyIntent("What happens during the first visit?", services).intent).toBe("first_visit_expectations");
+    expect(classifyIntent("Will I get a treatment plan at my first visit?", services).intent).toBe(
+      "first_visit_expectations"
+    );
+  });
+
+  it("classifies broad price list without dumping service prices", () => {
+    expect(classifyIntent("What are your prices?", services)).toEqual({
+      intent: "price_info",
+      broadPriceList: true
+    });
+    expect(classifyIntent("Kokia implantu kaina?", services).intent).toBe("price_info");
+  });
+
+  it("classifies about_clinic with focus", () => {
+    expect(classifyIntent("Tell me about your clinic", services)).toEqual({
+      intent: "about_clinic",
+      aboutFocus: "default"
+    });
+    expect(classifyIntent("Do you treat children at your clinic?", services)).toEqual({
+      intent: "about_clinic",
+      aboutFocus: "family"
+    });
+    expect(classifyIntent("Are your doctors qualified?", services)).toEqual({
+      intent: "about_clinic",
+      aboutFocus: "team"
+    });
+    expect(classifyIntent("Is everything under one roof?", services)).toEqual({
+      intent: "about_clinic",
+      aboutFocus: "fullService"
+    });
   });
 });

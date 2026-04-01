@@ -1,5 +1,5 @@
 import { AssistantResponse, SupportedLanguage } from "../types/message";
-import { IntentResult, PriceItem, ServiceItem } from "../types/knowledge";
+import { AboutClinicFocus, IntentResult, PriceItem, ServiceItem } from "../types/knowledge";
 import { knowledgeService } from "./knowledgeService";
 
 const fallbackWith = (language: SupportedLanguage, key: "unknown" | "clinicalOrUrgent"): AssistantResponse => ({
@@ -47,16 +47,21 @@ export const buildResponse = (
         escalated: false
       };
 
-    case "clinic_location":
+    case "clinic_location": {
+      const maps =
+        profile.googleMapsUrl != null && profile.googleMapsUrl.trim() !== ""
+          ? ` Google Maps: ${profile.googleMapsUrl}`
+          : "";
       return {
         language,
         intent: "clinic_location",
         reply:
           language === "lt"
-            ? `Musu adresas: ${profile.address.lt}. Daugiau informacijos rasite: ${profile.website}`
-            : `Our address: ${profile.address.en}. More information: ${profile.website}`,
+            ? `Musu adresas: ${profile.address.lt}. Daugiau informacijos rasite: ${profile.website}.${maps}`
+            : `Our address: ${profile.address.en}. More information: ${profile.website}.${maps}`,
         escalated: false
       };
+    }
 
     case "parking":
       return {
@@ -88,6 +93,51 @@ export const buildResponse = (
         escalated: false
       };
 
+    case "first_appointment_prep": {
+      const fv = knowledgeService.getFirstVisitPatient();
+      return {
+        language,
+        intent: "first_appointment_prep",
+        reply: fv.appointmentPrep[language],
+        escalated: false
+      };
+    }
+
+    case "first_visit_expectations": {
+      const fv = knowledgeService.getFirstVisitPatient();
+      return {
+        language,
+        intent: "first_visit_expectations",
+        reply: fv.visitExpectations[language],
+        escalated: false
+      };
+    }
+
+    case "about_clinic": {
+      const about = knowledgeService.getAboutClinic();
+      const focus: AboutClinicFocus = intentResult.aboutFocus ?? "default";
+      const pick = (key: keyof typeof about) => about[key][language];
+
+      if (focus === "family") {
+        return { language, intent: "about_clinic", reply: pick("familyCare"), escalated: false };
+      }
+
+      if (focus === "team") {
+        return { language, intent: "about_clinic", reply: pick("teamSummary"), escalated: false };
+      }
+
+      if (focus === "fullService") {
+        return { language, intent: "about_clinic", reply: pick("fullService"), escalated: false };
+      }
+
+      return {
+        language,
+        intent: "about_clinic",
+        reply: `${pick("summary")} ${pick("familyCare")} ${pick("fullService")} ${pick("teamSummary")}`,
+        escalated: false
+      };
+    }
+
     case "service_info": {
       const service = serviceById(services, intentResult.serviceId);
       if (!service) {
@@ -111,6 +161,15 @@ export const buildResponse = (
     }
 
     case "price_info": {
+      if (intentResult.broadPriceList) {
+        return {
+          language,
+          intent: "price_info",
+          reply: knowledgeService.getPriceBroadReply()[language],
+          escalated: false
+        };
+      }
+
       const service = serviceById(services, intentResult.serviceId);
       const price = priceByServiceId(prices, intentResult.serviceId);
 

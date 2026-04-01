@@ -10,6 +10,8 @@ export interface ClinicProfile {
   email: string;
   phone: string;
   parking: LocalizedText;
+  /** Official or approved Google Maps / place link */
+  googleMapsUrl?: string;
 }
 
 export interface ServiceItem {
@@ -39,7 +41,24 @@ export interface FallbackData {
   languageSwitch: LocalizedText;
 }
 
+export interface FirstVisitPatientData {
+  appointmentPrep: LocalizedText;
+  visitExpectations: LocalizedText;
+}
+
+export interface AboutClinicData {
+  summary: LocalizedText;
+  familyCare: LocalizedText;
+  fullService: LocalizedText;
+  teamSummary: LocalizedText;
+}
+
+export type AboutClinicFocus = "default" | "family" | "team" | "fullService";
+
 export interface IntentResult {
   intent: MessageIntent;
   serviceId?: string;
+  aboutFocus?: AboutClinicFocus;
+  /** Vague "full price list" style question — short redirect, no dump */
+  broadPriceList?: boolean;
 }

@@ -1,9 +1,10 @@
 {
   "clinicName": "Dantu Harmonija",
   "address": {
-    "lt": "Olimpieciu g. 1A-24, Vilnius",
-    "en": "Olimpieciu st. 1A-24, Vilnius"
+    "lt": "Olimpiečių str. 1A-9, LT-09235 Vilnius",
+    "en": "Olimpiečių str. 1A-9, LT-09235 Vilnius"
   },
+  "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Olimpieciu+str.+1A-9+Vilnius",
   "workingHours": {
     "lt": "Darbo dienomis 08:00-20:00, sestadieniais 09:00-14:00 (tik su isankstine registracija), sekmadieniais nedirbama",
     "en": "Weekdays 08:00-20:00, Saturdays 09:00-14:00 (by prior registration), Sundays closed"
