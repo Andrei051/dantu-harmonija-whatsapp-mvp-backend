@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { runAssistantPipeline } from "../services/assistantPipeline";
+import { getOutboundBodyOptionC, sendWhatsAppTextMessage } from "../services/whatsappOutbound";
 import { logger } from "../utils/logger";
 import { extractInboundTextMessage } from "../utils/webhookParser";
 
@@ -57,5 +58,46 @@ webhookRouter.post("/webhook", (req, res) => {
     detectedLanguage: result.language,
     escalated: result.escalated,
     response: result.response
+  });
+
+  void (async () => {
+    if (!parsed.sender) {
+      logger.info("outbound_skipped_no_sender");
+      return;
+    }
+
+    if (!process.env.WHATSAPP_ACCESS_TOKEN || !process.env.WHATSAPP_PHONE_NUMBER_ID) {
+      logger.info("outbound_skipped_missing_credentials");
+      return;
+    }
+
+    const outboundBody = getOutboundBodyOptionC(
+      result.escalated,
+      result.language,
+      result.response
+    );
+
+    logger.info("outbound_reply_attempt", {
+      to: parsed.sender,
+      escalated: result.escalated,
+      optionC_ack_only: result.escalated
+    });
+
+    const sendResult = await sendWhatsAppTextMessage({
+      to: parsed.sender,
+      body: outboundBody
+    });
+
+    if (sendResult.ok) {
+      logger.info("outbound_reply_success", { status: sendResult.status });
+      return;
+    }
+
+    logger.error("outbound_reply_failed", {
+      status: sendResult.status,
+      detail: sendResult.detail
+    });
+  })().catch((error: unknown) => {
+    logger.error("outbound_reply_exception", { message: String(error) });
   });
 });

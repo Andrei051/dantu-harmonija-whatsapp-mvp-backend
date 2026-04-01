@@ -23,6 +23,8 @@ Small deterministic backend for a WhatsApp assistant that answers patient questi
 
 - `PORT` (default `3000`)
 - `WHATSAPP_VERIFY_TOKEN` (required for `GET /webhook` verification with Meta)
+- `WHATSAPP_ACCESS_TOKEN` (Graph API token for outbound messages)
+- `WHATSAPP_PHONE_NUMBER_ID` (WhatsApp Business phone number id for `POST /v22.0/{id}/messages`)
 
 ## Run tests
 
@@ -50,6 +52,7 @@ Small deterministic backend for a WhatsApp assistant that answers patient questi
   - Returns `200` quickly.
   - Processes inbound text messages only and runs deterministic assistant pipeline.
   - Logs structured processing output (sender, message, intent, language, escalation, response).
+  - When `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` are set, sends an outbound reply (Option C: full reply for normal messages; short acknowledgment only when escalated).
   - Unsupported event types are ignored safely.
 
 ## Local webhook testing
@@ -85,7 +88,7 @@ Meta webhook verification requires a public HTTPS URL. For local development, ex
 
 - Keyword-based classification can miss nuanced messages
 - Placeholder data still needs exact extraction/verification from the clinic website
-- No WhatsApp provider integration yet (this is backend core logic only)
+- Outbound replies require Graph API credentials in environment variables
 - No persistent conversation state yet
 
 ## Next step: AI layer
