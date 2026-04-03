@@ -11,7 +11,7 @@
       "en": "80-100 EUR"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -19,7 +19,7 @@
     "id": "price_implants",
     "serviceId": "implants",
     "label": {
-      "lt": "Dantu implantacija",
+      "lt": "Dantų implantacija",
       "en": "Dental implants"
     },
     "amountText": {
@@ -27,7 +27,7 @@
       "en": "from 860 EUR"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -39,11 +39,11 @@
       "en": "Orthodontic treatment"
     },
     "amountText": {
-      "lt": "Konsultacija: 50-80 EUR; metaliniai breketai: nuo 750 EUR/ žandikaulis; kapomis (aligneriai): apie 4000-5000 EUR",
+      "lt": "Konsultacija: 50–80 EUR; metaliniai breketai: nuo 750 EUR / žandikaulį; kapos (aligneriai): apie 4000–5000 EUR",
       "en": "Consultation: 50-80 EUR; metal braces: from 750 EUR per jaw; aligners: approx. 4000-5000 EUR"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -51,7 +51,7 @@
     "id": "price_whitening",
     "serviceId": "teeth_whitening",
     "label": {
-      "lt": "Dantu balinimas",
+      "lt": "Dantų balinimas",
       "en": "Teeth whitening"
     },
     "amountText": {
@@ -59,7 +59,7 @@
       "en": "Teeth whitening (trays): 200 EUR; Zoom whitening: 299 EUR; Post-op trays: 100 EUR"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -67,15 +67,15 @@
     "id": "price_physiotherapy",
     "serviceId": "physiotherapy",
     "label": {
-      "lt": "Fizioterapija / zandikaulio terapija",
+      "lt": "Fizioterapija / žandikaulio terapija",
       "en": "Physiotherapy / jaw therapy"
     },
     "amountText": {
-      "lt": "Konsultacija: 75 EUR; TMJ gydymas: 65 EUR; Miofunkcine terapija: 55 EUR",
+      "lt": "Konsultacija: 75 EUR; TMJ gydymas: 65 EUR; miofunkcinė terapija: 55 EUR",
       "en": "Consultation: 75 EUR; TMJ treatment: 65 EUR; Myofunctional therapy: 55 EUR"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -83,15 +83,15 @@
     "id": "price_paediatric",
     "serviceId": "paediatric_dentistry",
     "label": {
-      "lt": "Vaiku odontologija",
+      "lt": "Vaikų odontologija",
       "en": "Paediatric dentistry"
     },
     "amountText": {
-      "lt": "Konsultacija vaikams: 40-50 EUR; gydymas priklausomai nuo proceduros (pvz. plombavimas 60-120 EUR)",
+      "lt": "Konsultacija vaikams: 40–50 EUR; gydymas priklauso nuo procedūros (pvz. plombavimas 60–120 EUR)",
       "en": "Children's consultation: 40-50 EUR; treatment depends on procedure (e.g. fillings often 60-120 EUR)"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -107,7 +107,7 @@
       "en": "Consultation: 50 EUR; X-ray: 10 EUR; Panoramic X-ray: 30 EUR; CT scan: 100 EUR"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -119,11 +119,11 @@
       "en": "Fillings"
     },
     "amountText": {
-      "lt": "Kompozitinis plombavimas: dazniausiai 60-150 EUR uz pavirsiu (priklauso nuo danties)",
+      "lt": "Kompozitinis plombavimas: dažniausiai 60–150 EUR už paviršių (priklauso nuo danties)",
       "en": "Composite fillings: typically 60-150 EUR per surface (depends on tooth)"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -135,11 +135,11 @@
       "en": "Cosmetic filling"
     },
     "amountText": {
-      "lt": "Estetinis priekinis plombavimas: apie 50-120 EUR (orientacines)",
+      "lt": "Estetinis priekinis plombavimas: apie 50–120 EUR (orientacinės)",
       "en": "Aesthetic anterior fillings: approx. 50-120 EUR (indicative)"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -147,15 +147,15 @@
     "id": "price_root_canal",
     "serviceId": "root_canal",
     "label": {
-      "lt": "Dantu kanalu gydymas",
+      "lt": "Dantų kanalų gydymas",
       "en": "Root canal treatment"
     },
     "amountText": {
-      "lt": "nuo 150 EUR iki 400 EUR priklausomai nuo danties ir sudetingumo",
+      "lt": "nuo 150 EUR iki 400 EUR, priklausomai nuo danties ir sudėtingumo",
       "en": "from 150 EUR to 400 EUR depending on tooth and complexity"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -163,15 +163,15 @@
     "id": "price_extraction",
     "serviceId": "extraction",
     "label": {
-      "lt": "Dantu salinimas",
+      "lt": "Dantų šalinimas",
       "en": "Tooth extraction"
     },
     "amountText": {
-      "lt": "Paprastas salinimas: nuo 50 EUR; chirurginis: nuo 150 EUR",
+      "lt": "Paprastas šalinimas: nuo 50 EUR; chirurginis: nuo 150 EUR",
       "en": "Simple extraction: from 50 EUR; surgical: from 150 EUR"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -179,7 +179,7 @@
     "id": "price_veneers",
     "serviceId": "veneers",
     "label": {
-      "lt": "Veneeriai / laminates",
+      "lt": "Veneeriai / laminatai",
       "en": "Veneers / laminates"
     },
     "amountText": {
@@ -187,7 +187,7 @@
       "en": "from 300 EUR per tooth (indicative)"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -199,11 +199,11 @@
       "en": "Periodontics"
     },
     "amountText": {
-      "lt": "Profesionali burnos higiena / skalinimas: nuo 80 EUR; gydymas pagal dantenu bukle (orientacines)",
+      "lt": "Profesionali burnos higiena / skalinimas: nuo 80 EUR; gydymas pagal dantenų būklę (orientacinės)",
       "en": "Professional cleaning/scaling: from 80 EUR; treatment depends on gum condition (indicative)"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -215,11 +215,11 @@
       "en": "Prosthetic restoration"
     },
     "amountText": {
-      "lt": "Vainikelis: nuo 350 EUR; tiltas: nuo 600 EUR; protezas: nuo 900 EUR (orientacines)",
+      "lt": "Vainikelis: nuo 350 EUR; tiltas: nuo 600 EUR; protezas: nuo 900 EUR (orientacinės)",
       "en": "Crown: from 350 EUR; bridge: from 600 EUR; denture: from 900 EUR (indicative)"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   },
@@ -231,11 +231,11 @@
       "en": "Anaesthesia"
     },
     "amountText": {
-      "lt": "Vietiniai nuskaisinimai: 10-15 EUR; Bendroji narkoze: 150-550 EUR",
+      "lt": "Vietiniai nuskausminimai: 10–15 EUR; bendroji narkozė: 150–550 EUR",
       "en": "Local anaesthesia: 10-15 EUR; General anaesthesia: 150-550 EUR"
     },
     "notes": {
-      "lt": "Pateikiamos kainos yra orientacines. Tikslia kaina gydytojas pasako po individualios konsultacijos.",
+      "lt": "Pateikiamos kainos yra orientacinės. Tikslųją kainą gydytojas pasako po individualios konsultacijos.",
       "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
     }
   }

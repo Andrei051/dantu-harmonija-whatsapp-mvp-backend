@@ -6,14 +6,14 @@
   },
   "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Olimpieciu+str.+1A-9+Vilnius",
   "workingHours": {
-    "lt": "Darbo dienomis 08:00-20:00, sestadieniais 09:00-14:00 (tik su isankstine registracija), sekmadieniais nedirbama",
+    "lt": "Darbo dienomis 08:00–20:00, šeštadieniais 09:00–14:00 (tik su išankstine registracija), sekmadieniais nedirbama",
     "en": "Weekdays 08:00-20:00, Saturdays 09:00-14:00 (by prior registration), Sundays closed"
   },
   "website": "https://dantuharmonija.lt/",
   "email": "klinika@dantuharmonija.lt",
   "phone": "+370 610 11 222 / (8-5) 27 222 11",
   "parking": {
-    "lt": "Prie pagrindinio iejimo yra nemokama 5 vietu automobiliu aikstele. Taip pat yra mokamu parkavimo vietu netoliese.",
+    "lt": "Prie pagrindinio įėjimo yra nemokama 5 vietų automobilių aikštelė. Taip pat yra mokamų parkavimo vietų netoliese.",
     "en": "There is a free 5-space parking area at the main entrance. Paid parking options are also available nearby."
   }
 }

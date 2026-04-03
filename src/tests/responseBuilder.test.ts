@@ -7,7 +7,7 @@ describe("responseBuilder", () => {
     expect(result.intent).toBe("clinic_hours");
     expect(result.language).toBe("lt");
     expect(result.escalated).toBe(false);
-    expect(result.reply).toContain("Musu darbo laikas");
+    expect(result.reply).toContain("Mūsų darbo laikas");
   });
 
   it("builds English clinic_location response", () => {
@@ -45,7 +45,7 @@ describe("responseBuilder", () => {
     const resultLt = buildResponse("lt", { intent: "booking_request" });
     expect(resultLt.intent).toBe("booking_request");
     expect(resultLt.escalated).toBe(false);
-    expect(resultLt.reply).toContain("neuzsakau");
+    expect(resultLt.reply).toContain("neužsakau");
     expect(resultLt.reply).toContain("https://");
 
     const resultEn = buildResponse("en", { intent: "booking_request" });
@@ -58,7 +58,7 @@ describe("responseBuilder", () => {
     const result = buildResponse("lt", { intent: "service_info", serviceId: "implants" });
     expect(result.intent).toBe("service_info");
     expect(result.escalated).toBe(false);
-    expect(result.reply).toContain("Dantu implantacija");
+    expect(result.reply).toContain("Dantų implantacija");
   });
 
   it("builds price_info response", () => {
@@ -79,7 +79,7 @@ describe("responseBuilder", () => {
     const result = buildResponse("lt", { intent: "clinical_or_urgent" });
     expect(result.intent).toBe("clinical_or_urgent");
     expect(result.escalated).toBe(true);
-    expect(result.reply).toContain("negaliu vertinti klinikines bukles");
+    expect(result.reply).toContain("negaliu vertinti klinikinės būklės");
   });
 
   it("escalates clinical_or_urgent in English", () => {
@@ -106,7 +106,7 @@ describe("responseBuilder", () => {
     const result = buildResponse("lt", { intent: "first_visit_expectations" });
     expect(result.intent).toBe("first_visit_expectations");
     expect(result.escalated).toBe(false);
-    expect(result.reply).toContain("Registraturoje");
+    expect(result.reply).toContain("Registratūroje");
   });
 
   it("builds about_clinic default and family focus", () => {
@@ -133,7 +133,7 @@ describe("responseBuilder", () => {
     expect(en.reply).toContain("general information");
     const lt = buildResponse("lt", { intent: "assistant_capabilities" });
     expect(lt.escalated).toBe(false);
-    expect(lt.reply).toContain("klinika");
+    expect(lt.reply).toContain("kliniką");
   });
 
   it("prefixes Taip for LT service availability yes-no", () => {

@@ -2,11 +2,11 @@
   {
     "id": "booking_policy",
     "question": {
-      "lt": "Ar galite mane uzregistruoti vizitui?",
+      "lt": "Ar galite mane užregistruoti vizitui?",
       "en": "Can you book an appointment for me?"
     },
     "answer": {
-      "lt": "As galiu suteikti informacija ir nukreipti, bet vizitu neregistruoju.",
+      "lt": "Aš galiu suteikti informaciją ir nukreipti, bet vizitų neregistruoju.",
       "en": "I can provide information and guidance, but I do not perform bookings."
     }
   }

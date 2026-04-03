@@ -1,7 +1,7 @@
 import { SupportedLanguage } from "../types/message";
 
 const ESCALATION_ACK_OPTION_C: Record<SupportedLanguage, string> = {
-  lt: "Aciu uz zinute. Komandos narys perziures pranesima ir atsakys artimiausiu metu.",
+  lt: "Ačiū už žinutę. Komandos narys peržiūrės pranešimą ir atsakys artimiausiu metu.",
   en: "Thanks for your message. A team member will review it and get back to you soon."
 };
 

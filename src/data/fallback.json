@@ -1,14 +1,14 @@
 {
   "unknown": {
-    "lt": "Aciu uz zinute. Kol kas galiu atsakyti tik pagal oficialia klinikos informacija. Jei klausimas sudetingesnis, perduosiu ji komandos nariui.",
+    "lt": "Ačiū už žinutę. Kol kas galiu atsakyti tik pagal oficialią klinikos informaciją. Jei klausimas sudėtingesnis, perduosiu jį komandos nariui.",
     "en": "Thanks for your message. I currently answer only from official clinic information. If your question is more complex, I will route it to a team member."
   },
   "clinicalOrUrgent": {
-    "lt": "Apgailestauju, taciau negaliu vertinti klinikines bukles. Del skubios ar klinikines situacijos prasome nedelsiant susisiekti su klinika telefonu arba kreiptis i skubia pagalba.",
+    "lt": "Apgailestauju, tačiau negaliu vertinti klinikinės būklės. Dėl skubios ar klinikinės situacijos prašome nedelsiant susisiekti su klinika telefonu arba kreiptis į skubią pagalbą.",
     "en": "I am sorry, but I cannot assess clinical conditions. For urgent or clinical situations, please contact the clinic by phone immediately or seek emergency care."
   },
   "languageSwitch": {
-    "lt": "Galiu testi lietuviskai arba angliskai. Parasykite, kuria kalba patogiau.",
+    "lt": "Galiu tęsti lietuviškai arba angliškai. Parašykite, kuria kalba patogiau.",
     "en": "I can continue in Lithuanian or English. Please tell me which language you prefer."
   }
 }

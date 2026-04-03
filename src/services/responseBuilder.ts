@@ -20,7 +20,7 @@ const genericServicesReply = (language: SupportedLanguage, services: ServiceItem
   const list = labels.join(language === "lt" ? "; " : "; ");
 
   if (language === "lt") {
-    return `Klinikoje teikiamos pagrindines paslaugos (is oficialios informacijos): ${list}. Daugiau: ${website}`;
+    return `Klinikoje teikiamos pagrindinės paslaugos (iš oficialios informacijos): ${list}. Daugiau: ${website}`;
   }
 
   return `Main services offered (from official information): ${list}. More: ${website}`;
@@ -42,7 +42,7 @@ export const buildResponse = (
         intent: "clinic_hours",
         reply:
           language === "lt"
-            ? `Musu darbo laikas: ${profile.workingHours.lt}. Jei norite, galiu padeti rasti tinkamiausia kita zingsni.`
+            ? `Mūsų darbo laikas: ${profile.workingHours.lt}. Jei norite, galiu padėti rasti tinkamiausią kitą žingsnį.`
             : `Our working hours: ${profile.workingHours.en}. If you want, I can guide you to the next step.`,
         escalated: false
       };
@@ -57,7 +57,7 @@ export const buildResponse = (
         intent: "clinic_location",
         reply:
           language === "lt"
-            ? `Musu adresas: ${profile.address.lt}. Daugiau informacijos rasite: ${profile.website}.${maps}`
+            ? `Mūsų adresas: ${profile.address.lt}. Daugiau informacijos rasite: ${profile.website}.${maps}`
             : `Our address: ${profile.address.en}. More information: ${profile.website}.${maps}`,
         escalated: false
       };
@@ -77,7 +77,7 @@ export const buildResponse = (
         intent: "contact",
         reply:
           language === "lt"
-            ? `Susisiekti galite el. pastu ${profile.email} arba telefonu ${profile.phone}. Svetaine: ${profile.website}`
+            ? `Susisiekti galite el. paštu ${profile.email} arba telefonu ${profile.phone}. Svetainė: ${profile.website}`
             : `You can contact us via email ${profile.email} or phone ${profile.phone}. Website: ${profile.website}`,
         escalated: false
       };
@@ -88,7 +88,7 @@ export const buildResponse = (
         intent: "booking_request",
         reply:
           language === "lt"
-            ? `Per si kanala vizitu neuzsakau ir kalendoriaus nenaudoju. Registruokites arba susisiekite su klinika iprastu budu: ${profile.website}, tel. ${profile.phone}, el. pastas ${profile.email}.`
+            ? `Per šį kanalą vizitų neužsakau ir kalendoriaus nenaudoju. Registruokitės arba susisiekite su klinika įprastu būdu: ${profile.website}, tel. ${profile.phone}, el. paštas ${profile.email}.`
             : `I do not book appointments or use calendars here. To schedule a visit, please follow the clinic's usual process: ${profile.website}, phone ${profile.phone}, email ${profile.email}.`,
         escalated: false
       };
@@ -154,7 +154,7 @@ export const buildResponse = (
             intent: "service_info",
             reply:
               language === "lt"
-                ? `Si procedura neisvardinta musu trumpoje informacijoje. Daugiau: ${profile.website}, tel. ${profile.phone}.`
+                ? `Ši procedūra neįvardyta mūsų trumpoje informacijoje. Daugiau: ${profile.website}, tel. ${profile.phone}.`
                 : `That procedure is not listed in our short information. More: ${profile.website}, phone ${profile.phone}.`,
             escalated: false
           };
@@ -197,7 +197,7 @@ export const buildResponse = (
           intent: "price_info",
           reply:
             language === "lt"
-              ? "Kainos pateikiamos tik toms paslaugoms, kurios yra musu strukturuotoje informacijoje. Del tiksliu ikainiu susisiekite su klinika."
+              ? "Kainos pateikiamos tik toms paslaugoms, kurios yra mūsų struktūruotoje informacijoje. Dėl tikslių įkainių susisiekite su klinika."
               : "Prices are provided only for services available in our structured information. Please contact the clinic for exact fees.",
           escalated: false
         };

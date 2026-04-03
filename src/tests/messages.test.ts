@@ -34,7 +34,9 @@ describe("POST /messages/test integration", () => {
     expect(res.status).toBe(200);
     expect(res.body.intent).toBe("clinical_or_urgent");
     expect(res.body.escalated).toBe(true);
-    expect(String(res.body.response).toLowerCase()).toContain("negaliu vertinti klinikines bukles");
+    expect(String(res.body.response).toLowerCase()).toContain(
+      "negaliu vertinti klinikinės būklės".toLowerCase()
+    );
     expect(String(res.body.response).toLowerCase()).not.toContain("dantu implantacija");
   });
 

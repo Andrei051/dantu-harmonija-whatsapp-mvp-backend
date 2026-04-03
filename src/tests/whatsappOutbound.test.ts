@@ -8,7 +8,7 @@ describe("whatsappOutbound Option C", () => {
 
   it("returns short acknowledgment when escalated (LT)", () => {
     const body = getOutboundBodyOptionC(true, "lt", "Long clinical fallback");
-    expect(body).toContain("Aciu");
+    expect(body).toContain("Ačiū");
     expect(body).not.toContain("Long clinical fallback");
   });
 

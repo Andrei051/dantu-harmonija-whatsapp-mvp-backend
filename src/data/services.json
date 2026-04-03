@@ -6,7 +6,7 @@
       "en": "Professional oral hygiene"
     },
     "description": {
-      "lt": "Burnos higienos paslauga atliekama klinikoje kaip dantu gydymo prieziuros dalis.",
+      "lt": "Burnos higienos paslauga atliekama klinikoje kaip dantų gydymo priežiūros dalis.",
       "en": "Oral hygiene service provided in the clinic as part of dental care."
     },
     "keywords": {
@@ -17,26 +17,26 @@
   {
     "id": "implants",
     "name": {
-      "lt": "Dantu implantacija",
+      "lt": "Dantų implantacija",
       "en": "Dental implants"
     },
     "description": {
-      "lt": "Dantu implantavimo paslaugos, iskaitant skirtingas implantu sistemas pagal klinikos teikiama informacija.",
+      "lt": "Dantų implantavimo paslaugos, įskaitant skirtingas implantų sistemas pagal klinikos teikiamą informaciją.",
       "en": "Dental implant services, including different implant systems listed by the clinic."
     },
     "keywords": {
-      "lt": ["implant", "implantacija", "dantu implantai", "implanto operacija"],
+      "lt": ["implant", "implantacija", "dantų implantai", "implanto operacija"],
       "en": ["implant", "implants", "dental implant", "implant surgery"]
     }
   },
   {
     "id": "orthodontics",
     "name": {
-      "lt": "Ortodontinis gydymas / dantu tiesinimas",
+      "lt": "Ortodontinis gydymas / dantų tiesinimas",
       "en": "Orthodontic treatment / teeth straightening"
     },
     "description": {
-      "lt": "Ortodontinio gydymo paslaugos, iskaitant dantu tiesinima breketais ir kapomis.",
+      "lt": "Ortodontinio gydymo paslaugos, įskaitant dantų tiesinimą breketais ir aligneriais.",
       "en": "Orthodontic treatment services, including teeth alignment with braces and aligners."
     },
     "keywords": {
@@ -47,45 +47,45 @@
   {
     "id": "teeth_whitening",
     "name": {
-      "lt": "Dantu balinimas",
+      "lt": "Dantų balinimas",
       "en": "Teeth whitening"
     },
     "description": {
-      "lt": "Kosmetine procedura dantu spalvai svelninti; gali buti kapomis arba klinikoje atliekamu gydymu.",
+      "lt": "Kosmetinė procedūra dantų spalvai šviesinti; gali būti kapomis arba klinikoje atliekamu gydymu.",
       "en": "Cosmetic procedure to lighten tooth colour; can use trays or in-clinic treatment."
     },
     "keywords": {
-      "lt": ["balinimas", "balinima", "balinimo", "dantu balinimas", "zoom"],
+      "lt": ["balinimas", "balinima", "balinimo", "dantų balinimas", "zoom"],
       "en": ["whitening", "teeth whitening", "zoom whitening"]
     }
   },
   {
     "id": "physiotherapy",
     "name": {
-      "lt": "Fizioterapija / zandikaulio terapija",
+      "lt": "Fizioterapija / žandikaulio terapija",
       "en": "Physiotherapy / jaw therapy"
     },
     "description": {
-      "lt": "Padeda esant zandikaulio skausmui, itempimui, spragtelimui; gerina raumenu funkcija.",
+      "lt": "Padeda esant žandikaulio skausmui, įtempimui, spragtelėjimui; gerina raumenų funkciją.",
       "en": "Helps with jaw pain, tension, clicking; improves muscle function."
     },
     "keywords": {
-      "lt": ["fizioterapija", "kineziterapija", "zandikaulis", "temporomandibulinis"],
+      "lt": ["fizioterapija", "kineziterapija", "žandikaulis", "temporomandibulinis"],
       "en": ["physiotherapy", "jaw therapy", "tmj", "tmj treatment", "myofunctional", "myofunctional therapy"]
     }
   },
   {
     "id": "paediatric_dentistry",
     "name": {
-      "lt": "Vaiku odontologija",
+      "lt": "Vaikų odontologija",
       "en": "Paediatric dentistry"
     },
     "description": {
-      "lt": "Dantu prieziura ir gydymas vaikams.",
+      "lt": "Dantų priežiūra ir gydymas vaikams.",
       "en": "Dental care and treatment for children."
     },
     "keywords": {
-      "lt": ["vaik", "vaiku", "mazyl", "pedodont"],
+      "lt": ["vaik", "vaikų", "mazyl", "pedodont"],
       "en": ["children", "child", "kids", "pediatric", "paediatric"]
     }
   },
@@ -96,11 +96,11 @@
       "en": "Consultations and diagnostics"
     },
     "description": {
-      "lt": "Naudojama ivertinti burnos sveikata ir sudaryti gydymo plana.",
+      "lt": "Naudojama įvertinti burnos sveikatą ir sudaryti gydymo planą.",
       "en": "Used to assess dental condition and create a treatment plan."
     },
     "keywords": {
-      "lt": ["konsultacija", "diagnostika", "rentgenas", "panoraminis", "kompiuterine tomografija", "online konsultacija"],
+      "lt": ["konsultacija", "diagnostika", "rentgenas", "panoraminis", "kompiuterinė tomografija", "internetinė konsultacija", "online konsultacija"],
       "en": ["consultation", "diagnostics", "x-ray", "xray", "panoramic", "ct scan", "online consultation"]
     }
   },
@@ -111,67 +111,67 @@
       "en": "Cosmetic filling"
     },
     "description": {
-      "lt": "Estetiskai derantis plombavimas priekiniams dantims.",
+      "lt": "Estetiškai derantis plombavimas priekiniams dantims.",
       "en": "Aesthetic tooth-coloured fillings."
     },
     "keywords": {
-      "lt": ["estetinis plombavimas", "estetinis uzpildymas"],
+      "lt": ["estetinis plombavimas", "estetinis užpildymas"],
       "en": ["cosmetic filling", "aesthetic filling"]
     }
   },
   {
     "id": "fillings",
     "name": {
-      "lt": "Plombavimas / estetiniai uzpildymai",
+      "lt": "Plombavimas / estetiniai užpildymai",
       "en": "Fillings / aesthetic restorations"
     },
     "description": {
-      "lt": "Dantu audiniu atkurimas kompozitinemis medziagomis.",
+      "lt": "Dantų audinių atkūrimas kompozitinėmis medžiagomis.",
       "en": "Restoring teeth with composite materials."
     },
     "keywords": {
-      "lt": ["plomba", "plombavimas", "uzpildymas"],
+      "lt": ["plomba", "plombavimas", "užpildymas"],
       "en": ["filling", "fillings", "composite", "restoration"]
     }
   },
   {
     "id": "root_canal",
     "name": {
-      "lt": "Dantu kanalu gydymas",
+      "lt": "Dantų kanalų gydymas",
       "en": "Root canal treatment"
     },
     "description": {
-      "lt": "Saknies kanalu gydymas, siekiant isaugoti danti.",
+      "lt": "Šaknies kanalų gydymas, siekiant išsaugoti dantį.",
       "en": "Endodontic treatment to save the tooth."
     },
     "keywords": {
-      "lt": ["kanalu gydymas", "saknies kanal", "endodont"],
+      "lt": ["kanalų gydymas", "šaknies kanal", "endodont"],
       "en": ["root canal", "endodontic", "root treatment"]
     }
   },
   {
     "id": "extraction",
     "name": {
-      "lt": "Dantu salinimas",
+      "lt": "Dantų šalinimas",
       "en": "Tooth extraction"
     },
     "description": {
-      "lt": "Paprastas ar chirurginis dantu salinimas.",
+      "lt": "Paprastas ar chirurginis dantų šalinimas.",
       "en": "Simple or surgical tooth removal."
     },
     "keywords": {
-      "lt": ["salinimas", "traukimas", "chirurginis salinimas"],
+      "lt": ["šalinimas", "traukimas", "chirurginis šalinimas"],
       "en": ["extraction", "remove tooth", "surgical extraction", "wisdom tooth"]
     }
   },
   {
     "id": "veneers",
     "name": {
-      "lt": "Dantu laminates / veneeriai",
+      "lt": "Dantų laminatai / veneeriai",
       "en": "Dental veneers"
     },
     "description": {
-      "lt": "Plonos ploksteles priekiniams dantims estetikai.",
+      "lt": "Plonos plokštelės priekiniams dantims estetikai.",
       "en": "Thin shells for front teeth aesthetics."
     },
     "keywords": {
@@ -186,11 +186,11 @@
       "en": "Periodontics"
     },
     "description": {
-      "lt": "Dantenu ir implantu prieziura.",
+      "lt": "Dantenų ir implantų priežiūra.",
       "en": "Care of gums and supporting tissues."
     },
     "keywords": {
-      "lt": ["periodont", "dantenu", "gingivit"],
+      "lt": ["periodont", "dantenų", "gingivit"],
       "en": ["periodontal", "periodontics", "gum disease", "gingivitis"]
     }
   },
@@ -216,7 +216,7 @@
       "en": "Anaesthesia"
     },
     "description": {
-      "lt": "Vietiniai ir bendrieji nuskaisinimai proceduru metu komfortui uztikrinti.",
+      "lt": "Vietiniai ir bendrieji nuskausminimai procedūrų metu komfortui užtikrinti.",
       "en": "Local and general anaesthesia used to ensure comfort during procedures."
     },
     "keywords": {
@@ -227,15 +227,15 @@
   {
     "id": "dental_laboratory",
     "name": {
-      "lt": "Dantu laboratorija",
+      "lt": "Dantų laboratorija",
       "en": "Dental laboratory"
     },
     "description": {
-      "lt": "Klinikoje veikianti dantu laboratorija leidzia greiciau ir tiksliau paruosti sprendimus.",
+      "lt": "Klinikoje veikianti dantų laboratorija leidžia greičiau ir tiksliau paruošti sprendimus.",
       "en": "In-house dental laboratory enables faster and more customised dental solutions."
     },
     "keywords": {
-      "lt": ["laboratorija", "dantu laboratorija"],
+      "lt": ["laboratorija", "dantų laboratorija"],
       "en": ["laboratory", "dental lab", "in-house lab"]
     }
   }
