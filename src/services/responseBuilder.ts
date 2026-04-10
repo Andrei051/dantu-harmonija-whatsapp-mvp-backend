@@ -57,8 +57,8 @@ export const buildResponse = (
         intent: "clinic_location",
         reply:
           language === "lt"
-            ? `Mūsų adresas: ${profile.address.lt}.\n\nDaugiau informacijos rasite: ${profile.website}${mapsLine}`
-            : `Our address: ${profile.address.en}.\n\nMore information: ${profile.website}${mapsLine}`,
+            ? `Mūsų adresas: ${profile.address.lt}.\n\nSvetainė: ${profile.website}${mapsLine}`
+            : `Our address: ${profile.address.en}.\n\nWebsite: ${profile.website}${mapsLine}`,
         escalated: false
       };
     }
@@ -77,8 +77,8 @@ export const buildResponse = (
         intent: "contact",
         reply:
           language === "lt"
-            ? `Susisiekti galite:\n\nEl. paštas: ${profile.email}\nTel.: ${profile.phone}\nSvetainė: ${profile.website}`
-            : `You can reach us:\n\nEmail: ${profile.email}\nPhone: ${profile.phone}\nWebsite: ${profile.website}`,
+            ? `Susisiekti galite:\n\nSvetainė: ${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
+            : `You can reach us:\n\nWebsite: ${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`,
         escalated: false
       };
 
@@ -88,8 +88,8 @@ export const buildResponse = (
         intent: "booking_request",
         reply:
           language === "lt"
-            ? `Per šį kanalą vizitų neužsakau ir kalendoriaus nenaudoju.\n\nRegistruokitės arba susisiekite su klinika įprastu būdu:\n\n${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
-            : `I do not book appointments or use calendars here.\n\nTo schedule a visit, please follow the clinic's usual process:\n\n${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`,
+            ? `Per šį kanalą vizitų registruoti negaliu.\n\nRegistruokitės arba susisiekite su klinika įprastu būdu:\n\nSvetainė: ${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
+            : `I can't register visits through this channel.\n\nTo schedule a visit, please follow the clinic's usual process:\n\nWebsite: ${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`,
         escalated: false
       };
 

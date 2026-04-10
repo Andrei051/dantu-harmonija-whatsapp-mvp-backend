@@ -115,28 +115,12 @@
     "id": "price_fillings",
     "serviceId": "fillings",
     "label": {
-      "lt": "Plombavimas",
-      "en": "Fillings"
+      "lt": "Plombavimas / estetinis plombavimas",
+      "en": "Fillings / aesthetic fillings"
     },
     "amountText": {
-      "lt": "Kompozitinis plombavimas: dažniausiai 60–150 EUR už paviršių (priklauso nuo danties)",
-      "en": "Composite fillings: typically 60-150 EUR per surface (depends on tooth)"
-    },
-    "notes": {
-      "lt": "Pateikiamos kainos yra orientacinės. Tikslią kainą gydytojas pasako po individualios konsultacijos.",
-      "en": "Prices are indicative. The exact fee is confirmed by the doctor after an individual consultation."
-    }
-  },
-  {
-    "id": "price_cosmetic_filling",
-    "serviceId": "cosmetic_filling",
-    "label": {
-      "lt": "Estetinis plombavimas",
-      "en": "Cosmetic filling"
-    },
-    "amountText": {
-      "lt": "Estetinis priekinis plombavimas: apie 50–120 EUR (orientacinės)",
-      "en": "Aesthetic anterior fillings: approx. 50-120 EUR (indicative)"
+      "lt": "Kompozitinis plombavimas: dažniausiai 60–150 EUR už paviršių; estetinis priekinis: apie 50–120 EUR (priklauso nuo danties)",
+      "en": "Composite fillings: typically 60–150 EUR per surface; aesthetic anterior fillings: approx. 50–120 EUR (depends on tooth)"
     },
     "notes": {
       "lt": "Pateikiamos kainos yra orientacinės. Tikslią kainą gydytojas pasako po individualios konsultacijos.",

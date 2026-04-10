@@ -105,33 +105,18 @@
     }
   },
   {
-    "id": "cosmetic_filling",
-    "name": {
-      "lt": "Estetinis plombavimas",
-      "en": "Cosmetic filling"
-    },
-    "description": {
-      "lt": "Estetiškai derantis plombavimas priekiniams dantims.",
-      "en": "Aesthetic tooth-coloured fillings."
-    },
-    "keywords": {
-      "lt": ["estetinis plombavimas", "estetinis užpildymas"],
-      "en": ["cosmetic filling", "aesthetic filling"]
-    }
-  },
-  {
     "id": "fillings",
     "name": {
-      "lt": "Plombavimas / estetiniai užpildymai",
-      "en": "Fillings / aesthetic restorations"
+      "lt": "Plombavimas / estetinis plombavimas",
+      "en": "Fillings / aesthetic fillings"
     },
     "description": {
-      "lt": "Dantų audinių atkūrimas kompozitinėmis medžiagomis.",
-      "en": "Restoring teeth with composite materials."
+      "lt": "Dantų audinių atkūrimas kompozitinėmis medžiagomis, įskaitant estetinį plombavimą priekiniams dantims.",
+      "en": "Restoring teeth with composite materials, including aesthetic fillings for front teeth."
     },
     "keywords": {
-      "lt": ["plomba", "plombavimas", "užpildymas"],
-      "en": ["filling", "fillings", "composite", "restoration"]
+      "lt": ["plomba", "plombavimas", "užpildymas", "estetinis plombavimas", "estetinis užpildymas"],
+      "en": ["filling", "fillings", "composite", "restoration", "cosmetic filling", "aesthetic filling"]
     }
   },
   {

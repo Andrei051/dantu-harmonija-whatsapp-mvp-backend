@@ -45,13 +45,13 @@ describe("responseBuilder", () => {
     const resultLt = buildResponse("lt", { intent: "booking_request" });
     expect(resultLt.intent).toBe("booking_request");
     expect(resultLt.escalated).toBe(false);
-    expect(resultLt.reply).toContain("neužsakau");
+    expect(resultLt.reply).toContain("registruoti negaliu");
     expect(resultLt.reply).toContain("https://");
 
     const resultEn = buildResponse("en", { intent: "booking_request" });
     expect(resultEn.intent).toBe("booking_request");
     expect(resultEn.escalated).toBe(false);
-    expect(resultEn.reply).toContain("do not book");
+    expect(resultEn.reply.toLowerCase()).toContain("can't register");
   });
 
   it("builds service_info response", () => {

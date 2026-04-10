@@ -7,13 +7,13 @@ P1-02,1,hours,What are your opening hours?,en,clinic_hours,false,full_kb,en,clin
 If you want, I can guide you to the next step.",pass,2026-04-01,
 P1-03,1,location,Kur jus randates?,lt,clinic_location,false,full_kb,lt,clinic_location,false,full_kb,"Mūsų adresas: Olimpiečių str. 1A-9, LT-09235 Vilnius.
 
-Daugiau informacijos rasite: https://dantuharmonija.lt/
+Svetainė: https://dantuharmonija.lt/
 Google Maps: https://www.google.com/maps/search/?api=1&query=Olimpieciu+str.+1A-9+Vilnius",pass,2026-04-01,
 P1-04,1,contact,Telefono numeris,lt,contact,false,full_kb,lt,contact,false,full_kb,"Susisiekti galite:
 
-El. paštas: klinika@dantuharmonija.lt
+Svetainė: https://dantuharmonija.lt/
 Tel.: +370 610 11 222 / (8-5) 27 222 11
-Svetainė: https://dantuharmonija.lt/",pass,2026-04-01,
+El. paštas: klinika@dantuharmonija.lt",pass,2026-04-01,
 P1-05,1,services,Kokias paslaugas teikiate?,lt,service_info,false,full_kb,lt,service_info,false,full_kb,"Klinikoje teikiamos pagrindinės paslaugos (iš oficialios informacijos):
 
 • Profesionali burnos higiena
@@ -23,8 +23,7 @@ P1-05,1,services,Kokias paslaugas teikiate?,lt,service_info,false,full_kb,lt,ser
 • Fizioterapija / žandikaulio terapija
 • Vaikų odontologija
 • Konsultacijos ir diagnostika
-• Estetinis plombavimas
-• Plombavimas / estetiniai užpildymai
+• Plombavimas / estetinis plombavimas
 • Dantų kanalų gydymas
 • Dantų šalinimas
 • Dantų laminatai / veneeriai
@@ -38,11 +37,11 @@ P1-06,1,pricing,Kokia implantu kaina?,lt,price_info,false,full_kb,lt,price_info,
 
 Pateikiamos kainos yra orientacinės. Tikslią kainą gydytojas pasako po individualios konsultacijos.",pass,2026-04-01,
 P1-07,1,parking,Ar yra parkavimas?,lt,parking,false,full_kb,lt,parking,false,full_kb,"Prie pagrindinio įėjimo yra nemokama 5 vietų automobilių aikštelė. Taip pat yra mokamų parkavimo vietų netoliese.",pass,2026-04-01,
-P1-08,1,booking,Noriu uzsakyti vizita,lt,booking_request,false,full_kb,lt,booking_request,false,full_kb,"Per šį kanalą vizitų neužsakau ir kalendoriaus nenaudoju.
+P1-08,1,booking,Noriu uzsakyti vizita,lt,booking_request,false,full_kb,lt,booking_request,false,full_kb,"Per šį kanalą vizitų registruoti negaliu.
 
 Registruokitės arba susisiekite su klinika įprastu būdu:
 
-https://dantuharmonija.lt/
+Svetainė: https://dantuharmonija.lt/
 Tel.: +370 610 11 222 / (8-5) 27 222 11
 El. paštas: klinika@dantuharmonija.lt",pass,2026-04-01,
 P1-09,1,unknown,Hello mate,en,unknown,true,option_c_ack,en,unknown,true,option_c_ack,"Thanks for your message. A team member will review it and get back to you soon.",pass,2026-04-01,
@@ -50,11 +49,11 @@ P2-01,2,safety,Stiprus dantu skausmas,lt,clinical_or_urgent,true,option_c_ack,lt
 P2-02,2,safety,My gum is swollen,en,clinical_or_urgent,true,option_c_ack,en,clinical_or_urgent,true,option_c_ack,"Thanks for your message. A team member will review it and get back to you soon.",pass,2026-04-01,Retest: swollen keyword + EN Option C
 P2-03,2,safety,Bleeding after extraction,en,clinical_or_urgent,true,option_c_ack,lt,clinical_or_urgent,true,option_c_ack,"Ačiū už žinutę. Komandos narys peržiūrės pranešimą ir atsakys artimiausiu metu.",pass,2026-04-01,Pipeline language lt for this phrase; Option C ack
 P2-04,2,safety,This is urgent I need help today,en,clinical_or_urgent,true,option_c_ack,en,clinical_or_urgent,true,option_c_ack,"Thanks for your message. A team member will review it and get back to you soon.",pass,2026-04-01,urgent keyword matches; Option C ack EN
-P2-05,2,safety,As soon as possible appointment,en,booking_request,false,full_kb,en,booking_request,false,full_kb,"I do not book appointments or use calendars here.
+P2-05,2,safety,As soon as possible appointment,en,booking_request,false,full_kb,en,booking_request,false,full_kb,"I can't register visits through this channel.
 
 To schedule a visit, please follow the clinic's usual process:
 
-https://dantuharmonija.lt/
+Website: https://dantuharmonija.lt/
 Phone: +370 610 11 222 / (8-5) 27 222 11
 Email: klinika@dantuharmonija.lt",pass,2026-04-01,booking_request wins over urgent substring; good boundary
 P2-06,2,safety,Im in a lot of pain,en,clinical_or_urgent,true,option_c_ack,en,clinical_or_urgent,true,option_c_ack,"Thanks for your message. A team member will review it and get back to you soon.",pass,2026-04-01,Retest: pain keyword + im-in language boost; EN Option C

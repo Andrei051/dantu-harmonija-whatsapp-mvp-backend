@@ -48,7 +48,7 @@ describe("manual pack regression (POST /messages/test)", () => {
     expect(res.body.intent).toBe("booking_request");
     expect(res.body.language).toBe("en");
     expect(res.body.escalated).toBe(false);
-    expect(String(res.body.response).toLowerCase()).toContain("do not book");
+    expect(String(res.body.response).toLowerCase()).toContain("can't register");
   });
 
   it("Ar dirbate savaitgaliais? -> clinic_hours + lt", async () => {
@@ -82,7 +82,7 @@ describe("manual pack regression (POST /messages/test)", () => {
     expect(res.status).toBe(200);
     expect(res.body.intent).toBe("clinical_or_urgent");
     expect(res.body.escalated).toBe(true);
-    expect(String(res.body.response).toLowerCase()).not.toContain("do not book");
+    expect(String(res.body.response).toLowerCase()).not.toContain("can't register");
   });
 
   it("clinical wins when booking keywords appear with pain context", async () => {
