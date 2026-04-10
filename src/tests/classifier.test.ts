@@ -163,6 +163,29 @@ describe("classifier", () => {
     expect(classifyIntent("Koks gydytojas daro", services).intent).toBe("contact");
   });
 
+  it("routes short doctor identity question to contact with doctor context", () => {
+    expect(classifyIntent("koks gydytojas", services)).toEqual({
+      intent: "contact",
+      contactContext: "doctor"
+    });
+  });
+
+  it("classifies mixed LT price and booking with service-specific price", () => {
+    expect(classifyIntent("kiek kainuoja balinimas ir ar galit uzrasyti", services)).toEqual({
+      intent: "price_info",
+      serviceId: "teeth_whitening",
+      appendBookingGuidance: true
+    });
+  });
+
+  it("classifies mixed EN price and booking with whitening price", () => {
+    expect(classifyIntent("how much whitening and can I book", services)).toEqual({
+      intent: "price_info",
+      serviceId: "teeth_whitening",
+      appendBookingGuidance: true
+    });
+  });
+
   it("LT kiek shorthand and comparative pigiau+ar route to price correctly", () => {
     expect(classifyIntent("kiek implantas?", services)).toMatchObject({ intent: "price_info", serviceId: "implants" });
     expect(classifyIntent("ar pigiau implantai ar breketai", services)).toEqual({

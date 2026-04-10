@@ -1,6 +1,11 @@
 import { AssistantResponse, SupportedLanguage } from "../types/message";
-import { AboutClinicFocus, IntentResult, PriceItem, ServiceItem } from "../types/knowledge";
+import { AboutClinicFocus, ClinicProfile, IntentResult, PriceItem, ServiceItem } from "../types/knowledge";
 import { knowledgeService } from "./knowledgeService";
+
+const bookingLimitationBlock = (language: SupportedLanguage, profile: ClinicProfile): string =>
+  language === "lt"
+    ? `Per šį kanalą vizitų registruoti negaliu.\n\nRegistruokitės arba susisiekite su klinika įprastu būdu:\n\nSvetainė: ${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
+    : `I can't register visits through this channel.\n\nTo schedule a visit, please follow the clinic's usual process:\n\nWebsite: ${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`;
 
 const fallbackWith = (language: SupportedLanguage, key: "unknown" | "clinicalOrUrgent"): AssistantResponse => ({
   language,
@@ -71,25 +76,40 @@ export const buildResponse = (
         escalated: false
       };
 
-    case "contact":
+    case "contact": {
+      const contactLines =
+        language === "lt"
+          ? `Svetainė: ${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
+          : `Website: ${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`;
+
+      if (intentResult.contactContext === "doctor") {
+        return {
+          language,
+          intent: "contact",
+          reply:
+            language === "lt"
+              ? `Klinikoje dirba įvairių sričių specialistai.\n\nDėl konkretaus gydytojo rekomenduojame susisiekti su klinika:\n\n${contactLines}`
+              : `The clinic has specialists in several areas.\n\nFor a specific dentist, please contact the clinic:\n\n${contactLines}`,
+          escalated: false
+        };
+      }
+
       return {
         language,
         intent: "contact",
         reply:
           language === "lt"
-            ? `Susisiekti galite:\n\nSvetainė: ${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
-            : `You can reach us:\n\nWebsite: ${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`,
+            ? `Susisiekti galite:\n\n${contactLines}`
+            : `You can reach us:\n\n${contactLines}`,
         escalated: false
       };
+    }
 
     case "booking_request":
       return {
         language,
         intent: "booking_request",
-        reply:
-          language === "lt"
-            ? `Per šį kanalą vizitų registruoti negaliu.\n\nRegistruokitės arba susisiekite su klinika įprastu būdu:\n\nSvetainė: ${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
-            : `I can't register visits through this channel.\n\nTo schedule a visit, please follow the clinic's usual process:\n\nWebsite: ${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`,
+        reply: bookingLimitationBlock(language, profile),
         escalated: false
       };
 
@@ -192,24 +212,35 @@ export const buildResponse = (
       const price = priceByServiceId(prices, intentResult.serviceId);
 
       if (!service || !price) {
+        const genericPrice =
+          language === "lt"
+            ? "Kainos pateikiamos tik toms paslaugoms, kurios yra mūsų struktūruotoje informacijoje. Dėl tikslių įkainių susisiekite su klinika."
+            : "Prices are provided only for services available in our structured information. Please contact the clinic for exact fees.";
+        const withBooking =
+          intentResult.appendBookingGuidance === true
+            ? `${genericPrice}\n\n${bookingLimitationBlock(language, profile)}`
+            : genericPrice;
         return {
           language,
           intent: "price_info",
-          reply:
-            language === "lt"
-              ? "Kainos pateikiamos tik toms paslaugoms, kurios yra mūsų struktūruotoje informacijoje. Dėl tikslių įkainių susisiekite su klinika."
-              : "Prices are provided only for services available in our structured information. Please contact the clinic for exact fees.",
+          reply: withBooking,
           escalated: false
         };
       }
 
+      const priceBody =
+        language === "lt"
+          ? `${price.label.lt}: ${price.amountText.lt}${price.notes ? `\n\n${price.notes.lt}` : ""}`
+          : `${price.label.en}: ${price.amountText.en}${price.notes ? `\n\n${price.notes.en}` : ""}`;
+      const priceReply =
+        intentResult.appendBookingGuidance === true
+          ? `${priceBody}\n\n${bookingLimitationBlock(language, profile)}`
+          : priceBody;
+
       return {
         language,
         intent: "price_info",
-        reply:
-          language === "lt"
-            ? `${price.label.lt}: ${price.amountText.lt}${price.notes ? `\n\n${price.notes.lt}` : ""}`
-            : `${price.label.en}: ${price.amountText.en}${price.notes ? `\n\n${price.notes.en}` : ""}`,
+        reply: priceReply,
         escalated: false
       };
     }

@@ -1,4 +1,4 @@
-import { SupportedLanguage } from "../types/message";
+import { MessageIntent, SupportedLanguage } from "../types/message";
 
 const ESCALATION_ACK_OPTION_C: Record<SupportedLanguage, string> = {
   lt: "Ačiū už žinutę. Komandos narys peržiūrės pranešimą ir atsakys artimiausiu metu.",
@@ -8,8 +8,17 @@ const ESCALATION_ACK_OPTION_C: Record<SupportedLanguage, string> = {
 export const getOutboundBodyOptionC = (
   escalated: boolean,
   language: SupportedLanguage,
-  fullResponse: string
-): string => (escalated ? ESCALATION_ACK_OPTION_C[language] : fullResponse);
+  fullResponse: string,
+  intent?: MessageIntent
+): string => {
+  if (!escalated) {
+    return fullResponse;
+  }
+  if (intent === "clinical_or_urgent" && fullResponse.trim().length > 0) {
+    return `${fullResponse}\n\n${ESCALATION_ACK_OPTION_C[language]}`;
+  }
+  return ESCALATION_ACK_OPTION_C[language];
+};
 
 const truncateForWhatsApp = (body: string, maxChars = 4000): string => {
   if (body.length <= maxChars) {

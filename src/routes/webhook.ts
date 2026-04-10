@@ -86,7 +86,8 @@ webhookRouter.post("/webhook", (req, res) => {
     const outboundBody = getOutboundBodyOptionC(
       result.escalated,
       result.language,
-      result.response
+      result.response,
+      result.intent
     );
 
     logger.info("outbound_reply_attempt", {

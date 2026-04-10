@@ -68,7 +68,8 @@ const keywordMap: Record<MessageIntent, string[]> = {
     "uzsirasyti",
     "uzsirasyt",
     "izsirasyti",
-    "vizitui"
+    "vizitui",
+    "uzrasyti"
   ],
   service_info: ["paslaug", "gydym", "implant", "higiena", "ortodont", "service", "treatment", "services"],
   price_info: [
@@ -126,7 +127,9 @@ const keywordMap: Record<MessageIntent, string[]> = {
     "antibiotics",
     "gum",
     "gums",
-    "child has"
+    "child has",
+    "dantis",
+    "danti"
   ],
   unknown: []
 };
@@ -498,8 +501,11 @@ const matchesComparativePriceQuestion = (normalized: string): boolean => {
     return true;
   }
 
-  // LT: "... implantu ar plombai ... kaina" style comparisons
+  // LT: "... implantu ar plombai ... kaina" style comparisons (not "X ir ar galite" = and can you)
   if (
+    !normalized.includes("ir ar") &&
+    !normalized.includes("and can i book") &&
+    !normalized.includes("and can you book") &&
     normalized.includes(" ar ") &&
     (normalized.includes("kaina") || normalized.includes("kiek") || normalized.includes("kainuoja"))
   ) {
@@ -554,6 +560,27 @@ const looksLikeDoctorPerformerQuestion = (normalized: string): boolean => {
     normalized.includes("does");
 
   return hasDoctorCue && hasPerformerCue;
+};
+
+/** Short "which doctor" without procedure context — friendly contact, not escalation */
+const looksLikeDoctorIdentityQuestion = (normalized: string): boolean => {
+  if (looksLikeDoctorPerformerQuestion(normalized)) {
+    return false;
+  }
+  const hasDoctorCue =
+    normalized.includes("gydyto") || normalized.includes("doctor") || normalized.includes("specialist");
+  if (!hasDoctorCue) {
+    return false;
+  }
+  return (
+    normalized.includes("koks gydytojas") ||
+    normalized.includes("kokia gydytoja") ||
+    normalized.includes("kuris gydytojas") ||
+    normalized.includes("kurie gydytojai") ||
+    normalized.includes("who is the doctor") ||
+    normalized.includes("which doctor") ||
+    (normalized.includes("koks") && normalized.includes("gydytoj"))
+  );
 };
 
 /** LT "kiek implantas?" — price shorthand without "kainuoja" */
@@ -648,6 +675,28 @@ const detectService = (normalizedMessage: string, services: ServiceItem[]): stri
   return undefined;
 };
 
+const hasPriceCue = (normalized: string): boolean =>
+  keywordMap.price_info.some((keyword) => normalized.includes(normalizeText(keyword))) ||
+  matchesKiekPriceShorthand(normalized);
+
+const hasBookingCue = (normalized: string): boolean =>
+  keywordMap.booking_request.some((keyword) => normalized.includes(normalizeText(keyword))) ||
+  normalized.includes("can i book") ||
+  normalized.includes("ar galit") ||
+  normalized.includes("ar galiu");
+
+/** Price + booking in one message — specific service price then booking limitation */
+const resolveMixedPriceAndBooking = (normalized: string, services: ServiceItem[]): IntentResult | null => {
+  if (!hasPriceCue(normalized) || !hasBookingCue(normalized)) {
+    return null;
+  }
+  const serviceId = detectService(normalized, services);
+  if (!serviceId) {
+    return null;
+  }
+  return { intent: "price_info", serviceId, appendBookingGuidance: true };
+};
+
 export const classifyIntent = (message: string, services: ServiceItem[]): IntentResult => {
   const normalized = normalizeText(message);
 
@@ -686,6 +735,11 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
     return about;
   }
 
+  const mixedPriceBooking = resolveMixedPriceAndBooking(normalized, services);
+  if (mixedPriceBooking) {
+    return mixedPriceBooking;
+  }
+
   if (keywordMap.booking_request.some((keyword) => normalized.includes(normalizeText(keyword)))) {
     return { intent: "booking_request" };
   }
@@ -707,6 +761,10 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
 
   if (keywordMap.contact.some((keyword) => normalized.includes(normalizeText(keyword)))) {
     return { intent: "contact" };
+  }
+
+  if (looksLikeDoctorIdentityQuestion(normalized)) {
+    return { intent: "contact", contactContext: "doctor" };
   }
 
   if (looksLikeDoctorPerformerQuestion(normalized)) {

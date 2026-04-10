@@ -63,4 +63,8 @@ export interface IntentResult {
   broadPriceList?: boolean;
   /** LT "ar darote …?" / EN "do you offer …?" — prefix reply with yes + service blurb */
   serviceAvailabilityYesNo?: boolean;
+  /** Price question also asks about booking — append booking limitation after price */
+  appendBookingGuidance?: boolean;
+  /** Contact intent: short doctor/specialist question without escalation */
+  contactContext?: "doctor";
 }
