@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { runAssistantPipeline } from "../services/assistantPipeline";
+import { getCapabilityIntroIfFirstReply, markCapabilityIntroSent } from "../services/whatsappConversationIntro";
 import { getOutboundBodyOptionC, sendWhatsAppTextMessage } from "../services/whatsappOutbound";
 import { logger } from "../utils/logger";
 import { isDuplicateInboundMessageId } from "../utils/inboundMessageDedup";
@@ -83,25 +84,32 @@ webhookRouter.post("/webhook", (req, res) => {
       return;
     }
 
+    const capabilityIntro = getCapabilityIntroIfFirstReply(parsed.sender, result.language);
     const outboundBody = getOutboundBodyOptionC(
       result.escalated,
       result.language,
       result.response,
       result.intent
     );
+    const bodyToSend =
+      capabilityIntro != null ? `${capabilityIntro}\n\n${outboundBody}` : outboundBody;
 
     logger.info("outbound_reply_attempt", {
       to: parsed.sender,
       escalated: result.escalated,
-      optionC_ack_only: result.escalated
+      optionC_ack_only: result.escalated,
+      first_reply_capability: capabilityIntro != null
     });
 
     const sendResult = await sendWhatsAppTextMessage({
       to: parsed.sender,
-      body: outboundBody
+      body: bodyToSend
     });
 
     if (sendResult.ok) {
+      if (capabilityIntro != null) {
+        markCapabilityIntroSent(parsed.sender);
+      }
       logger.info("outbound_reply_success", { status: sendResult.status });
       return;
     }
