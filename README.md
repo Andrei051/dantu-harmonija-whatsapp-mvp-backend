@@ -25,6 +25,7 @@ Small deterministic backend for a WhatsApp assistant that answers patient questi
 - `WHATSAPP_VERIFY_TOKEN` (required for `GET /webhook` verification with Meta)
 - `WHATSAPP_ACCESS_TOKEN` (Graph API token for outbound messages)
 - `WHATSAPP_PHONE_NUMBER_ID` (WhatsApp Business phone number id for `POST /v22.0/{id}/messages`)
+- `WHATSAPP_CAPABILITY_STATE_PATH` (optional) — JSON file path for “first reply” capability-intro state per sender. Defaults to `whatsapp-capability-seen.json` under the OS temp directory if unset.
 
 ## Run tests
 
@@ -37,7 +38,9 @@ Small deterministic backend for a WhatsApp assistant that answers patient questi
   - `languageService`
   - `responseBuilder`
   - `whatsappOutbound` (Option C body selection)
+  - `whatsappConversationIntro` (first-reply framing + persisted state)
   - `webhook` routes (`GET /webhook`, `POST /webhook`)
+  - `messages` (`POST /messages/test`) and manual regression cases
 
 ## Webhook endpoints (Meta Cloud API ready)
 
@@ -52,9 +55,10 @@ Small deterministic backend for a WhatsApp assistant that answers patient questi
   - Accepts Meta webhook payloads.
   - Returns `200` quickly.
   - Processes inbound text messages only and runs deterministic assistant pipeline.
-  - Logs structured processing output (sender, message, intent, language, escalation, response).
-  - When `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` are set, sends an outbound reply (Option C: full reply for normal messages; short acknowledgment only when escalated).
-  - Unsupported event types are ignored safely.
+  - Logs structured processing output (sender, `sender_key`, message, intent, language, escalation, response, `first_reply_capability`).
+  - **First outbound reply per WhatsApp sender** (normalized phone id): prepends a short LT/EN capability line (services, prices, clinic; contact clinic for booking/treatment). State is stored in the optional JSON file above so it survives process restarts on a single instance.
+  - When `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` are set, sends an outbound reply (**Option C**: non-escalated = full reply; escalated `unknown` = short ack only; escalated `clinical_or_urgent` = full safety reply + short team ack).
+  - Unsupported event types (e.g. delivery/read status without a message) are ignored safely.
 
 ## Local webhook testing
 
@@ -82,6 +86,10 @@ Meta webhook verification requires a public HTTPS URL. For local development, ex
   - `price_info`
   - `language_switch`
   - `clinical_or_urgent`
+  - `first_appointment_prep`
+  - `first_visit_expectations`
+  - `about_clinic`
+  - `assistant_capabilities`
   - `unknown`
 - Safe escalation for urgent/clinical requests
 - No booking, no diagnosis, no calendar integration
@@ -91,7 +99,7 @@ Meta webhook verification requires a public HTTPS URL. For local development, ex
 - Keyword-based classification can miss nuanced messages
 - JSON knowledge should stay aligned with the clinic website (manual updates)
 - Outbound replies require Graph API credentials in environment variables
-- No persistent conversation state yet
+- Only **first-reply capability intro** is persisted (per sender, file-backed). Full conversation history is not stored. Multiple app instances without shared storage can each show the intro once until you add shared state (e.g. Redis).
 
 ## Next step: AI layer
 
