@@ -38,7 +38,7 @@ describe("responseBuilder", () => {
     const result = buildResponse("en", { intent: "contact" });
     expect(result.intent).toBe("contact");
     expect(result.escalated).toBe(false);
-    expect(result.reply).toContain("email");
+    expect(result.reply.toLowerCase()).toContain("email");
   });
 
   it("builds booking_request response without booking action", () => {

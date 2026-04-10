@@ -17,13 +17,13 @@ const priceByServiceId = (prices: PriceItem[], serviceId?: string): PriceItem | 
 
 const genericServicesReply = (language: SupportedLanguage, services: ServiceItem[], website: string): string => {
   const labels = services.map((s) => (language === "lt" ? s.name.lt : s.name.en));
-  const list = labels.join(language === "lt" ? "; " : "; ");
+  const lines = labels.map((label) => `• ${label}`).join("\n");
 
   if (language === "lt") {
-    return `Klinikoje teikiamos pagrindinės paslaugos (iš oficialios informacijos): ${list}. Daugiau: ${website}`;
+    return `Klinikoje teikiamos pagrindinės paslaugos (iš oficialios informacijos):\n\n${lines}\n\nDaugiau: ${website}`;
   }
 
-  return `Main services offered (from official information): ${list}. More: ${website}`;
+  return `Main services offered (from official information):\n\n${lines}\n\nMore: ${website}`;
 };
 
 export const buildResponse = (
@@ -42,23 +42,23 @@ export const buildResponse = (
         intent: "clinic_hours",
         reply:
           language === "lt"
-            ? `Mūsų darbo laikas: ${profile.workingHours.lt}. Jei norite, galiu padėti rasti tinkamiausią kitą žingsnį.`
-            : `Our working hours: ${profile.workingHours.en}. If you want, I can guide you to the next step.`,
+            ? `Mūsų darbo laikas: ${profile.workingHours.lt}.\n\nJei norite, galiu padėti rasti tinkamiausią kitą žingsnį.`
+            : `Our working hours: ${profile.workingHours.en}.\n\nIf you want, I can guide you to the next step.`,
         escalated: false
       };
 
     case "clinic_location": {
-      const maps =
+      const mapsLine =
         profile.googleMapsUrl != null && profile.googleMapsUrl.trim() !== ""
-          ? ` Google Maps: ${profile.googleMapsUrl}`
+          ? `\nGoogle Maps: ${profile.googleMapsUrl}`
           : "";
       return {
         language,
         intent: "clinic_location",
         reply:
           language === "lt"
-            ? `Mūsų adresas: ${profile.address.lt}. Daugiau informacijos rasite: ${profile.website}.${maps}`
-            : `Our address: ${profile.address.en}. More information: ${profile.website}.${maps}`,
+            ? `Mūsų adresas: ${profile.address.lt}.\n\nDaugiau informacijos rasite: ${profile.website}${mapsLine}`
+            : `Our address: ${profile.address.en}.\n\nMore information: ${profile.website}${mapsLine}`,
         escalated: false
       };
     }
@@ -77,8 +77,8 @@ export const buildResponse = (
         intent: "contact",
         reply:
           language === "lt"
-            ? `Susisiekti galite el. paštu ${profile.email} arba telefonu ${profile.phone}. Svetainė: ${profile.website}`
-            : `You can contact us via email ${profile.email} or phone ${profile.phone}. Website: ${profile.website}`,
+            ? `Susisiekti galite:\n\nEl. paštas: ${profile.email}\nTel.: ${profile.phone}\nSvetainė: ${profile.website}`
+            : `You can reach us:\n\nEmail: ${profile.email}\nPhone: ${profile.phone}\nWebsite: ${profile.website}`,
         escalated: false
       };
 
@@ -88,8 +88,8 @@ export const buildResponse = (
         intent: "booking_request",
         reply:
           language === "lt"
-            ? `Per šį kanalą vizitų neužsakau ir kalendoriaus nenaudoju. Registruokitės arba susisiekite su klinika įprastu būdu: ${profile.website}, tel. ${profile.phone}, el. paštas ${profile.email}.`
-            : `I do not book appointments or use calendars here. To schedule a visit, please follow the clinic's usual process: ${profile.website}, phone ${profile.phone}, email ${profile.email}.`,
+            ? `Per šį kanalą vizitų neužsakau ir kalendoriaus nenaudoju.\n\nRegistruokitės arba susisiekite su klinika įprastu būdu:\n\n${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
+            : `I do not book appointments or use calendars here.\n\nTo schedule a visit, please follow the clinic's usual process:\n\n${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`,
         escalated: false
       };
 
@@ -133,7 +133,7 @@ export const buildResponse = (
       return {
         language,
         intent: "about_clinic",
-        reply: `${pick("summary")} ${pick("familyCare")} ${pick("fullService")} ${pick("teamSummary")}`,
+        reply: [pick("summary"), pick("familyCare"), pick("fullService"), pick("teamSummary")].join("\n\n"),
         escalated: false
       };
     }
@@ -154,8 +154,8 @@ export const buildResponse = (
             intent: "service_info",
             reply:
               language === "lt"
-                ? `Ši procedūra neįvardyta mūsų trumpoje informacijoje. Daugiau: ${profile.website}, tel. ${profile.phone}.`
-                : `That procedure is not listed in our short information. More: ${profile.website}, phone ${profile.phone}.`,
+                ? `Ši procedūra neįvardyta mūsų trumpoje informacijoje.\n\nDaugiau: ${profile.website}, tel. ${profile.phone}.`
+                : `That procedure is not listed in our short information.\n\nMore: ${profile.website}, phone ${profile.phone}.`,
             escalated: false
           };
         }
@@ -208,8 +208,8 @@ export const buildResponse = (
         intent: "price_info",
         reply:
           language === "lt"
-            ? `${price.label.lt}: ${price.amountText.lt}${price.notes ? ` (${price.notes.lt})` : ""}`
-            : `${price.label.en}: ${price.amountText.en}${price.notes ? ` (${price.notes.en})` : ""}`,
+            ? `${price.label.lt}: ${price.amountText.lt}${price.notes ? `\n\n${price.notes.lt}` : ""}`
+            : `${price.label.en}: ${price.amountText.en}${price.notes ? `\n\n${price.notes.en}` : ""}`,
         escalated: false
       };
     }

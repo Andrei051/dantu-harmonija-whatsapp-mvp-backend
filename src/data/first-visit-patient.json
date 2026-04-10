@@ -1,10 +1,10 @@
 {
   "appointmentPrep": {
-    "lt": "Pirmam vizitui: atvykite 10–15 min. anksčiau. Atsineškite tapatybės dokumentą. Ruoškite klausimus iš anksto.",
-    "en": "For your first visit: arrive 10-15 minutes early. Bring a valid identity document. Prepare any questions in advance."
+    "lt": "Pirmam vizitui: atvykite 10–15 min. anksčiau. Atsineškite tapatybės dokumentą.\n\nRuoškite klausimus iš anksto.",
+    "en": "For your first visit: arrive 10-15 minutes early. Bring a valid identity document.\n\nPrepare any questions in advance."
   },
   "visitExpectations": {
-    "lt": "Registratūroje užpildote anketą ir pasirašote sutartį; gali būti prašoma susipažinti su klinikos taisyklėmis. Gydytojas atlieka apžiūrą. Jei reikia, skiriama diagnostika. Gydymo variantai ir kainos aptariamos po įvertinimo. Galutinis gydymo planas ir kaina priklauso nuo individualios konsultacijos po apžiūros.",
-    "en": "At reception you complete a questionnaire and sign the service agreement; you may be asked to read the clinic rules. The dentist performs an examination. Diagnostics may be prescribed if needed. Treatment options and prices are discussed after assessment. The exact treatment plan and fees depend on an individual consultation after examination."
+    "lt": "Registratūroje užpildote anketą ir pasirašote sutartį; gali būti prašoma susipažinti su klinikos taisyklėmis.\n\nGydytojas atlieka apžiūrą. Jei reikia, skiriama diagnostika.\n\nGydymo variantai ir kainos aptariamos po įvertinimo. Galutinis gydymo planas ir kaina priklauso nuo individualios konsultacijos po apžiūros.",
+    "en": "At reception you complete a questionnaire and sign the service agreement; you may be asked to read the clinic rules.\n\nThe dentist performs an examination. Diagnostics may be prescribed if needed.\n\nTreatment options and prices are discussed after assessment. The exact treatment plan and fees depend on an individual consultation after examination."
   }
 }
