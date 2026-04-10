@@ -43,7 +43,13 @@ const keywordMap: Record<MessageIntent, string[]> = {
     "directions",
     "kaip atvykti",
     "kaip nuvaziuoti",
-    "kaip jus rasti"
+    "kaip jus rasti",
+    "kur yra klinika",
+    "kur vilniuje yra klinika",
+    "klinikos adresas",
+    "kur randasi klinika",
+    "klinika vilniuje",
+    "lokalizacija"
   ],
   parking: ["parking", "parkav", "where to park"],
   contact: ["kontakt", "telefon", "email", "el past", "contact", "phone", "call"],
@@ -54,10 +60,15 @@ const keywordMap: Record<MessageIntent, string[]> = {
     "registruoti",
     "registracija",
     "registracijos",
+    "registruotis",
     "rezervuoti",
     "reserve",
     "uzsakyti",
-    "need appointment"
+    "need appointment",
+    "uzsirasyti",
+    "uzsirasyt",
+    "izsirasyti",
+    "vizitui"
   ],
   service_info: ["paslaug", "gydym", "implant", "higiena", "ortodont", "service", "treatment", "services"],
   price_info: [
@@ -507,6 +518,13 @@ const matchesComparativePriceQuestion = (normalized: string): boolean => {
 };
 
 const looksLikeLocationQuery = (normalized: string): boolean => {
+  if (
+    normalized.includes("kur") &&
+    (normalized.includes("klinika") || normalized.includes("adresas") || normalized.includes("lokalizacija"))
+  ) {
+    return true;
+  }
+
   if (normalized.includes("kur") && (normalized.includes("randat") || normalized.includes("esate"))) {
     return true;
   }
@@ -521,6 +539,21 @@ const looksLikeLocationQuery = (normalized: string): boolean => {
   }
 
   return false;
+};
+
+const looksLikeDoctorPerformerQuestion = (normalized: string): boolean => {
+  const hasDoctorCue =
+    normalized.includes("gydyto") ||
+    normalized.includes("specialist") ||
+    normalized.includes("doctor") ||
+    normalized.includes("who");
+  const hasPerformerCue =
+    normalized.includes("atlieka") ||
+    normalized.includes("daro") ||
+    normalized.includes("perform") ||
+    normalized.includes("does");
+
+  return hasDoctorCue && hasPerformerCue;
 };
 
 /** LT "kiek implantas?" — price shorthand without "kainuoja" */
@@ -673,6 +706,10 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
   }
 
   if (keywordMap.contact.some((keyword) => normalized.includes(normalizeText(keyword)))) {
+    return { intent: "contact" };
+  }
+
+  if (looksLikeDoctorPerformerQuestion(normalized)) {
     return { intent: "contact" };
   }
 

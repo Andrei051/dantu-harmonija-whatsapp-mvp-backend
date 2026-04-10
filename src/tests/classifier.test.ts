@@ -88,6 +88,11 @@ describe("classifier", () => {
     expect(classifyIntent("Noriu registracijos rytoj", services).intent).toBe("booking_request");
   });
 
+  it("classifies LT booking variants from real users", () => {
+    expect(classifyIntent("Ar galiu uzsirasyti balinimui", services).intent).toBe("booking_request");
+    expect(classifyIntent("Noriu izsirasyti vizitui", services).intent).toBe("booking_request");
+  });
+
   it("classifies first_appointment_prep", () => {
     expect(classifyIntent("What should I bring to my first appointment?", services).intent).toBe(
       "first_appointment_prep"
@@ -146,6 +151,16 @@ describe("classifier", () => {
     expect(classifyIntent("atsiusk pin", services).intent).toBe("clinic_location");
     expect(classifyIntent("first time what need bring", services).intent).toBe("first_appointment_prep");
     expect(classifyIntent("pirma karta ka reikia", services).intent).toBe("first_appointment_prep");
+  });
+
+  it("classifies natural LT location variants from real users", () => {
+    expect(classifyIntent("Kur yra klinika?", services).intent).toBe("clinic_location");
+    expect(classifyIntent("Kur Vilniuje yra klinika", services).intent).toBe("clinic_location");
+    expect(classifyIntent("Kokia klinikos lokalizacija", services).intent).toBe("clinic_location");
+  });
+
+  it("routes doctor performer question to contact instead of unknown", () => {
+    expect(classifyIntent("Koks gydytojas daro", services).intent).toBe("contact");
   });
 
   it("LT kiek shorthand and comparative pigiau+ar route to price correctly", () => {
