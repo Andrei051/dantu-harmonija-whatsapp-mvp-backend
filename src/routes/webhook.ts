@@ -1,6 +1,10 @@
 import { Router } from "express";
 import { runAssistantPipeline } from "../services/assistantPipeline";
-import { getCapabilityIntroIfFirstReply, markCapabilityIntroSent } from "../services/whatsappConversationIntro";
+import {
+  getCapabilityIntroIfFirstReply,
+  markCapabilityIntroSent,
+  normalizeSenderKey
+} from "../services/whatsappConversationIntro";
 import { getOutboundBodyOptionC, sendWhatsAppTextMessage } from "../services/whatsappOutbound";
 import { logger } from "../utils/logger";
 import { isDuplicateInboundMessageId } from "../utils/inboundMessageDedup";
@@ -96,6 +100,7 @@ webhookRouter.post("/webhook", (req, res) => {
 
     logger.info("outbound_reply_attempt", {
       to: parsed.sender,
+      sender_key: normalizeSenderKey(parsed.sender),
       escalated: result.escalated,
       optionC_ack_only: result.escalated,
       first_reply_capability: capabilityIntro != null
