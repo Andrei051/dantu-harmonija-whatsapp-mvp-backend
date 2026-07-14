@@ -1,0 +1,136 @@
+url,lang,type,topic,intent,status,notes,surface
+/en/new/a-course-on-the-use-of-micro-implants-in-orthodontic-treatment/,en,Article,Implants,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/en/new/a-digital-smile-from-a-to-z/,en,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/en/new/a-nobelprocera-scanner-in-our-clinic/,en,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/en/new/a-training-course-guided-implant-surgery-aesthetics/,en,Article,Implants,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/en/new/a-training-course-on-challenging-dental-placement-cases/,en,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/en/new/international-nobel-biocaresymposium/,en,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/en/new/is-pasaulines-parodos-parsiveze-ideju/,en,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/en/new/the-clinic-dental-harmony-took-part-in-the-charity-event-christmas-with-books/,en,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/en/new/we-share-our-experience-and-expertise-with-colleagues/,en,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/en/,en,Category,Other,Commercial,Active,Locale homepage,mirror-candidate
+/en/naudinga/,en,Category,Other,Informational,Active,,partial-surface
+/en/services/,en,Category,Other,Commercial,Active,,partial-surface
+/en/duk/,en,FAQ,Other,Informational,Active,,partial-surface
+/en/about-the-clinic/,en,Other,Other,Informational,Active,,partial-surface
+/en/before-the-first-appointment/,en,Other,Other,Informational,Active,,partial-surface
+/en/career/,en,Other,Other,Informational,Active,,partial-surface
+/en/contact-us/,en,Other,Other,Informational,Active,,partial-surface
+/en/contacts/,en,Other,Other,Informational,Active,,partial-surface
+/en/cookie-policy/,en,Other,Other,Informational,Active,,partial-surface
+/en/pasiruosimas-chirurginei-procedurai/,en,Other,Other,Informational,Active,,partial-surface
+/en/prices/,en,Other,Other,Cost,Active,,partial-surface
+/en/privacy-policy/,en,Other,Other,Informational,Active,,partial-surface
+/en/specialist-team/,en,Other,Other,Informational,Active,,partial-surface
+/en/specialist/21413/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/adele-tvaskuviene/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/beata-ostapenko/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/deividas-blazys/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/egle-tupalske/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/eugenija-bucinskiene/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/gabriele-juozapaviciute/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/goda-useviciute/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/jone-davidoniene/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/lina-duseviciute/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/lukas-naktinis/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/marius-bucinskas/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/migle-baranauskaite-sutkaite/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/milda-cepenaite/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/monika-ambrasiene/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/monika-maciute/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/monika-pratapiene/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/neringa-vasiliauskaite/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/vitalija-tuce/,en,Other,Other,Informational,Active,,specialist-partial
+/en/specialist/vytautas-sabataitis/,en,Other,Other,Informational,Active,,specialist-partial
+/en/success-stories/,en,Other,Other,Informational,Active,,partial-surface
+/en/success-story/sekmes-istorija-10/,en,Other,Other,Informational,Active,,success-story-partial
+/en/success-story/sekmes-istorija-11/,en,Other,Other,Informational,Active,,success-story-partial
+/en/success-story/sekmes-istorija-9/,en,Other,Other,Informational,Active,,success-story-partial
+/en/success-story/story-1/,en,Other,Other,Informational,Active,,success-story-partial
+/en/success-story/story-2/,en,Other,Other,Informational,Active,,success-story-partial
+/en/success-story/story-3/,en,Other,Other,Informational,Active,,success-story-partial
+/en/success-story/story-4/,en,Other,Other,Informational,Active,,success-story-partial
+/en/success-story/story-5/,en,Other,Other,Informational,Active,,success-story-partial
+/en/success-story/story-6/,en,Other,Other,Informational,Active,,success-story-partial
+/en/success-story/story-7/,en,Other,Other,Informational,Active,,success-story-partial
+/en/success-story/story-8/,en,Other,Other,Informational,Active,,success-story-partial
+/en/service/aesthetic-restorations/,en,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/en/service/anaesthesia-services/,en,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/en/service/cosmetic-filling/,en,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/en/service/dental-fillings/,en,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/en/service/dental-implant-surgery/,en,Service,Implants,Commercial,Active,,service-mirror-candidate
+/en/service/diagnostics/,en,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/en/service/laboratory/,en,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/en/service/oral-hygiene/,en,Service,Hygiene,Commercial,Active,,service-mirror-candidate
+/en/service/paediatric-dentistry/,en,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/en/service/periodontics/,en,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/en/service/physiotherapy/,en,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/en/service/prosthetic-restoration/,en,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/en/service/root-canal-treatment/,en,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/en/service/teeth-straightening/,en,Service,Orthodontics,Commercial,Active,,service-mirror-candidate
+/en/service/teeth-whitening/,en,Service,Whitening,Commercial,Active,,service-mirror-candidate
+/en/service/tooth-extraction/,en,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/new/klinika-dantu-harmonija-dental-harmony-uchastvuyet-v-aktsii-knygu-kaledos/,ru,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/kursy-guided-implant-surgery-and-aesthetics/,ru,Article,Implants,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/kursy-ob-implantatsii-v-slozhnykh-situatsiyakh/,ru,Article,Implants,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/kursy-po-ispolzovaniyu-mikroimplantatov-dlya-ortodonticheskogo-lecheniya/,ru,Article,Implants,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/lektsiya-dlya-studentov-vracha-implantologa-mariusa-buchinskasa/,ru,Article,Implants,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/mezhdunarodnyy-simpozium-nobel-biocare/,ru,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/my-delimsya-s-kollegami-svoimi-tekhnologiyami/,ru,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/my-ne-perestayem-sovershenstvovatsya/,ru,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/my-prinyali-uchastiye-v-mezhdunarodnoy-stomatologicheskoy-vystavke-ids-2017/,ru,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/nagrada-za-prosvetitelskuyu-deyatelnost/,ru,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/nobelprocera-skaner-v-nashey-klinike/,ru,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/so-vsemirnoy-vystavki-privezeny-idei/,ru,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/tsifrovaya-ulybka-ot-a-do-ya/,ru,Article,Other,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/new/vosstanovleniye-vsekh-zubov-nizhney-chelyusti-vsego-na-3-implantakh/,ru,Article,Implants,Informational,Active,Locale article CPT (/new/); parity with LT /naudinga/ TBD by count,article-partial-vs-lt
+/ru/,ru,Category,Other,Commercial,Active,Locale homepage,mirror-candidate
+/ru/polezno/,ru,Category,Other,Informational,Active,,partial-surface
+/ru/uslugi/,ru,Category,Other,Commercial,Active,,partial-surface
+/ru/chasto-zadavayemyye-voprosy/,ru,FAQ,Other,Informational,Active,,partial-surface
+/ru/karyera/,ru,Other,Other,Informational,Active,,partial-surface
+/ru/kontakty/,ru,Other,Other,Informational,Active,,partial-surface
+/ru/o-klinike/,ru,Other,Other,Informational,Active,,partial-surface
+/ru/pervyy-vizit/,ru,Other,Other,Informational,Active,,partial-surface
+/ru/podgotovka-k-khirurgicheskomu-vmeshatelstvu/,ru,Other,Other,Informational,Active,,partial-surface
+/ru/politika-cookie-faylov/,ru,Other,Other,Informational,Active,,partial-surface
+/ru/politika-konfidentsialnosti/,ru,Other,Other,Informational,Active,,partial-surface
+/ru/specialist/%d0%b2%d0%b8%d1%82%d0%b0%d0%bb%d0%b8%d1%8f-%d1%82%d1%83%d1%87%d0%b5/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/%d0%b3%d0%b0%d0%b1%d1%80%d0%b8%d1%8d%d0%bb%d0%b5-%d0%b9%d0%be%d0%b7%d0%b0%d0%bf%d0%b0%d0%b2%d0%b8%d1%87%d1%83%d1%82%d0%b5/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/%d0%bc%d0%b8%d0%b3%d0%bb%d0%b5-%d0%b1%d0%b0%d1%80%d0%b0%d0%bd%d0%b0%d1%83%d1%81%d0%ba%d0%b0%d0%b9%d1%82%d0%b5-%d1%81%d1%83%d1%82%d0%ba%d0%b0%d0%b9%d1%82%d0%b5/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/%d0%bd%d0%b5%d1%80%d0%b8%d0%bd%d0%b3%d0%b0-%d0%b2%d0%b0%d1%81%d0%b8%d0%bb%d1%8f%d1%83%d1%81%d0%ba%d0%b0%d0%b9%d1%82%d0%b5/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/adele-tvaskuviene/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/beata-ostapenko/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/deividas-blazys/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/egle-tupalske/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/eugenija-bucinskiene/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/goda-useviciute/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/jone-davidoniene/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/lina-duseviciute/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/lukas-naktinis/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/marius-bucinskas/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/milda-cepenaite/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/monika-ambrasiene/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/monika-maciute/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/monika-pratapiene/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/specialist/vytautas-sabataitis/,ru,Other,Other,Informational,Active,,specialist-partial
+/ru/spetsialistai/,ru,Other,Other,Informational,Active,,partial-surface
+/ru/svyazatsya/,ru,Other,Other,Informational,Active,,partial-surface
+/ru/titulinis/,ru,Other,Other,Informational,Active,,partial-surface
+/ru/tseny/,ru,Other,Other,Cost,Active,,partial-surface
+/ru/service/%d1%84%d0%b8%d0%b7%d0%b8%d0%be%d1%82%d0%b5%d1%80%d0%b0%d0%bf%d0%b8%d1%8f/,ru,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/service/diagnostika/,ru,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/service/esteticheskoe-plombirovanie/,ru,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/service/esteticheskoe-protezirovanie/,ru,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/service/gigiena-polosti-rta/,ru,Service,Hygiene,Commercial,Active,,service-mirror-candidate
+/ru/service/implantatsiya-zubov/,ru,Service,Implants,Commercial,Active,,service-mirror-candidate
+/ru/service/laboratoriya/,ru,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/service/lecheniye-kanalov/,ru,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/service/lecheniye-zubov-u-detey/,ru,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/service/otbelivanie-zubov/,ru,Service,Whitening,Commercial,Active,,service-mirror-candidate
+/ru/service/parodontologiya/,ru,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/service/plombirovanie-zubov/,ru,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/service/protezirovanie-zubov/,ru,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/service/udaleniye-zubov/,ru,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/service/uslugi-po-anestezii/,ru,Service,Other,Commercial,Review,Locale service outside priority clusters,service-mirror-candidate
+/ru/service/vypryamlenie-zubov-ortodontiya/,ru,Service,Orthodontics,Commercial,Active,,service-mirror-candidate

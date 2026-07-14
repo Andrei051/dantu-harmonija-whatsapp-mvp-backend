@@ -101,6 +101,43 @@ Meta webhook verification requires a public HTTPS URL. For local development, ex
 - Outbound replies require Graph API credentials in environment variables
 - Only **first-reply capability intro** is persisted (per sender, file-backed). Full conversation history is not stored. Multiple app instances without shared storage can each show the intro once until you add shared state (e.g. Redis).
 
+## Token refresh runbook (Render + Meta)
+
+If inbound webhooks are received but outbound replies fail, first check logs for:
+- `outbound_reply_failed` with `status: 401`
+- Meta OAuth error `code: 190` ("Authentication Error")
+
+This usually means `WHATSAPP_ACCESS_TOKEN` is expired/invalid or does not match the same WhatsApp app/WABA context as `WHATSAPP_PHONE_NUMBER_ID`.
+
+### Quick recovery
+
+1. In Meta Developers, open the app used by this backend.
+2. Go to WhatsApp setup flow (new UI may show this under **Use Cases**):
+   - `Connect with customers through WhatsApp` -> `Customize` -> `Step 1: Try it out`
+3. Click **Generate Access Token**.
+4. Update Render environment variable:
+   - `WHATSAPP_ACCESS_TOKEN=<new token>`
+5. Confirm `WHATSAPP_PHONE_NUMBER_ID` still matches the same setup where the token was generated.
+6. Restart/redeploy Render service.
+
+### Verification command (PowerShell)
+
+Use a real token + phone number id (single line):
+
+```powershell
+curl.exe -i -X POST "https://graph.facebook.com/v22.0/<PHONE_NUMBER_ID>/messages" -H "Authorization: Bearer <ACCESS_TOKEN>" -H "Content-Type: application/json" -d "{\"messaging_product\":\"whatsapp\",\"to\":\"<RECIPIENT_MSISDN>\",\"type\":\"text\",\"text\":{\"body\":\"Auth test\"}}"
+```
+
+Expected:
+- `200/201`: credentials are valid
+- `401` with code `190`: token issue (expired/invalid/wrong context)
+- `400` object/permission error: wrong phone id or missing permissions
+
+### Notes
+
+- `WHATSAPP_VERIFY_TOKEN` is only for `GET /webhook` verification and is unrelated to outbound auth.
+- Temporary tokens are fine for quick tests but can expire; for stability, use a System User token with WhatsApp permissions.
+
 ## Next step: AI layer
 
 When deterministic coverage is stable, add an AI layer on top of this service for better language understanding while keeping these safety/guardrail rules:
