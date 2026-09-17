@@ -61,10 +61,16 @@ export interface IntentResult {
   aboutFocus?: AboutClinicFocus;
   /** Vague "full price list" style question — short redirect, no dump */
   broadPriceList?: boolean;
+  /** Price asked with no identifiable service — ask which service */
+  needsServiceClarification?: boolean;
   /** LT "ar darote …?" / EN "do you offer …?" — prefix reply with yes + service blurb */
   serviceAvailabilityYesNo?: boolean;
-  /** Price question also asks about booking — append booking limitation after price */
+  /** Price question also asks about booking — append contact redirect after price */
   appendBookingGuidance?: boolean;
+  /** Price/availability mix — append availability contact redirect (not Option C) */
+  appendAvailabilityGuidance?: boolean;
+  /** Availability-only enquiry — contact redirect, no slot invention */
+  availabilityOnly?: boolean;
   /** Contact intent: short doctor/specialist question without escalation */
   contactContext?: "doctor";
 }

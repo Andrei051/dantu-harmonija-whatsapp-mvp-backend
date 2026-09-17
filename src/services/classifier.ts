@@ -57,6 +57,11 @@ const keywordMap: Record<MessageIntent, string[]> = {
     "appointment",
     "booking",
     "vizitas",
+    "vizita",
+    "vizito",
+    "vizitui",
+    "paskirti",
+    "paskyrim",
     "registruoti",
     "registracija",
     "registracijos",
@@ -68,8 +73,8 @@ const keywordMap: Record<MessageIntent, string[]> = {
     "uzsirasyti",
     "uzsirasyt",
     "izsirasyti",
-    "vizitui",
-    "uzrasyti"
+    "uzrasyti",
+    "schedule"
   ],
   service_info: ["paslaug", "gydym", "implant", "higiena", "ortodont", "service", "treatment", "services"],
   price_info: [
@@ -651,6 +656,33 @@ const matchesAssistantCapabilities = (normalized: string): boolean => {
   return phrases.some((phrase) => normalized.includes(normalizeText(phrase)));
 };
 
+/** Short greeting only — capability reply, never Option C */
+const matchesGreetingOnly = (normalized: string): boolean => {
+  const exact = [
+    "sveiki",
+    "sveikas",
+    "sveika",
+    "labas",
+    "labukas",
+    "labas rytas",
+    "laba diena",
+    "labas vakaras",
+    "hello",
+    "hi",
+    "hey",
+    "good morning",
+    "good afternoon",
+    "good evening",
+    "hello there",
+    "hi there",
+    "hey there",
+    "sveiki sveiki",
+    "hello hello"
+  ];
+
+  return exact.some((phrase) => normalized === normalizeText(phrase));
+};
+
 const matchesServiceAvailabilityYesNo = (normalized: string): boolean =>
   normalized.includes("ar darote") ||
   normalized.includes("ar atliekate") ||
@@ -679,22 +711,75 @@ const hasPriceCue = (normalized: string): boolean =>
   keywordMap.price_info.some((keyword) => normalized.includes(normalizeText(keyword))) ||
   matchesKiekPriceShorthand(normalized);
 
+/** Booking stems: vizita/vizitą/vizitas/… and common book phrasing */
+const hasBookingStem = (normalized: string): boolean =>
+  /(^|\s)vizit\w*/.test(normalized) ||
+  normalized.includes("paskirti") ||
+  normalized.includes("paskyrim") ||
+  normalized.includes("to book") ||
+  normalized.includes("book me") ||
+  normalized.includes("book an") ||
+  normalized.includes("book a ");
+
 const hasBookingCue = (normalized: string): boolean =>
   keywordMap.booking_request.some((keyword) => normalized.includes(normalizeText(keyword))) ||
-  normalized.includes("can i book") ||
-  normalized.includes("ar galit") ||
-  normalized.includes("ar galiu");
+  hasBookingStem(normalized) ||
+  normalized.includes("can i book");
 
-/** Price + booking in one message — specific service price then booking limitation */
-const resolveMixedPriceAndBooking = (normalized: string, services: ServiceItem[]): IntentResult | null => {
-  if (!hasPriceCue(normalized) || !hasBookingCue(normalized)) {
+/** Looser book phrasing for mixed price+action only (not standalone — avoids "ar galiu sužinoti kainą" → booking) */
+const hasLooseBookAsk = (normalized: string): boolean =>
+  hasBookingCue(normalized) ||
+  normalized.includes("ar galit") ||
+  normalized.includes("ar galiu") ||
+  normalized.includes("can i book") ||
+  normalized.includes("and can i book") ||
+  normalized.includes("and can you book");
+
+/** Appointment slots / free times — never invent; contact redirect only */
+const hasAvailabilityCue = (normalized: string): boolean => {
+  if (
+    normalized.includes("laisv") &&
+    (normalized.includes("laik") || normalized.includes("vizit") || normalized.includes("termin"))
+  ) {
+    return true;
+  }
+  if (
+    normalized.includes("free slot") ||
+    normalized.includes("available slot") ||
+    normalized.includes("availability") ||
+    normalized.includes("next available") ||
+    normalized.includes("earliest appointment") ||
+    normalized.includes("when are you free")
+  ) {
+    return true;
+  }
+  if (normalized.includes("kada turite") && (normalized.includes("laik") || normalized.includes("laisv"))) {
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Mixed question principle: answer a reliable supported component (e.g. priced service),
+ * then append contact redirect for booking/availability — not bespoke phrase pairs only.
+ */
+const resolveMixedSupportedAndAction = (normalized: string, services: ServiceItem[]): IntentResult | null => {
+  const price = hasPriceCue(normalized);
+  const booking = hasLooseBookAsk(normalized);
+  const availability = hasAvailabilityCue(normalized);
+  if (!price || (!booking && !availability)) {
     return null;
   }
   const serviceId = detectService(normalized, services);
   if (!serviceId) {
     return null;
   }
-  return { intent: "price_info", serviceId, appendBookingGuidance: true };
+  return {
+    intent: "price_info",
+    serviceId,
+    ...(booking ? { appendBookingGuidance: true as const } : {}),
+    ...(availability && !booking ? { appendAvailabilityGuidance: true as const } : {})
+  };
 };
 
 export const classifyIntent = (message: string, services: ServiceItem[]): IntentResult => {
@@ -718,6 +803,10 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
     return { intent: "assistant_capabilities" };
   }
 
+  if (matchesGreetingOnly(normalized)) {
+    return { intent: "assistant_capabilities" };
+  }
+
   if (matchesFirstVisitExpectations(normalized)) {
     return { intent: "first_visit_expectations" };
   }
@@ -735,13 +824,17 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
     return about;
   }
 
-  const mixedPriceBooking = resolveMixedPriceAndBooking(normalized, services);
-  if (mixedPriceBooking) {
-    return mixedPriceBooking;
+  const mixedSupportedAndAction = resolveMixedSupportedAndAction(normalized, services);
+  if (mixedSupportedAndAction) {
+    return mixedSupportedAndAction;
   }
 
-  if (keywordMap.booking_request.some((keyword) => normalized.includes(normalizeText(keyword)))) {
+  if (hasBookingCue(normalized)) {
     return { intent: "booking_request" };
+  }
+
+  if (hasAvailabilityCue(normalized)) {
+    return { intent: "booking_request", availabilityOnly: true };
   }
 
   if (keywordMap.clinic_hours.some((keyword) => normalized.includes(normalizeText(keyword)))) {
@@ -788,6 +881,9 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
     }
 
     const serviceId = detectService(normalized, services);
+    if (!serviceId) {
+      return { intent: "price_info", needsServiceClarification: true };
+    }
     return { intent: "price_info", serviceId };
   }
 

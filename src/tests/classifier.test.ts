@@ -262,4 +262,38 @@ describe("classifier", () => {
       aboutFocus: "default"
     });
   });
+
+  it("classifies greetings as assistant_capabilities", () => {
+    expect(classifyIntent("Sveiki", services).intent).toBe("assistant_capabilities");
+    expect(classifyIntent("Labas", services).intent).toBe("assistant_capabilities");
+    expect(classifyIntent("Hello", services).intent).toBe("assistant_capabilities");
+  });
+
+  it("Aušra named-doctor booking is booking_request not service_info", () => {
+    expect(
+      classifyIntent("Domina paskirti vizitą implantacijai pas gyd. Marių Bučinską", services).intent
+    ).toBe("booking_request");
+  });
+
+  it("mixed price + availability appends availability guidance", () => {
+    expect(classifyIntent("Kokia implantų kaina? Kada turite laisvų laikų?", services)).toEqual({
+      intent: "price_info",
+      serviceId: "implants",
+      appendAvailabilityGuidance: true
+    });
+  });
+
+  it("bare price question needs service clarification", () => {
+    expect(classifyIntent("Kokia kaina?", services)).toEqual({
+      intent: "price_info",
+      needsServiceClarification: true
+    });
+  });
+
+  it("ar galiu with price only is not standalone booking", () => {
+    expect(classifyIntent("Ar galiu sužinoti kainą?", services)).toEqual({
+      intent: "price_info",
+      needsServiceClarification: true
+    });
+  });
 });

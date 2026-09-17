@@ -54,11 +54,20 @@ describe("POST /messages/test integration", () => {
   it("returns unknown safe fallback", async () => {
     const res = await request(app)
       .post("/messages/test")
-      .send({ message: "Sveiki" });
+      .send({ message: "asdkjhasd qweoiu zxcmn" });
 
     expect(res.status).toBe(200);
     expect(res.body.intent).toBe("unknown");
     expect(res.body.escalated).toBe(true);
     expect(res.body.response).not.toBe("");
+  });
+
+  it("returns capability reply for greeting without escalation", async () => {
+    const res = await request(app).post("/messages/test").send({ message: "Sveiki" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.intent).toBe("assistant_capabilities");
+    expect(res.body.escalated).toBe(false);
+    expect(String(res.body.response).toLowerCase()).toContain("informacija");
   });
 });

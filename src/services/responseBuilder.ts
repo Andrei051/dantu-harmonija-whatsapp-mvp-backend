@@ -7,6 +7,31 @@ const bookingLimitationBlock = (language: SupportedLanguage, profile: ClinicProf
     ? `Per šį kanalą vizitų registruoti negaliu.\n\nRegistruokitės arba susisiekite su klinika įprastu būdu:\n\nSvetainė: ${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
     : `I can't register visits through this channel.\n\nTo schedule a visit, please follow the clinic's usual process:\n\nWebsite: ${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`;
 
+const availabilityLimitationBlock = (language: SupportedLanguage, profile: ClinicProfile): string =>
+  language === "lt"
+    ? `Laisvų laikų per šį kanalą pasakyti negaliu.\n\nDėl terminų susisiekite su klinika:\n\nSvetainė: ${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
+    : `I can't provide available appointment times through this channel.\n\nPlease contact the clinic for scheduling:\n\nWebsite: ${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`;
+
+const priceServiceClarification = (language: SupportedLanguage): string =>
+  language === "lt"
+    ? "Kokios paslaugos kainą norėtumėte sužinoti?"
+    : "Which service's price would you like to know?";
+
+const appendActionGuidance = (
+  body: string,
+  language: SupportedLanguage,
+  profile: ClinicProfile,
+  intentResult: IntentResult
+): string => {
+  const parts = [body];
+  if (intentResult.appendBookingGuidance === true) {
+    parts.push(bookingLimitationBlock(language, profile));
+  } else if (intentResult.appendAvailabilityGuidance === true) {
+    parts.push(availabilityLimitationBlock(language, profile));
+  }
+  return parts.join("\n\n");
+};
+
 const fallbackWith = (language: SupportedLanguage, key: "unknown" | "clinicalOrUrgent"): AssistantResponse => ({
   language,
   intent: key === "unknown" ? "unknown" : "clinical_or_urgent",
@@ -109,7 +134,10 @@ export const buildResponse = (
       return {
         language,
         intent: "booking_request",
-        reply: bookingLimitationBlock(language, profile),
+        reply:
+          intentResult.availabilityOnly === true
+            ? availabilityLimitationBlock(language, profile)
+            : bookingLimitationBlock(language, profile),
         escalated: false
       };
 
@@ -208,6 +236,15 @@ export const buildResponse = (
         };
       }
 
+      if (intentResult.needsServiceClarification === true || !intentResult.serviceId) {
+        return {
+          language,
+          intent: "price_info",
+          reply: appendActionGuidance(priceServiceClarification(language), language, profile, intentResult),
+          escalated: false
+        };
+      }
+
       const service = serviceById(services, intentResult.serviceId);
       const price = priceByServiceId(prices, intentResult.serviceId);
 
@@ -216,14 +253,10 @@ export const buildResponse = (
           language === "lt"
             ? "Kainos pateikiamos tik toms paslaugoms, kurios yra mūsų struktūruotoje informacijoje. Dėl tikslių įkainių susisiekite su klinika."
             : "Prices are provided only for services available in our structured information. Please contact the clinic for exact fees.";
-        const withBooking =
-          intentResult.appendBookingGuidance === true
-            ? `${genericPrice}\n\n${bookingLimitationBlock(language, profile)}`
-            : genericPrice;
         return {
           language,
           intent: "price_info",
-          reply: withBooking,
+          reply: appendActionGuidance(genericPrice, language, profile, intentResult),
           escalated: false
         };
       }
@@ -232,15 +265,11 @@ export const buildResponse = (
         language === "lt"
           ? `${price.label.lt}: ${price.amountText.lt}${price.notes ? `\n\n${price.notes.lt}` : ""}`
           : `${price.label.en}: ${price.amountText.en}${price.notes ? `\n\n${price.notes.en}` : ""}`;
-      const priceReply =
-        intentResult.appendBookingGuidance === true
-          ? `${priceBody}\n\n${bookingLimitationBlock(language, profile)}`
-          : priceBody;
 
       return {
         language,
         intent: "price_info",
-        reply: priceReply,
+        reply: appendActionGuidance(priceBody, language, profile, intentResult),
         escalated: false
       };
     }

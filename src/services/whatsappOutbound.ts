@@ -5,6 +5,7 @@ const ESCALATION_ACK_OPTION_C: Record<SupportedLanguage, string> = {
   en: "Thanks for your message. A team member will review it and get back to you soon."
 };
 
+/** Option C: team ack only when escalated (unknown / clinical follow-up expected). Contact redirects must not set escalated. */
 export const getOutboundBodyOptionC = (
   escalated: boolean,
   language: SupportedLanguage,

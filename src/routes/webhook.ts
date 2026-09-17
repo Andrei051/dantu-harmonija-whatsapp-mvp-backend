@@ -88,7 +88,10 @@ webhookRouter.post("/webhook", (req, res) => {
       return;
     }
 
-    const capabilityIntro = getCapabilityIntroIfFirstReply(parsed.sender, result.language);
+    const isCapabilityReply = result.intent === "assistant_capabilities";
+    const capabilityIntro = isCapabilityReply
+      ? null
+      : getCapabilityIntroIfFirstReply(parsed.sender, result.language);
     const outboundBody = getOutboundBodyOptionC(
       result.escalated,
       result.language,
@@ -102,7 +105,7 @@ webhookRouter.post("/webhook", (req, res) => {
       to: parsed.sender,
       sender_key: normalizeSenderKey(parsed.sender),
       escalated: result.escalated,
-      optionC_ack_only: result.escalated,
+      optionC_ack_only: result.escalated && result.intent !== "clinical_or_urgent",
       first_reply_capability: capabilityIntro != null
     });
 
@@ -112,7 +115,7 @@ webhookRouter.post("/webhook", (req, res) => {
     });
 
     if (sendResult.ok) {
-      if (capabilityIntro != null) {
+      if (capabilityIntro != null || isCapabilityReply) {
         markCapabilityIntroSent(parsed.sender);
       }
       logger.info("outbound_reply_success", { status: sendResult.status });

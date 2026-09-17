@@ -131,9 +131,37 @@ describe("responseBuilder", () => {
     expect(en.intent).toBe("assistant_capabilities");
     expect(en.escalated).toBe(false);
     expect(en.reply).toContain("general information");
+    expect(en.reply.toLowerCase()).not.toContain("next steps");
     const lt = buildResponse("lt", { intent: "assistant_capabilities" });
     expect(lt.escalated).toBe(false);
     expect(lt.reply).toContain("kliniką");
+  });
+
+  it("clarifies service when price context is insufficient", () => {
+    const lt = buildResponse("lt", { intent: "price_info", needsServiceClarification: true });
+    expect(lt.escalated).toBe(false);
+    expect(lt.reply).toContain("Kokios paslaugos kainą");
+    const en = buildResponse("en", { intent: "price_info", needsServiceClarification: true });
+    expect(en.reply.toLowerCase()).toContain("which service");
+  });
+
+  it("appends availability contact redirect after priced service", () => {
+    const result = buildResponse("lt", {
+      intent: "price_info",
+      serviceId: "implants",
+      appendAvailabilityGuidance: true
+    });
+    expect(result.escalated).toBe(false);
+    expect(result.reply).toContain("EUR");
+    expect(result.reply).toContain("Laisvų laikų");
+    expect(result.reply.toLowerCase()).not.toContain("komandos narys");
+  });
+
+  it("availability-only booking path uses contact redirect", () => {
+    const result = buildResponse("en", { intent: "booking_request", availabilityOnly: true });
+    expect(result.escalated).toBe(false);
+    expect(result.reply.toLowerCase()).toContain("available appointment");
+    expect(result.reply.toLowerCase()).not.toContain("team member will review");
   });
 
   it("prefixes Taip for LT service availability yes-no", () => {

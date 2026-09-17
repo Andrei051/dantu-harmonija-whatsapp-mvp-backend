@@ -30,13 +30,24 @@ describe("manual pack regression (POST /messages/test)", () => {
     expect(String(res.body.response).toLowerCase()).toContain("working hours");
   });
 
-  it("hello -> unknown + en", async () => {
+  it("hello -> assistant_capabilities + en, not escalated", async () => {
     const res = await request(app).post("/messages/test").send({ message: "hello" });
 
     expect(res.status).toBe(200);
-    expect(res.body.intent).toBe("unknown");
+    expect(res.body.intent).toBe("assistant_capabilities");
     expect(res.body.language).toBe("en");
-    expect(res.body.escalated).toBe(true);
+    expect(res.body.escalated).toBe(false);
+    expect(String(res.body.response).toLowerCase()).not.toContain("team member will review");
+  });
+
+  it("Sveiki -> assistant_capabilities + lt, not escalated", async () => {
+    const res = await request(app).post("/messages/test").send({ message: "Sveiki" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.intent).toBe("assistant_capabilities");
+    expect(res.body.language).toBe("lt");
+    expect(res.body.escalated).toBe(false);
+    expect(String(res.body.response).toLowerCase()).not.toContain("komandos narys peržiūrės");
   });
 
   it("I need appointment tomorrow -> booking_request + en", async () => {
