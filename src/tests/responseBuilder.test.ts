@@ -22,9 +22,9 @@ describe("responseBuilder", () => {
 
   it("builds Lithuanian clinic_location with address and maps from KB", () => {
     const result = buildResponse("lt", { intent: "clinic_location" });
-    expect(result.reply).toContain("Olimpiečių str. 1A-9");
+    expect(result.reply).toContain("Olimpiečių g. 1A-24");
     expect(result.reply).toContain("LT-09235");
-    expect(result.reply).not.toContain("1A-24");
+    expect(result.reply).not.toContain("1A-9");
     expect(result.reply).toContain("Google Maps");
   });
 

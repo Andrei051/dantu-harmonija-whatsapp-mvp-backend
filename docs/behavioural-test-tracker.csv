@@ -5,10 +5,10 @@ Jei norite, galiu padėti rasti tinkamiausią kitą žingsnį.",pass,2026-04-01,
 P1-02,1,hours,What are your opening hours?,en,clinic_hours,false,full_kb,en,clinic_hours,false,full_kb,"Our working hours: Weekdays 08:00-20:00, Saturdays 09:00-14:00 (by prior registration), Sundays closed.
 
 If you want, I can guide you to the next step.",pass,2026-04-01,
-P1-03,1,location,Kur jus randates?,lt,clinic_location,false,full_kb,lt,clinic_location,false,full_kb,"Mūsų adresas: Olimpiečių str. 1A-9, LT-09235 Vilnius.
+P1-03,1,location,Kur jus randates?,lt,clinic_location,false,full_kb,lt,clinic_location,false,full_kb,"Mūsų adresas: Olimpiečių g. 1A-24, LT-09235 Vilnius.
 
 Svetainė: https://dantuharmonija.lt/
-Google Maps: https://www.google.com/maps/search/?api=1&query=Olimpieciu+str.+1A-9+Vilnius",pass,2026-04-01,
+Google Maps: https://www.google.com/maps/search/?api=1&query=Olimpieciu+g.+1A-24+Vilnius",pending,2026-09-17,Address corrected to 1A-24 (Aušra)
 P1-04,1,contact,Telefono numeris,lt,contact,false,full_kb,lt,contact,false,full_kb,"Susisiekti galite:
 
 Svetainė: https://dantuharmonija.lt/
