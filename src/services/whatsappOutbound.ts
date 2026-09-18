@@ -5,7 +5,8 @@ const ESCALATION_ACK_OPTION_C: Record<SupportedLanguage, string> = {
   en: "We have received your enquiry and will reply on a working day between 08:00 and 17:00."
 };
 
-/** Option C: team ack only when escalated (unknown / clinical follow-up expected). Contact redirects must not set escalated. */
+/** Option C: team ack only when escalated and human follow-up is expected.
+ * Urgent clinical: send the safety reply only — Option C ack competes with “act now” (Voice §8). */
 export const getOutboundBodyOptionC = (
   escalated: boolean,
   language: SupportedLanguage,
@@ -15,8 +16,8 @@ export const getOutboundBodyOptionC = (
   if (!escalated) {
     return fullResponse;
   }
-  if (intent === "clinical_or_urgent" && fullResponse.trim().length > 0) {
-    return `${fullResponse}\n\n${ESCALATION_ACK_OPTION_C[language]}`;
+  if (intent === "clinical_or_urgent") {
+    return fullResponse.trim().length > 0 ? fullResponse : ESCALATION_ACK_OPTION_C[language];
   }
   return ESCALATION_ACK_OPTION_C[language];
 };

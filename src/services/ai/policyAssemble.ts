@@ -543,8 +543,8 @@ export const applyPolicyAndAssemble = (
       const name = knowledgeService.getClinicProfile().clinicName;
       parts.push(
         language === "en"
-          ? `Our clinic is called ${name}.`
-          : `Mūsų klinikos pavadinimas — ${name}.`
+          ? `The clinic is called ${name}.`
+          : `Klinika vadinasi „${name}“.`
       );
     } else if (isLaboratoryAsk(patientMessage)) {
       actions.push("F6_laboratory_info");

@@ -46,12 +46,12 @@ describe("responseBuilder", () => {
     expect(resultLt.intent).toBe("booking_request");
     expect(resultLt.escalated).toBe(false);
     expect(resultLt.reply).toContain("registruoti negaliu");
-    expect(resultLt.reply).toContain("https://");
+    expect(resultLt.reply).toContain("+370");
 
     const resultEn = buildResponse("en", { intent: "booking_request", bookingRoute: "contact" });
     expect(resultEn.intent).toBe("booking_request");
     expect(resultEn.escalated).toBe(false);
-    expect(resultEn.reply.toLowerCase()).toContain("can't register");
+    expect(resultEn.reply.toLowerCase()).toMatch(/can't book|can't register/);
   });
 
   it("builds online-registration booking guidance", () => {
@@ -90,14 +90,16 @@ describe("responseBuilder", () => {
     const result = buildResponse("lt", { intent: "clinical_or_urgent" });
     expect(result.intent).toBe("clinical_or_urgent");
     expect(result.escalated).toBe(true);
-    expect(result.reply).toContain("negaliu vertinti klinikinės būklės");
+    expect(result.reply).toContain("+370 610 11222");
+    expect(result.reply).toMatch(/nedelsiant|skubios/i);
   });
 
   it("escalates clinical_or_urgent in English", () => {
     const result = buildResponse("en", { intent: "clinical_or_urgent" });
     expect(result.intent).toBe("clinical_or_urgent");
     expect(result.escalated).toBe(true);
-    expect(result.reply).toContain("cannot assess clinical conditions");
+    expect(result.reply).toContain("+370 610 11222");
+    expect(result.reply.toLowerCase()).toMatch(/immediately|emergency/);
   });
 
   it("returns unknown fallback for unknown intent", () => {
@@ -117,7 +119,7 @@ describe("responseBuilder", () => {
     const result = buildResponse("lt", { intent: "first_visit_expectations" });
     expect(result.intent).toBe("first_visit_expectations");
     expect(result.escalated).toBe(false);
-    expect(result.reply).toContain("Registratūroje");
+    expect(result.reply).toMatch(/apžiūr|diagnostik/i);
   });
 
   it("builds about_clinic default and family focus", () => {
@@ -141,11 +143,11 @@ describe("responseBuilder", () => {
     const en = buildResponse("en", { intent: "assistant_capabilities" });
     expect(en.intent).toBe("assistant_capabilities");
     expect(en.escalated).toBe(false);
-    expect(en.reply).toContain("general information");
+    expect(en.reply).toMatch(/How can I help/i);
     expect(en.reply.toLowerCase()).not.toContain("next steps");
     const lt = buildResponse("lt", { intent: "assistant_capabilities" });
     expect(lt.escalated).toBe(false);
-    expect(lt.reply).toContain("kliniką");
+    expect(lt.reply).toMatch(/Kuo galiu padėti/i);
   });
 
   it("clarifies service when price context is insufficient", () => {
@@ -181,7 +183,7 @@ describe("responseBuilder", () => {
       serviceId: "teeth_whitening",
       serviceAvailabilityYesNo: true
     });
-    expect(result.reply).toMatch(/^Taip, atliekame\. /);
+    expect(result.reply).toMatch(/^Taip,/);
     expect(result.reply).toContain("balinimas");
   });
 });

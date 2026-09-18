@@ -111,7 +111,7 @@ describe("Behaviour v1.1 acceptance", () => {
         .send({ message: "Ar galiu dėtis implantą jei sergu diabetu?" });
       expect(res.body.intent).toBe("clinical_or_urgent");
       expect(res.body.escalated).toBe(true);
-      expect(String(res.body.response).toLowerCase()).toContain("klinikinės");
+      expect(String(res.body.response).toLowerCase()).toContain("+370 610 11222");
     });
   });
 
@@ -156,7 +156,7 @@ describe("Behaviour v1.1 acceptance", () => {
         .send({ message: "Ar turite dantų laboratoriją?" });
       const reply = String(res.body.response).toLowerCase();
       expect(reply).toContain("laborator");
-      expect(reply).toContain("nėra atskira");
+      expect(reply.toLowerCase()).toMatch(/atskirai nerodomos|not shown separately|nėra atskira/);
       expect(services.some((s) => s.id.includes("lab"))).toBe(false);
     });
   });

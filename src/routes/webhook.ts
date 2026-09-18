@@ -4,7 +4,6 @@ import {
   runMessagePipeline
 } from "../services/ai/messagePipeline";
 import {
-  getCapabilityIntroIfFirstReply,
   markCapabilityIntroSent,
   normalizeSenderKey
 } from "../services/whatsappConversationIntro";
@@ -106,24 +105,22 @@ webhookRouter.post("/webhook", (req, res) => {
     }
 
     const isCapabilityReply = result.intent === "assistant_capabilities";
-    const capabilityIntro = isCapabilityReply
-      ? null
-      : getCapabilityIntroIfFirstReply(parsed.sender, result.language);
     const outboundBody = getOutboundBodyOptionC(
       result.escalated,
       result.language,
       result.response,
       result.intent
     );
-    const bodyToSend =
-      capabilityIntro != null ? `${capabilityIntro}\n\n${outboundBody}` : outboundBody;
+    // Voice §3/§13: capability intro is the greeting/capability answer itself — never a
+    // mandatory prefix on substantive first replies.
+    const bodyToSend = outboundBody;
 
     logger.info("outbound_reply_attempt", {
       to: parsed.sender,
       sender_key: normalizeSenderKey(parsed.sender),
       escalated: result.escalated,
       optionC_ack_only: result.escalated && result.intent !== "clinical_or_urgent",
-      first_reply_capability: capabilityIntro != null,
+      first_reply_capability: false,
       path: result.path,
       fallback_used: result.fallback_used
     });
@@ -134,7 +131,7 @@ webhookRouter.post("/webhook", (req, res) => {
     });
 
     if (sendResult.ok) {
-      if (capabilityIntro != null || isCapabilityReply) {
+      if (isCapabilityReply) {
         markCapabilityIntroSent(parsed.sender);
       }
       recordConversationExchange({

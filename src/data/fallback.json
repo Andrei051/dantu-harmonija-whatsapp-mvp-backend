@@ -1,22 +1,22 @@
 {
   "unknown": {
-    "lt": "Ačiū už žinutę. Kol kas galiu atsakyti tik pagal oficialią klinikos informaciją. Jei klausimas sudėtingesnis, perduosiu jį komandos nariui.",
-    "en": "Thanks for your message. I currently answer only from official clinic information. If your question is more complex, I will route it to a team member."
+    "lt": "Šios informacijos patvirtinti negaliu. Dėl to geriausia pasitikslinti tiesiogiai klinikoje.",
+    "en": "I can't confirm that from the clinic's official information. Please check directly with the clinic."
   },
   "clinicalOrUrgent": {
-    "lt": "Apgailestauju, tačiau negaliu vertinti klinikinės būklės. Dėl skubios ar klinikinės situacijos prašome nedelsiant skambinti į kliniką telefonu +370 610 11222 arba kreiptis į skubią pagalbą.",
-    "en": "I am sorry, but I cannot assess clinical conditions. For urgent or clinical situations, please call the clinic immediately on +370 610 11222 or seek emergency care."
+    "lt": "Pagal jūsų aprašymą reikėtų nedelsiant susisiekti su klinika telefonu +370 610 11222. Jei reikia skubios medicininės pagalbos, kreipkitės į skubios pagalbos tarnybas.",
+    "en": "Based on what you described, please contact the clinic immediately on +370 610 11222. If you need emergency medical care, contact emergency services."
   },
   "clinicalAssessment": {
-    "lt": "Negaliu įvertinti klinikinės situacijos per šį kanalą. Dėl jūsų atvejo įvertinimo susisiekite su klinika telefonu +370 610 11222 — gydytojas galės patarti, ką daryti toliau.",
-    "en": "I cannot assess clinical situations through this channel. Please contact the clinic on +370 610 11222 so a dentist can assess your case and advise on next steps."
+    "lt": "Kuris gydymo variantas tiktų jūsų atveju, reikėtų įvertinti gydytojui. Dėl įvertinimo galite susisiekti su klinika telefonu +370 610 11222.",
+    "en": "Which treatment option is right for your case needs a dentist's assessment. Please contact the clinic on +370 610 11222 for an evaluation."
   },
   "languageSwitch": {
     "lt": "Galiu tęsti lietuviškai arba angliškai. Parašykite, kuria kalba patogiau.",
     "en": "I can continue in Lithuanian or English. Please tell me which language you prefer."
   },
   "laboratoryInfo": {
-    "lt": "Dantų laboratorija nėra atskira pacientų paslauga registracijai. Ji padeda greičiau ir tiksliau atlikti gydytojo paskirtus darbus; laboratorijos darbų kainos pacientui atskirai nerodomos.",
-    "en": "The dental laboratory is not a separate patient service for booking. It supports faster, more precise clinician-ordered work; laboratory work prices are not shown separately to patients."
+    "lt": "Taip, klinika turi dantų laboratoriją. Ji padeda atlikti gydytojo paskirtus darbus; laboratorijos darbų kainos pacientams atskirai nerodomos.",
+    "en": "Yes, the clinic has a dental laboratory. It supports clinician-ordered work; laboratory work prices are not shown separately to patients."
   }
 }

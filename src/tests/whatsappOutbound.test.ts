@@ -6,22 +6,18 @@ describe("whatsappOutbound Option C", () => {
     expect(getOutboundBodyOptionC(false, "lt", "Full reply text")).toBe("Full reply text");
   });
 
-  it("prepends clinical guidance before ack when escalated clinical_or_urgent", () => {
-    const clinical = "Apgailestauju, tačiau negaliu vertinti klinikinės būklės.";
+  it("urgent clinical: safety reply only — no Option C ack", () => {
+    const clinical = "Pagal jūsų aprašymą reikėtų nedelsiant susisiekti su klinika telefonu +370 610 11222.";
     const body = getOutboundBodyOptionC(true, "lt", clinical, "clinical_or_urgent");
-    expect(body).toContain(clinical);
-    expect(body).toContain("Jūsų užklausą gavome");
-    expect(body).toContain("8:00");
-    expect(body).toContain("17:00");
+    expect(body).toBe(clinical);
+    expect(body).not.toContain("Jūsų užklausą gavome");
   });
 
-  it("prepends EN clinical guidance before ack when escalated clinical_or_urgent", () => {
-    const clinical = "I am sorry, but I cannot assess clinical conditions.";
+  it("urgent clinical EN: safety reply only — no Option C ack", () => {
+    const clinical = "Based on what you described, please contact the clinic immediately on +370 610 11222.";
     const body = getOutboundBodyOptionC(true, "en", clinical, "clinical_or_urgent");
-    expect(body).toContain(clinical);
-    expect(body).toContain("We have received your enquiry");
-    expect(body).toContain("08:00");
-    expect(body).toContain("17:00");
+    expect(body).toBe(clinical);
+    expect(body).not.toContain("We have received your enquiry");
   });
 
   it("returns only ack for unknown escalation", () => {

@@ -1,10 +1,10 @@
 {
   "appointmentPrep": {
-    "lt": "Rekomenduojame atvykti 10–15 min. anksčiau, kad ramiai sutvarkytume dokumentus. Su savimi turėkite asmens tapatybės dokumentą.\n\nParkavimas: prie pagrindinio įėjimo yra nemokama 5 vietų aikštelė; netoliese yra ir mokamų vietų.",
-    "en": "We recommend arriving 10–15 minutes early so documents can be completed calmly. Please bring an identity document.\n\nParking: there is a free 5-space area at the main entrance; paid parking is also available nearby."
+    "lt": "Rekomenduojame atvykti 10–15 min. anksčiau ir turėti asmens dokumentą – registratūroje gali reikėti užpildyti dokumentus.\n\nPrie pagrindinio įėjimo yra nemokama 5 vietų aikštelė; netoliese yra ir mokamų parkavimo vietų.",
+    "en": "We recommend arriving 10–15 minutes early with an identity document — reception may ask you to complete paperwork.\n\nThere is a free 5-space parking area at the main entrance; paid parking is also available nearby."
   },
   "visitExpectations": {
-    "lt": "Registratūroje gali tekti užpildyti anketą ir pasirašyti dokumentus; gali prireikti sutikimų procedūroms.\n\nGydytojas atlieka apžiūrą. Jei reikia, skiriama diagnostika.\n\nSudaromas gydymo planas; variantai ir kainos aptariami po įvertinimo. Galutinę kainą įvardina gydytojas.",
-    "en": "At reception you may complete a form and sign documents; procedure consents may also be required.\n\nThe dentist examines you. Diagnostics may be prescribed if needed.\n\nA treatment plan is drawn up; options and fees are discussed after assessment. The dentist states the final fee."
+    "lt": "Pirmojo vizito metu gydytojas pirmiausia apžiūrės jūsų dantis ir, jei reikės, paskirs diagnostiką. Po įvertinimo aptars gydymo variantus, planą ir kainas.\n\nRekomenduojame atvykti 10–15 min. anksčiau ir turėti asmens dokumentą – registratūroje gali reikėti užpildyti dokumentus.",
+    "en": "At your first visit the dentist will examine your teeth and, if needed, arrange diagnostics. After the assessment they will discuss treatment options, the plan, and fees.\n\nPlease arrive 10–15 minutes early with an identity document — reception may ask you to complete paperwork."
   }
 }

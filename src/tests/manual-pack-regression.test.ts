@@ -59,7 +59,7 @@ describe("manual pack regression (POST /messages/test)", () => {
     expect(res.body.intent).toBe("booking_request");
     expect(res.body.language).toBe("en");
     expect(res.body.escalated).toBe(false);
-    expect(String(res.body.response).toLowerCase()).toContain("can't register");
+    expect(String(res.body.response).toLowerCase()).toMatch(/can't book|can't register/);
   });
 
   it("Ar dirbate savaitgaliais? -> clinic_hours + lt", async () => {

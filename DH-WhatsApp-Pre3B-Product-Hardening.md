@@ -4,7 +4,7 @@
 **Status:** **FUNCTIONAL HARDENING COMPLETE** ✅ — F5b waived (Schema v1 limit); next = Clinic Voice & Response Presentation v1  
 **Character:** Narrow product-policy / retrieval hardening — **not** Phase 3B clinic pilot  
 **Upstream:** `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` (CLOSED — Technical PASS / Product PARTIAL)  
-**Downstream:** Clinic Voice & Response Presentation v1 → short owner smoke → Phase 3B protocol  
+**Downstream:** `DH-WhatsApp-Clinic-Voice-Response-Presentation-v1.md` (DRAFT) → short owner smoke → Phase 3B protocol  
 
 ---
 

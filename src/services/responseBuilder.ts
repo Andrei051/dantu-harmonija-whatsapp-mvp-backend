@@ -11,14 +11,14 @@ import { knowledgeService } from "./knowledgeService";
 
 const bookingContactBlock = (language: SupportedLanguage, profile: ClinicProfile): string =>
   language === "lt"
-    ? `Per šį kanalą vizitų registruoti negaliu.\n\nRegistruokitės arba susisiekite su klinika įprastu būdu:\n\nSvetainė: ${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
-    : `I can't register visits through this channel.\n\nTo schedule a visit, please follow the clinic's usual process:\n\nWebsite: ${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`;
+    ? `Per WhatsApp vizito užregistruoti negaliu.\n\nDėl vizito susisiekite su klinika:\n${profile.phone}`
+    : `I can't book appointments on WhatsApp.\n\nPlease contact the clinic to schedule a visit:\n${profile.phone}`;
 
 const bookingOnlineRegistrationBlock = (language: SupportedLanguage, profile: ClinicProfile): string => {
   const url = profile.onlineRegistrationUrl ?? `${profile.website}registracija/`;
   return language === "lt"
-    ? `Per šį kanalą vizitų registruoti negaliu.\n\nKonsultacijoms ir burnos higienai galite registruotis internetu:\n${url}\n\nKitu klausimu dėl vizito susisiekite:\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
-    : `I can't register visits through this channel.\n\nFor specialist consultations and oral hygiene, you can book online:\n${url}\n\nFor other visit questions, contact the clinic:\nPhone: ${profile.phone}\nEmail: ${profile.email}`;
+    ? `Registruotis galite internetu:\n${url}\n\nPer WhatsApp vizito užregistruoti negaliu.`
+    : `You can register online:\n${url}\n\nI can't book appointments on WhatsApp.`;
 };
 
 const bookingGuidanceBlock = (
@@ -33,8 +33,8 @@ const bookingGuidanceBlock = (
 const availabilityLimitationBlock = (language: SupportedLanguage, profile: ClinicProfile): string => {
   const url = profile.onlineRegistrationUrl ?? `${profile.website}registracija/`;
   return language === "lt"
-    ? `Laisvų laikų per šį kanalą pasakyti negaliu.\n\nTerminų ieškokite internetinėje registracijoje (${url}) arba susisiekite su klinika:\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
-    : `I can't provide available appointment times through this channel.\n\nPlease check online registration (${url}) or contact the clinic:\nPhone: ${profile.phone}\nEmail: ${profile.email}`;
+    ? `Laisvų laikų per šį kanalą pasakyti negaliu.\n\nTerminų ieškokite internetinėje registracijoje:\n${url}\n\nArba skambinkite: ${profile.phone}`
+    : `I can't provide available appointment times through this channel.\n\nPlease check online registration:\n${url}\n\nOr call: ${profile.phone}`;
 };
 
 const priceServiceClarification = (language: SupportedLanguage): string =>
@@ -232,12 +232,6 @@ export const buildResponse = (
 
     case "service_info": {
       const service = serviceById(services, intentResult.serviceId);
-      const yesAvail =
-        intentResult.serviceAvailabilityYesNo === true
-          ? language === "lt"
-            ? "Taip, atliekame. "
-            : "Yes, we offer this. "
-          : "";
 
       if (!service) {
         if (intentResult.serviceAvailabilityYesNo) {
@@ -246,8 +240,8 @@ export const buildResponse = (
             intent: "service_info",
             reply:
               language === "lt"
-                ? `Ši procedūra neįvardyta mūsų trumpoje informacijoje.\n\nDaugiau: ${profile.website}, tel. ${profile.phone}.`
-                : `That procedure is not listed in our short information.\n\nMore: ${profile.website}, phone ${profile.phone}.`,
+                ? `Ši procedūra neįvardyta mūsų trumpoje informacijoje. Daugiau: ${profile.website}, tel. ${profile.phone}.`
+                : `That procedure is not listed in our short information. More: ${profile.website}, phone ${profile.phone}.`,
             escalated: false
           };
         }
@@ -259,13 +253,16 @@ export const buildResponse = (
         };
       }
 
+      // Voice §5: patient-facing sentence, not "Name: description" field label
+      const reply =
+        language === "lt"
+          ? `Taip, klinikoje teikiama paslauga „${service.name.lt}“. ${service.description.lt}`
+          : `Yes, the clinic offers ${service.name.en}. ${service.description.en}`;
+
       return {
         language,
         intent: "service_info",
-        reply:
-          language === "lt"
-            ? `${yesAvail}${service.name.lt}: ${service.description.lt}`
-            : `${yesAvail}${service.name.en}: ${service.description.en}`,
+        reply,
         escalated: false
       };
     }
@@ -307,8 +304,8 @@ export const buildResponse = (
 
       const priceBody =
         language === "lt"
-          ? `${price.label.lt}: ${price.amountText.lt}${price.notes ? `\n\n${price.notes.lt}` : ""}`
-          : `${price.label.en}: ${price.amountText.en}${price.notes ? `\n\n${price.notes.en}` : ""}`;
+          ? `${price.label.lt} kainuoja ${price.amountText.lt}${price.notes ? `\n\n${price.notes.lt}` : ""}`
+          : `${price.label.en} costs ${price.amountText.en}${price.notes ? `\n\n${price.notes.en}` : ""}`;
 
       return {
         language,

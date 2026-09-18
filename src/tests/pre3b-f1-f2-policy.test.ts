@@ -430,7 +430,7 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.actions).toContain("F6_laboratory_info");
     expect(policy.foundation_hits).toContain("fallback.laboratoryInfo");
     expect(policy.reply).toMatch(/laborator/i);
-    expect(policy.reply).toMatch(/nėra atskira pacientų paslauga/i);
+    expect(policy.reply).toMatch(/kainos pacientams atskirai nerodomos|nėra atskira/i);
     expect(policy.actions).not.toContain("C4_about");
   });
 
