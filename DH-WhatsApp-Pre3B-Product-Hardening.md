@@ -1,7 +1,7 @@
 # Pre-3B — Product Hardening (change control)
 
 **Date:** 2026-09-18  
-**Status:** **OPEN** 🟡 — **F1 + F2 HARDENED + PROD VERIFIED** 🔒; F4 next  
+**Status:** **OPEN** 🟡 — **F1 + F2 + F4 HARDENED + PROD VERIFIED** 🔒; F5/F6 RCA next  
 **Character:** Narrow product-policy / retrieval hardening — **not** Phase 3B clinic pilot  
 **Upstream:** `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` (CLOSED — Technical PASS / Product PARTIAL)  
 **Downstream after green:** Clinic Voice & Response Presentation v1 → short owner smoke → Phase 3B protocol  
@@ -47,7 +47,7 @@ Convert Phase 3A owner evidence into **governed behaviour changes** without:
 
 | ID | Finding | Action |
 |---|---|---|
-| **F4** | Consultation cue lost in `bookingRouteFor` | **Implementing** — align with v1.1 consultation cue |
+| **F4** | Consultation cue lost in `bookingRouteFor` | **HARDENED + PROD VERIFIED** 🔒 (consultation → online; implant treatment → contact) |
 | **F5** | Price / service retrieval incomplete | Trace before change |
 | **F6** | Approved Foundation facts not surfaced | Trace which layer dropped |
 
