@@ -385,4 +385,29 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.reply).toMatch(/Dantu Harmonija|Dantų Harmonija/i);
     expect(policy.reply).not.toMatch(/experienced specialists/i);
   });
+
+  it("F6 children: service_info + null id + vaik* → paediatric capability", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [{ type: "service_info", confidence: 0.9 }],
+        service_or_topic: {
+          id: null,
+          confidence: 0.7,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Ar priimate mokyklinio amžiaus vaikus?"
+    );
+
+    expect(policy.actions).toContain("F6_single_slot_service_bridge");
+    expect(policy.reply).toMatch(/vaik/i);
+    expect(policy.escalated).toBe(false);
+    expect(policy.actions).not.toContain("D2_unresolved_service_info_clarify");
+  });
 });

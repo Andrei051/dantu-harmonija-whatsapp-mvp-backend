@@ -1,7 +1,7 @@
 # Pre-3B — Product Hardening (change control)
 
 **Date:** 2026-09-18  
-**Status:** **OPEN** 🟡 — F1/F2/F4/F5a ✅; F6 name implementing; F5/F6 overall still OPEN  
+**Status:** **OPEN** 🟡 — F1/F2/F4/F5a/F6-name ✅; F6 children implementing; F6 lab + F5b pending  
 **Character:** Narrow product-policy / retrieval hardening — **not** Phase 3B clinic pilot  
 **Upstream:** `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` (CLOSED — Technical PASS / Product PARTIAL)  
 **Downstream after green:** Clinic Voice & Response Presentation v1 → short owner smoke → Phase 3B protocol  
@@ -177,8 +177,8 @@ If recovery starts needing **implicit** entities or complex multi-topic behaviou
 | Slice | Contract | Status |
 |---|---|---|
 | **F5a** | `price` + null id + **exactly one** explicit Foundation service in message → that price + disclaimer | **HARDENED + PROD VERIFIED** 🔒 |
-| **F6 name** | Name/identity ask → `clinicName` (not about essay) | Implementing |
-| **F6 children** | Same service_info null-id bridge → paediatric/family capability | Pending (prefer general bridge) |
+| **F6 name** | Name/identity ask → `clinicName` (not about essay) | **HARDENED + PROD VERIFIED** 🔒 |
+| **F6 children** | Same service_info null-id bridge → paediatric/family capability | Implementing |
 | **F6 lab** | Explicit lab ask → `laboratoryInfo` (not service bridge) | Pending separate |
 | **F5b** | Multi-price topics | **Defer / likely waive** unless trivial after F5a — prefer document Schema limit over Schema-v2-by-stealth |
 

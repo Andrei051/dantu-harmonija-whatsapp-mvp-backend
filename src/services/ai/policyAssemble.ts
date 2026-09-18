@@ -463,14 +463,13 @@ export const applyPolicyAndAssemble = (
       if (!clinicalJudgementActive) primary_intent_label = "service_info";
       const built = buildResponse(language, { intent: "service_info", serviceId: sid });
       parts.push(built.reply);
-    } else if (
-      clinicalJudgementActive &&
-      interp.service_or_topic?.id == null
-    ) {
-      // Temporary single-slot schema bridge — F2 / R7
+    } else if (interp.service_or_topic?.id == null) {
+      // Single-slot schema bridge: explicit Foundation names in current message (R7 / F6 children)
       const recoveredIds = matchExplicitFoundationServiceIds(patientMessage);
       if (recoveredIds.length > 0) {
-        actions.push("F2_single_slot_schema_bridge");
+        actions.push(
+          clinicalJudgementActive ? "F2_single_slot_schema_bridge" : "F6_single_slot_service_bridge"
+        );
         const capabilityReplies: string[] = [];
         for (const recoveredId of recoveredIds) {
           foundation_hits.push(`service_description:${recoveredId}`);
@@ -481,11 +480,23 @@ export const applyPolicyAndAssemble = (
           });
           capabilityReplies.push(built.reply);
         }
-        // Capabilities before assessment clause when assessment already prepended
-        parts.unshift(...capabilityReplies);
-      } else {
+        if (clinicalJudgementActive) {
+          parts.unshift(...capabilityReplies);
+        } else {
+          parts.push(...capabilityReplies);
+          primary_intent_label = "service_info";
+        }
+      } else if (clinicalJudgementActive) {
         foundation_misses.push("service_description:unresolved_under_clinical");
         actions.push("F2_bridge_no_explicit_foundation_match");
+      } else {
+        foundation_misses.push("service_description:unresolved");
+        actions.push("D2_unresolved_service_info_clarify");
+        primary_intent_label = "service_info";
+        const fallback = buildResponse(language, { intent: "unknown" });
+        parts.push(fallback.reply);
+        escalated = true;
+        route = "option_c";
       }
     } else if (!clinicalJudgementActive) {
       foundation_misses.push("service_description:unresolved");
