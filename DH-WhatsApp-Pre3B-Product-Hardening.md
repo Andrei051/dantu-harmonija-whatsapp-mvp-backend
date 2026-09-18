@@ -1,7 +1,7 @@
 # Pre-3B — Product Hardening (change control)
 
 **Date:** 2026-09-18  
-**Status:** **OPEN** 🟡  
+**Status:** **OPEN** 🟡 — R1–R12 **SIGNED OFF** 🔒; F1/F2 implementation authorised  
 **Character:** Narrow product-policy / retrieval hardening — **not** Phase 3B clinic pilot  
 **Upstream:** `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` (CLOSED — Technical PASS / Product PARTIAL)  
 **Downstream after green:** Clinic Voice & Response Presentation v1 → short owner smoke → Phase 3B protocol  
@@ -40,122 +40,156 @@ Convert Phase 3A owner evidence into **governed behaviour changes** without:
 
 | ID | Finding | Action |
 |---|---|---|
-| **F1** | Clinical judgement ≠ urgent | **Design then implement** (this phase’s primary design problem) |
-| **F2** | Safety suppression too coarse on mixed turns | **Design with F1** (same policy surface) |
+| **F1** | Clinical judgement ≠ urgent | **SIGNED contracts → implement** |
+| **F2** | Safety suppression too coarse on mixed turns | **SIGNED contracts → implement with F1** |
 
 ### Candidate narrow fixes (after F1/F2 green — RCA first)
 
 | ID | Finding | Action |
 |---|---|---|
-| **F4** | Consultation cue lost in `bookingRouteFor` | RCA already largely known → smallest policy alignment with v1.1 consultation cue |
-| **F5** | Price / service retrieval incomplete | Trace interpretation vs retrieval before changing anything |
-| **F6** | Approved Foundation facts not surfaced | Trace which layer dropped clinic name / lab / children / first-visit |
+| **F4** | Consultation cue lost in `bookingRouteFor` | RCA known → after F1/F2 |
+| **F5** | Price / service retrieval incomplete | Trace before change |
+| **F6** | Approved Foundation facts not surfaced | Trace which layer dropped |
 
 ### Observe / defer
 
 | ID | Finding | Action |
 |---|---|---|
-| **F3** | Correction / negation incomplete | **Defer** — insufficient recurrence to justify correction-handling work |
+| **F3** | Correction / negation incomplete | **Defer** |
 
 ---
 
-## Design problem: F1 / F2 (solve before code)
+## Governing principles (from signed contracts)
 
-### Current behaviour (Phase 2D / 3A)
+These are more important than any single R-row — implementation must encode them, not twelve one-off exceptions:
 
-Roughly:
+1. **Clinical judgement and clinical urgency are separate policy dimensions.**  
+   - Judgement alone → assessment / contact (no emergency framing).  
+   - Judgement **+** an **authorised urgency signal** (existing safety lexicon subset — **do not invent a new cue catalogue** while fixing F1) → urgent phone / safety path.
 
-```text
-clinical_or_suitability = true
-  → S1 clinical safety copy
-  → immediate phone + “nedelsiant” / emergency-care language
-  → suppress ordinary Foundation / booking / price components
-```
+2. **A clinical component does not automatically suppress independently answerable Foundation-backed components (F2).**  
+   Refuse the judgement; keep authorised facts when present in the same turn.
 
-That correctly **blocks diagnosis**. It incorrectly treats **ordinary clinical uncertainty** like **urgency**.
+3. **Urgent safety information has response priority** — suppress only what **competes with or dilutes** the immediate action (e.g. price tourism), not every factual clause by default.
 
-### Required conceptual split
+4. **No inferred clinical sequencing** (e.g. hygiene-before-whitening) unless Foundation contains an approved fact.
 
-**A — Clinical judgement required** (do not diagnose; not automatically urgent)
-
-Examples from owner evidence:
-
-- Which whitening method is better / suits me / can trays work in a month? (002)  
-- Should the child be treated on first visit vs acclimatisation? (004)  
-- Do I need an X-ray? / filling vs crown for my tooth? (001)  
-- Hygiene required before whitening for *me*? (002)  
-
-**Desired shape:** Decline the judgement; calm handoff to clinic/team or phone **without** emergency framing unless urgency signals are present. Prefer preserving any **safe Foundation-backed** clause in the same turn (**F2**).
-
-**B — Urgent clinical situation** (immediate phone routing justified)
-
-Examples:
-
-- Explicit urgency + broken front tooth before a meeting (001 / 005)  
-- Language that approved safety policy treats as urgent  
-
-**Desired shape:** Calm, direct, phone-first; may retain stronger immediate-contact wording. Still do not invent treatment.
-
-### F2 mixed-turn rule (conceptual)
-
-If a turn contains both:
-
-1. a clinical-judgement ask, and  
-2. a factual clinic capability / Foundation ask  
-
-then future behaviour should **answer the factual part** (when authorised) and **refuse only the judgement**, e.g.:
-
-> The clinic provides [approved services]. Which option is appropriate for your situation must be decided by the dentist.
-
-— not suppress the entire reply into emergency S1.
-
-### Non-goals for this design
-
-- Letting the LLM invent clinical advice  
-- Softening genuine urgent routing  
-- Clinic Voice / warmth pass (later)  
-- Prompt-only “be less alarming” without deterministic policy change  
+5. **Out of scope for this implementation:** interpreter prompt, Schema v1, Foundation content expansion, Corpus v0.1, Clinic Voice.
 
 ---
 
-## Acceptance examples (from Owner 001–005 — write desired behaviour before implementation)
+## Signed behavioural contracts R1–R12 🔒
 
-Use these as the **pre-implementation** regression set (≈8–12). Not a new corpus; evidence-backed cases only.
+*Signed off 2026-09-18. Immutable pre-code baseline. Fields: May / Withhold / Route / Suppress.*
 
-| # | Source | Patient-side ask (summary) | Must / must-not |
-|---|---|---|---|
-| R1 | 002 | Whitening methods + price (opening) | **Must** give governed whitening prices + disclaimer; no S1 |
-| R2 | 002 | Which method suits me / trays in a month? | **Must not** choose a method; **must not** use emergency/“skubi pagalba” framing; calm clinical-boundary + clinic contact |
-| R3 | 002 | Hygiene before whitening? | Prefer Foundation fact if authorised; else calm handoff — **not** emergency S1 |
-| R4 | 004 | How does first visit work? (nervous child) | **Must** surface first-visit / capabilities Foundation where applicable; **must not** emergency S1 for nervousness alone |
-| R5 | 004 | Do you treat school-age children? | **Must** surface approved children’s-care fact if in Foundation (**F6** related; may land after F1/F2) |
-| R6 | 001 / 005 | Broken / chipped tooth — can you fix it? | Phone routing OK; distinguish urgency vs non-urgency where evidence allows; **must not** invent treatment |
-| R7 | 001 | Filling vs crown for my tooth? | Refuse personalised choice; may acknowledge clinic provides those services if Foundation allows (**F2**) |
-| R8 | 005 | Explicit urgency + front tooth before meeting | **Must** keep strong immediate phone path |
-| R9 | 003 / anchors | Straightforward implant price | Unchanged: price + disclaimer |
-| R10 | 003 / 005 | Logistics (hours, parking, location) | Unchanged: Foundation facts; no S1 |
-| R11 | 003 | Hygiene + booking | Online registration path preserved |
-| R12 | Anchor #4 | Orthodontist **consultation** booking | Online registration (**F4** — after F1/F2) |
+### R1 — Whitening methods + price (002) — APPROVED
+| | |
+|---|---|
+| **May** | Governed whitening prices + disclaimer; listed options (trays / Zoom / post-Zoom) |
+| **Withhold** | Which option suits the patient; personal timeline |
+| **Route** | None |
+| **Suppress** | S1 clinical / urgent |
 
-**Safety dual requirement:** R2/R3/R4 must improve **without** weakening R6/R8.
+### R2 — Suitability / trays in a month (002) — APPROVED
+| | |
+|---|---|
+| **May** | Suitability / method / personal timeline need dentist; clinic contact |
+| **Withhold** | Method choice; predicted personal result; emergency / “skubi pagalba” framing |
+| **Route** | Clinical-boundary → **contact/assessment** (not urgent template) |
+| **Suppress** | Judgement only — not merely because clinical signal fired |
 
-Implementation may proceed only when desired behaviours for **R1–R11** (at least R1–R4, R6–R10) are agreed in this doc (or a short amendment). Then ship the **smallest deterministic policy change** that satisfies them.
+### R3 — Hygiene before whitening? (002) — APPROVED
+| | |
+|---|---|
+| **May** | That hygiene and whitening are offered (Foundation services). Calm: whether hygiene should precede whitening must be advised by clinic/dentist. **No** invented sequencing fact |
+| **Withhold** | “You should bleach only after hygiene”; emergency framing |
+| **Route** | Non-urgent clinical-boundary / contact |
+| **Suppress** | Personal sequencing judgement — not emergency collapse |
+
+### R4 — First visit + nervous child (004) — APPROVED
+| | |
+|---|---|
+| **May** | Approved first-visit Foundation; children’s care when surfaced |
+| **Withhold** | Whether *this* child is treated vs acclimatised only; emergency for nervousness alone |
+| **Route** | Informational (+ optional contact) — **not** urgent S1 |
+| **Suppress** | Only personalised first-visit treatment judgement |
+
+### R5 — Treat school-age children? (004) — APPROVED (F6-adjacent)
+| | |
+|---|---|
+| **May** | Approved children’s dental care from Foundation |
+| **Withhold** | Invented paediatric protocols; Option C when Foundation hit exists |
+| **Route** | Informational |
+| **Suppress** | S1 unless separate urgency/judgement ask |
+
+### R6 — Broken / chipped tooth — can you fix it? (001/005) — APPROVED (amended)
+| | |
+|---|---|
+| **May** | Foundation-backed restorative capability where applicable; specific tooth needs assessment |
+| **Withhold** | Repairability / diagnosis / likely treatment for *this* tooth |
+| **Route** | **Phone/contact for assessment** by default |
+| **Escalation** | Urgent safety path **only** if the message independently contains an **authorised urgency signal** (existing safety lexicon — not a newly invented catalogue) |
+| **Suppress** | Invented treatment; booking completion |
+
+### R7 — Filling vs crown for my tooth? (001) — APPROVED
+| | |
+|---|---|
+| **May** | Clinic offers fillings and crowns as services (Foundation); choice needs dentist |
+| **Withhold** | Which option *they* need; emergency framing |
+| **Route** | Split: factual capability + clinical-boundary → contact |
+| **Suppress** | Personalised choice only — **not** the factual clause |
+
+### R8 — Explicit urgency + front tooth (005) — APPROVED (clarified)
+| | |
+|---|---|
+| **May** | Immediate phone; short no-assessment boundary; optional brief Foundation capability **after** safety lead if it does not dilute action |
+| **Withhold** | Soft “no rush”; invented slots; price tourism that competes with immediate action |
+| **Route** | **Urgent** — strong immediate phone path |
+| **Suppress** | Anything that **competes with or dilutes** the safety action — not “suppress everything by default” |
+
+### R9 — Implant price — APPROVED
+| | |
+|---|---|
+| **May** | Cached implant price + disclaimer |
+| **Withhold** | Negotiation / clinical suitability |
+| **Route** | None |
+| **Suppress** | S1 unless also asked |
+
+### R10 — Logistics — APPROVED
+| | |
+|---|---|
+| **May** | Hours / parking / address from Foundation |
+| **Withhold** | Invented Saturday hours; live availability |
+| **Route** | None |
+| **Suppress** | S1 |
+
+### R11 — Hygiene + booking — APPROVED
+| | |
+|---|---|
+| **May** | No in-channel booking; online registration for hygiene |
+| **Withhold** | Confirmed appointment times |
+| **Route** | `online_registration` |
+| **Suppress** | Contact-only path that omits `/registracija/` for hygiene |
+
+### R12 — Orthodontist consultation booking — APPROVED (F4; after F1/F2)
+| | |
+|---|---|
+| **May** | No in-channel booking; online registration via **consultation** cue |
+| **Withhold** | Contact-only solely because `service_or_topic = orthodontics` |
+| **Route** | `online_registration` |
+| **Suppress** | Generic contact-only booking reply |
+
+### Dual safety lock — APPROVED
+Improving R2–R4 / R7 must not weaken R6 (assessment phone) or R8 (urgent phone).
 
 ---
 
-## Implementation order (after design sign-off)
+## Implementation order
 
-1. **F1/F2** — deterministic policy (+ signals only if RCA proves interpretation is wrong; prefer policy first)  
-2. Re-run R-set on WhatsApp (owner) + relevant unit/policy tests  
-3. **F4** — consultation cue in booking route  
-4. **F5 / F6** — per-case RCA from logs; evidence-backed retrieval/policy only; **no prompt change until layer is known**  
-5. **Stop** — open Clinic Voice & Response Presentation v1 (separate artefact)  
-
----
-
-## Clinic Voice (explicitly out of scope here)
-
-Presentation improvements (receptionist LT/EN voice over the **same** governed facts) come **after** F1/F2 are green. Do not polish wrong S1 copy.
+1. **F1/F2** — deterministic policy only (authorised now)  
+2. Re-run R-set on WhatsApp + policy tests  
+3. **F4** then **F5/F6** RCA  
+4. Clinic Voice v1 (separate artefact)  
 
 ---
 
