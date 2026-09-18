@@ -565,17 +565,29 @@ export const applyPolicyAndAssemble = (
   }
 
   if (parts.length === 0) {
-    if (hasIntent(interp, "other") || interp.signals.unsupported_or_ambiguous) {
-      actions.push("foundation_or_unsupported_handoff");
-      foundation_misses.push("no_authorised_block");
+    // Intent-agnostic: AI may label lab as service_info, about_clinic, or other+unsupported
+    if (isLaboratoryAsk(patientMessage)) {
+      actions.push("F6_laboratory_info");
+      foundation_hits.push("fallback.laboratoryInfo");
+      primary_intent_label = "about_clinic";
+      const built = buildResponse(language, {
+        intent: "about_clinic",
+        laboratoryInfo: true
+      });
+      parts.push(built.reply);
     } else {
-      actions.push("safe_unknown");
+      if (hasIntent(interp, "other") || interp.signals.unsupported_or_ambiguous) {
+        actions.push("foundation_or_unsupported_handoff");
+        foundation_misses.push("no_authorised_block");
+      } else {
+        actions.push("safe_unknown");
+      }
+      const built = buildResponse(language, { intent: "unknown" });
+      escalated = true;
+      route = "option_c";
+      primary_intent_label = "unknown";
+      parts.push(built.reply);
     }
-    const built = buildResponse(language, { intent: "unknown" });
-    escalated = true;
-    route = "option_c";
-    primary_intent_label = "unknown";
-    parts.push(built.reply);
   }
 
   return {

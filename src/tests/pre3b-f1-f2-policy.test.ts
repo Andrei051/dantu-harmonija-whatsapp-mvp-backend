@@ -460,4 +460,31 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.escalated).toBe(false);
     expect(policy.actions).not.toContain("D2_unresolved_service_info_clarify");
   });
+
+  it("F6 lab: other + unsupported + laborator* → laboratoryInfo (PROD flap)", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "lt",
+        intents: [{ type: "other", confidence: 0.9 }],
+        service_or_topic: {
+          id: null,
+          confidence: 0,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: true
+        }
+      }),
+      "Ar turite dantų laboratoriją?"
+    );
+
+    expect(policy.actions).toContain("F6_laboratory_info");
+    expect(policy.foundation_hits).toContain("fallback.laboratoryInfo");
+    expect(policy.reply).toMatch(/laborator/i);
+    expect(policy.escalated).toBe(false);
+    expect(policy.actions).not.toContain("foundation_or_unsupported_handoff");
+  });
 });

@@ -170,7 +170,7 @@ If recovery starts needing **implicit** entities or complex multi-topic behaviou
 | Hygiene + patikrinimas | `price`, `id: professional_hygiene` only | Hygiene price only | Single-slot multi-topic (**F5b**) |
 | Mokyklinio amžiaus vaikus? | `service_info`, `id: null` | Unresolved → Option C | Intent OK; id unresolved; `vaik*` ↔ paediatric |
 | Clinic name? | `about_clinic` | About dump | **P** — `clinicName` never composed |
-| In-house lab? | `about_clinic` *(assumed)* / PROD: `service_info` + null id | About dump / Option C | **P** — not `laboratoryInfo` path; AI may label as service |
+| In-house lab? | PROD flap: `service_info`+null → `other`+unsupported | Option C | **P** — recover via message cues, not AI intent label |
 
 ### Implementation slices (close only after PROD verify)
 
@@ -179,7 +179,7 @@ If recovery starts needing **implicit** entities or complex multi-topic behaviou
 | **F5a** | `price` + null id + **exactly one** explicit Foundation service in message → that price + disclaimer | **HARDENED + PROD VERIFIED** 🔒 |
 | **F6 name** | Name/identity ask → `clinicName` (not about essay) | **HARDENED + PROD VERIFIED** 🔒 |
 | **F6 children** | Same service_info null-id bridge → paediatric/family capability | **HARDENED + PROD VERIFIED** 🔒 |
-| **F6 lab** | Explicit lab ask → `laboratoryInfo` on `about_clinic` **or** `service_info`+null (PROD) | **Code ready** — redeploy after PROD miss |
+| **F6 lab** | Explicit lab ask → `laboratoryInfo` via message cues (intent-agnostic) | **Code ready** — redeploy after other+unsupported miss |
 | **F5b** | Multi-price topics | **Defer / likely waive** unless trivial after F5a — prefer document Schema limit over Schema-v2-by-stealth |
 
 ---
