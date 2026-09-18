@@ -1,7 +1,7 @@
 # Pre-3B — Product Hardening (change control)
 
 **Date:** 2026-09-18  
-**Status:** **OPEN** 🟡 — R1–R12 signed; **F1 HARDENED + PROD VERIFIED** 🔒; F2 bridge authorised  
+**Status:** **OPEN** 🟡 — **F1 + F2 HARDENED + PROD VERIFIED** 🔒; F4 next  
 **Character:** Narrow product-policy / retrieval hardening — **not** Phase 3B clinic pilot  
 **Upstream:** `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` (CLOSED — Technical PASS / Product PARTIAL)  
 **Downstream after green:** Clinic Voice & Response Presentation v1 → short owner smoke → Phase 3B protocol  
@@ -41,13 +41,13 @@ Convert Phase 3A owner evidence into **governed behaviour changes** without:
 | ID | Finding | Action |
 |---|---|---|
 | **F1** | Clinical judgement ≠ urgent | **HARDENED + PROD VERIFIED** 🔒 (R2, R6, R8, dual lock) |
-| **F2** | Safety suppression too coarse on mixed turns | **Bridge authorised** — R4 PASS; R7 structural cause below |
+| **F2** | Safety suppression too coarse on mixed turns | **HARDENED + PROD VERIFIED** 🔒 (R4 + R7 bridge) |
 
 ### Candidate narrow fixes (after F1/F2 green — RCA first)
 
 | ID | Finding | Action |
 |---|---|---|
-| **F4** | Consultation cue lost in `bookingRouteFor` | RCA known → after F1/F2 |
+| **F4** | Consultation cue lost in `bookingRouteFor` | **Implementing** — align with v1.1 consultation cue |
 | **F5** | Price / service retrieval incomplete | Trace before change |
 | **F6** | Approved Foundation facts not surfaced | Trace which layer dropped |
 

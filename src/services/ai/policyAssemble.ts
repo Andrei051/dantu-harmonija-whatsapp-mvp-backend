@@ -59,11 +59,19 @@ const serviceId = (interp: InterpretationV1): string | undefined => {
   return known ? id : undefined;
 };
 
-/** D1: unresolved service must never assume online-registration eligibility. */
-const bookingRouteFor = (interp: InterpretationV1): "online_registration" | "contact" => {
+/** D1 + F4: online for hygiene/diagnostics; consultation cue on message → online even if specialty id resolved. */
+const bookingRouteFor = (
+  interp: InterpretationV1,
+  patientMessage = ""
+): "online_registration" | "contact" => {
   const sid = serviceId(interp);
-  if (sid && ONLINE_BOOKABLE.has(sid)) return "online_registration";
+  const n = normalizeText(patientMessage);
+  const hasConsultationCue =
+    n.includes("konsultac") || n.includes("consultation") || n.includes("consult");
+  if (sid === "professional_hygiene" || sid === "diagnostics") return "online_registration";
+  if (hasConsultationCue) return "online_registration";
   if (sid && !ONLINE_BOOKABLE.has(sid)) return "contact";
+  // Unresolved / null service without consultation cue → contact (D1)
   return "contact";
 };
 
@@ -297,14 +305,14 @@ export const applyPolicyAndAssemble = (
           ...(wantBook && !wantAvail
             ? {
                 appendBookingGuidance: true as const,
-                bookingRoute: bookingRouteFor(interp)
+                bookingRoute: bookingRouteFor(interp, patientMessage)
               }
             : {})
         };
         if (wantAvail) actions.push("C2_availability");
         if (wantBook && !wantAvail) {
           actions.push("C3_booking");
-          route = bookingRouteFor(interp);
+          route = bookingRouteFor(interp, patientMessage);
         } else if (wantAvail) {
           route = "contact";
         }
@@ -326,7 +334,7 @@ export const applyPolicyAndAssemble = (
         needsServiceClarification: true,
         ...(wantAvail ? { appendAvailabilityGuidance: true as const } : {}),
         ...(wantBook && !wantAvail
-          ? { appendBookingGuidance: true as const, bookingRoute: bookingRouteFor(interp) }
+          ? { appendBookingGuidance: true as const, bookingRoute: bookingRouteFor(interp, patientMessage) }
           : {})
       });
       parts.push(built.reply);
@@ -346,7 +354,7 @@ export const applyPolicyAndAssemble = (
     parts.push(built.reply);
   } else if (wantAvail && wantBook) {
     actions.push("C2_availability");
-    route = bookingRouteFor(interp);
+    route = bookingRouteFor(interp, patientMessage);
     primary_intent_label = "booking_request";
     const built = buildResponse(language, {
       intent: "booking_request",
@@ -355,7 +363,7 @@ export const applyPolicyAndAssemble = (
     parts.push(built.reply);
   } else if (wantBook) {
     actions.push("C3_booking");
-    const br = bookingRouteFor(interp);
+    const br = bookingRouteFor(interp, patientMessage);
     route = br;
     primary_intent_label = "booking_request";
     const built = buildResponse(language, {

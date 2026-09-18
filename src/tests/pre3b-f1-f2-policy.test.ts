@@ -267,4 +267,51 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.actions).not.toContain("C1_price");
     expect(policy.reply).not.toMatch(/EUR|filling/i);
   });
+
+  it("F4/R12: orthodontics + consultation cue → online registration", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [{ type: "booking", confidence: 0.95 }],
+        service_or_topic: {
+          id: "orthodontics",
+          confidence: 0.9,
+          source: "current_message"
+        },
+        signals: {
+          booking: "hard",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Noriu užsiregistruoti ortodonto konsultacijai"
+    );
+
+    expect(policy.actions).toContain("C3_booking");
+    expect(policy.route).toBe("online_registration");
+    expect(policy.reply).toMatch(/registracija/i);
+  });
+
+  it("F4: orthodontics treatment booking without consultation cue → contact", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [{ type: "booking", confidence: 0.95 }],
+        service_or_topic: {
+          id: "orthodontics",
+          confidence: 0.9,
+          source: "current_message"
+        },
+        signals: {
+          booking: "hard",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Noriu užsiregistruoti ortodontiniam gydymui"
+    );
+
+    expect(policy.route).toBe("contact");
+    expect(policy.reply).not.toMatch(/registracija\/\)/i);
+  });
 });
