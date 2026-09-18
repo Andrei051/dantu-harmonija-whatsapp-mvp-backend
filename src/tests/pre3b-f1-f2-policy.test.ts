@@ -159,6 +159,65 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.reply).not.toMatch(/skubi(ą|os)? pagalba/i);
   });
 
+  it("R7/F2 bridge: service_info + null id recovers explicit multi-service names", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [
+          { type: "service_info", confidence: 0.95 },
+          { type: "clinical", confidence: 0.9 }
+        ],
+        service_or_topic: {
+          id: null,
+          confidence: 0.8,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Ar jūsų klinikoje darote plombavimą ir karūnėles? Nežinau, ko reikėtų mano dančiui."
+    );
+
+    expect(policy.actions).toContain("S1_clinical_assessment");
+    expect(policy.actions).toContain("F2_single_slot_schema_bridge");
+    expect(policy.reply).toMatch(/plombav/i);
+    expect(policy.reply).toMatch(/protezav|vainikel|karun/i);
+    expect(policy.reply).toMatch(/11222/);
+    expect(policy.reply).not.toMatch(/skubi(ą|os)? pagalba|nedelsiant/i);
+    expect(policy.escalated).toBe(false);
+  });
+
+  it("R7/F2 bridge: no explicit Foundation names → assessment only, no invented services", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [
+          { type: "service_info", confidence: 0.9 },
+          { type: "clinical", confidence: 0.9 }
+        ],
+        service_or_topic: {
+          id: null,
+          confidence: 0.8,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Ką galėtumėte padaryti su mano dančiu? Nežinau ko man reikia."
+    );
+
+    expect(policy.actions).toContain("S1_clinical_assessment");
+    expect(policy.actions).toContain("F2_bridge_no_explicit_foundation_match");
+    expect(policy.actions).not.toContain("F2_single_slot_schema_bridge");
+    expect(policy.reply).not.toMatch(/plombav|protezav|implant/i);
+    expect(policy.reply).toMatch(/11222/);
+  });
   it("R4: first visit + clinical judgement still surfaces first-visit Foundation", () => {
     const policy = applyPolicyAndAssemble(
       base({

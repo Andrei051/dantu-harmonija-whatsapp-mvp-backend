@@ -87,6 +87,29 @@ const clinicalAssessmentCopy = (language: SupportedLanguage): string => {
   return fb.clinicalAssessment?.[language] ?? fb.clinicalOrUrgent[language];
 };
 
+/**
+ * Controlled single-slot schema bridge (temporary): when interpretation emits
+ * service_info but cannot attach a single service_or_topic.id for a multi-service
+ * message, recover explicitly named Foundation services from the current message only.
+ * Not a general-purpose service classifier.
+ */
+const matchExplicitFoundationServiceIds = (patientMessage: string): string[] => {
+  const n = normalizeText(patientMessage);
+  if (!n) return [];
+  const matched: string[] = [];
+  for (const service of knowledgeService.getServices()) {
+    const stems = [
+      ...service.keywords.lt,
+      ...service.keywords.en,
+      service.name.lt,
+      service.name.en
+    ].map((s) => normalizeText(s)).filter((s) => s.length >= 4);
+    const hit = stems.some((stem) => n.includes(stem));
+    if (hit) matched.push(service.id);
+  }
+  return matched;
+};
+
 const isGreetingOnly = (message: string): boolean => {
   const n = message
     .trim()
@@ -349,6 +372,30 @@ export const applyPolicyAndAssemble = (
       if (!clinicalJudgementActive) primary_intent_label = "service_info";
       const built = buildResponse(language, { intent: "service_info", serviceId: sid });
       parts.push(built.reply);
+    } else if (
+      clinicalJudgementActive &&
+      interp.service_or_topic?.id == null
+    ) {
+      // Temporary single-slot schema bridge — F2 / R7
+      const recoveredIds = matchExplicitFoundationServiceIds(patientMessage);
+      if (recoveredIds.length > 0) {
+        actions.push("F2_single_slot_schema_bridge");
+        const capabilityReplies: string[] = [];
+        for (const recoveredId of recoveredIds) {
+          foundation_hits.push(`service_description:${recoveredId}`);
+          actions.push(`C4_service_description_bridged:${recoveredId}`);
+          const built = buildResponse(language, {
+            intent: "service_info",
+            serviceId: recoveredId
+          });
+          capabilityReplies.push(built.reply);
+        }
+        // Capabilities before assessment clause when assessment already prepended
+        parts.unshift(...capabilityReplies);
+      } else {
+        foundation_misses.push("service_description:unresolved_under_clinical");
+        actions.push("F2_bridge_no_explicit_foundation_match");
+      }
     } else if (!clinicalJudgementActive) {
       foundation_misses.push("service_description:unresolved");
       actions.push("D2_unresolved_service_info_clarify");

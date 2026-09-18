@@ -1,7 +1,7 @@
 # Pre-3B — Product Hardening (change control)
 
 **Date:** 2026-09-18  
-**Status:** **OPEN** 🟡 — R1–R12 **SIGNED OFF** 🔒; F1/F2 implementation authorised  
+**Status:** **OPEN** 🟡 — R1–R12 signed; **F1 HARDENED + PROD VERIFIED** 🔒; F2 bridge authorised  
 **Character:** Narrow product-policy / retrieval hardening — **not** Phase 3B clinic pilot  
 **Upstream:** `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` (CLOSED — Technical PASS / Product PARTIAL)  
 **Downstream after green:** Clinic Voice & Response Presentation v1 → short owner smoke → Phase 3B protocol  
@@ -40,8 +40,8 @@ Convert Phase 3A owner evidence into **governed behaviour changes** without:
 
 | ID | Finding | Action |
 |---|---|---|
-| **F1** | Clinical judgement ≠ urgent | **SIGNED contracts → implement** |
-| **F2** | Safety suppression too coarse on mixed turns | **SIGNED contracts → implement with F1** |
+| **F1** | Clinical judgement ≠ urgent | **HARDENED + PROD VERIFIED** 🔒 (R2, R6, R8, dual lock) |
+| **F2** | Safety suppression too coarse on mixed turns | **Bridge authorised** — R4 PASS; R7 structural cause below |
 
 ### Candidate narrow fixes (after F1/F2 green — RCA first)
 
@@ -131,7 +131,30 @@ These are more important than any single R-row — implementation must encode th
 | **Escalation** | Urgent safety path **only** if the message independently contains an **authorised urgency signal** (existing safety lexicon — not a newly invented catalogue) |
 | **Suppress** | Invented treatment; booking completion |
 
-### R7 — Filling vs crown for my tooth? (001) — APPROVED
+### R7 structural cause (PROD log 2026-09-18) — recorded before bridge
+
+Schema v1 represents **at most one** `service_or_topic`. For a multi-service capability question, interpretation may correctly emit `service_info` while leaving `service_or_topic.id = null`.
+
+Evidence (R7):
+
+```text
+intents: service_info + clinical
+service_or_topic.id: null
+policy before bridge: S1_clinical_assessment only; foundation_hits: []
+```
+
+F2 therefore had no Foundation-addressable service block to compose with the clinical-assessment response. This is a **representation limitation**, not a failed interpretation.
+
+**Controlled single-slot schema bridge** (temporary architectural accommodation, not expansion of the interpretation contract):
+
+- Fires only when: `service_info` present ∧ clinical judgement active ∧ `service_or_topic.id == null`
+- Scans **current patient message only** against Foundation service keywords/names
+- Surfaces only authorised service descriptions
+- Must not infer treatment choice, sequencing, suitability, or diagnosis
+- Must not become a general-purpose service classifier (no match on vague “what can you do for my tooth?”)
+- If multi-topic failures proliferate → revisit Schema v1 multi-topic; do **not** stack more bridges
+
+---
 | | |
 |---|---|
 | **May** | Clinic offers fillings and crowns as services (Foundation); choice needs dentist |
