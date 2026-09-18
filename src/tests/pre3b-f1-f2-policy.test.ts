@@ -363,4 +363,26 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.actions).toContain("C1_price_clarify");
     expect(policy.actions).not.toContain("F5a_single_slot_price_bridge");
   });
+
+  it("F6 name: about_clinic + name ask → clinicName only", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "about_clinic", confidence: 0.9 }],
+        service_or_topic: null,
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "What is the name of the clinic?"
+    );
+
+    expect(policy.actions).toContain("F6_clinic_name");
+    expect(policy.foundation_hits).toContain("clinic_profile.clinicName");
+    expect(policy.reply).toMatch(/Dantu Harmonija|Dantų Harmonija/i);
+    expect(policy.reply).not.toMatch(/experienced specialists/i);
+  });
 });

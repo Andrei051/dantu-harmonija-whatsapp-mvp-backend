@@ -499,11 +499,31 @@ export const applyPolicyAndAssemble = (
   }
 
   if (hasIntent(interp, "about_clinic") && !parts.length) {
-    actions.push("C4_about");
-    foundation_hits.push("about_clinic");
-    primary_intent_label = "about_clinic";
-    const built = buildResponse(language, { intent: "about_clinic", aboutFocus: "default" });
-    parts.push(built.reply);
+    const n = normalizeText(patientMessage);
+    const isNameAsk =
+      /\b(name of (the )?clinic|clinic('?s)? name|how do you spell|what('?s| is) your clinic called|koks (yra )?pavadinimas|kaip vadinasi|klinikos pavadinimas)\b/.test(
+        n
+      ) ||
+      (n.includes("spell") && n.includes("clinic")) ||
+      (n.includes("pavadinim") && n.includes("klinik"));
+
+    if (isNameAsk) {
+      actions.push("F6_clinic_name");
+      foundation_hits.push("clinic_profile.clinicName");
+      primary_intent_label = "about_clinic";
+      const name = knowledgeService.getClinicProfile().clinicName;
+      parts.push(
+        language === "en"
+          ? `Our clinic is called ${name}.`
+          : `Mūsų klinikos pavadinimas — ${name}.`
+      );
+    } else {
+      actions.push("C4_about");
+      foundation_hits.push("about_clinic");
+      primary_intent_label = "about_clinic";
+      const built = buildResponse(language, { intent: "about_clinic", aboutFocus: "default" });
+      parts.push(built.reply);
+    }
   }
 
   if (parts.length === 0) {
