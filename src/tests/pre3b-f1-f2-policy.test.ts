@@ -1,0 +1,169 @@
+import { describe, expect, it } from "vitest";
+import { applyPolicyAndAssemble } from "../services/ai/policyAssemble";
+import type { InterpretationV1 } from "../services/ai/validateInterpretation";
+
+const base = (
+  overrides: Partial<InterpretationV1> & {
+    intents: InterpretationV1["intents"];
+  }
+): InterpretationV1 => ({
+  schema_version: "1.0",
+  language: "lt",
+  service_or_topic: null,
+  signals: {
+    booking: "none",
+    availability: false,
+    clinical_or_suitability: false,
+    unsupported_or_ambiguous: false
+  },
+  references: [],
+  overall_confidence: 0.9,
+  ...overrides
+});
+
+describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
+  it("R2: suitability without urgency → assessment contact, not emergency S1", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [{ type: "clinical", confidence: 0.9 }],
+        service_or_topic: {
+          id: "teeth_whitening",
+          confidence: 0.9,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "O kuris variantas efektyvesnis ir ar man tiktų?"
+    );
+
+    expect(policy.actions).toContain("S1_clinical_assessment");
+    expect(policy.actions).not.toContain("S1_urgent_phone");
+    expect(policy.reply).not.toMatch(/skubi(ą|os)? pagalba|emergency care/i);
+    expect(policy.reply).toMatch(/11222/);
+    expect(policy.escalated).toBe(false);
+    expect(policy.route).toBe("contact");
+  });
+
+  it("R6: broken tooth without urgency cue → assessment, not emergency", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [{ type: "clinical", confidence: 0.9 }],
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Part of my tooth fell off. Can your clinic fix it?"
+    );
+
+    expect(policy.actions).toContain("S1_clinical_assessment");
+    expect(policy.reply).not.toMatch(/emergency care|skubi/i);
+    expect(policy.escalated).toBe(false);
+  });
+
+  it("R8: explicit urgency → strong phone path", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "clinical", confidence: 0.95 }],
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Urgently need to fix this front tooth before a meeting."
+    );
+
+    expect(policy.actions).toContain("S1_urgent_phone");
+    expect(policy.reply).toMatch(/immediately|emergency care/i);
+    expect(policy.escalated).toBe(true);
+    expect(policy.route).toBe("phone");
+  });
+
+  it("R7/F2: clinical judgement + service_info keeps Foundation service fact", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [
+          { type: "clinical", confidence: 0.8 },
+          { type: "service_info", confidence: 0.85 }
+        ],
+        service_or_topic: {
+          id: "fillings",
+          confidence: 0.9,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Ar dedat plombas ar karuneles man?"
+    );
+
+    expect(policy.actions).toContain("S1_clinical_assessment");
+    expect(policy.actions).toContain("C4_service_description");
+    expect(policy.reply).toMatch(/plomba|plombav/i);
+    expect(policy.reply).not.toMatch(/skubi(ą|os)? pagalba/i);
+  });
+
+  it("R4: first visit + clinical judgement still surfaces first-visit Foundation", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [
+          { type: "clinical", confidence: 0.7 },
+          { type: "first_visit_expectations", confidence: 0.9 }
+        ],
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Kaip pas jus vyksta pirmasis vizitas, vaikas prisibijo?"
+    );
+
+    expect(policy.actions).toContain("S1_clinical_assessment");
+    expect(policy.actions).toContain("C4_info:first_visit_expectations");
+    expect(policy.reply).not.toMatch(/skubi(ą|os)? pagalba/i);
+  });
+
+  it("R8: urgency + price ask suppresses price tourism", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [
+          { type: "clinical", confidence: 0.9 },
+          { type: "price", confidence: 0.8 }
+        ],
+        service_or_topic: {
+          id: "fillings",
+          confidence: 0.9,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "I'm bleeding badly — how much is a filling?"
+    );
+
+    expect(policy.actions).toContain("S1_urgent_phone");
+    expect(policy.actions).not.toContain("C1_price");
+    expect(policy.reply).not.toMatch(/EUR|filling/i);
+  });
+});

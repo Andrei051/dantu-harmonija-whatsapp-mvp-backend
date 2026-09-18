@@ -2,11 +2,13 @@
  * Phase 2D — deterministic policy + Foundation assembly from Interpretation v1.
  * Hardening: D1 unresolved booking→contact; D2 ask-family Foundation gate;
  * D3 composable info+booking; D4 greeting/empty→capabilities.
+ * Pre-3B F1/F2: clinical judgement ≠ urgency; mixed turns keep Foundation facts.
  */
 import { buildResponse } from "../responseBuilder";
 import { knowledgeService } from "../knowledgeService";
 import { IntentResult } from "../../types/knowledge";
 import { SupportedLanguage } from "../../types/message";
+import { normalizeText } from "../../utils/normalizeText";
 import { InterpretationV1 } from "./validateInterpretation";
 
 const ONLINE_BOOKABLE = new Set(["professional_hygiene", "diagnostics"]);
@@ -14,6 +16,23 @@ const ONLINE_BOOKABLE = new Set(["professional_hygiene", "diagnostics"]);
 /** Foundation absence families — authorised non-answers (not Understanding synonym rescue). */
 const UNSUPPORTED_ASK_FAMILY =
   /ligoniu\s*kas|ligonių\s*kas|kompensuoj|draudim|insurance|reimburs|issimoket|išsimoket|installment|financin|moketi\s*dalimis|mokėti\s*dalimis/i;
+
+/**
+ * Urgency subset of already-authorised clinical safety lexicon (classifier clinical_or_urgent).
+ * Not a new clinical catalogue — Pre-3B F1: judgement alone must not use emergency S1.
+ */
+const URGENCY_CUES = [
+  "stiprus skausmas",
+  "kraujuoja",
+  "urgent",
+  "urgently",
+  "emergency",
+  "bleeding",
+  "severe pain",
+  "skubiai",
+  "skubos tvarka",
+  "nedelsiant"
+];
 
 export type PolicyTrace = {
   actions: string[];
@@ -45,8 +64,18 @@ const bookingRouteFor = (interp: InterpretationV1): "online_registration" | "con
   const sid = serviceId(interp);
   if (sid && ONLINE_BOOKABLE.has(sid)) return "online_registration";
   if (sid && !ONLINE_BOOKABLE.has(sid)) return "contact";
-  // Unresolved / null service → contact (never online default)
   return "contact";
+};
+
+const hasAuthorisedUrgencySignal = (patientMessage: string): boolean => {
+  const n = normalizeText(patientMessage);
+  if (!n) return false;
+  return URGENCY_CUES.some((cue) => n.includes(normalizeText(cue)));
+};
+
+const clinicalAssessmentCopy = (language: SupportedLanguage): string => {
+  const fb = knowledgeService.getFallback();
+  return fb.clinicalAssessment?.[language] ?? fb.clinicalOrUrgent[language];
 };
 
 const isGreetingOnly = (message: string): boolean => {
@@ -115,11 +144,23 @@ export const applyPolicyAndAssemble = (
     };
   }
 
-  // S1 clinical suppress
-  if (interp.signals.clinical_or_suitability || hasIntent(interp, "clinical")) {
-    actions.push("S1_clinical_phone");
-    suppressed.push("booking", "online_registration");
-    const built = buildResponse(language, { intent: "clinical_or_urgent" });
+  const hasClinicalJudgement =
+    interp.signals.clinical_or_suitability || hasIntent(interp, "clinical");
+  const hasUrgency = hasAuthorisedUrgencySignal(patientMessage);
+
+  // F1/F2 — urgent: safety-first; suppress diluting price/booking/availability
+  if (hasClinicalJudgement && hasUrgency) {
+    actions.push("S1_urgent_phone");
+    suppressed.push("booking", "online_registration", "availability", "price_tourism");
+    const urgent = buildResponse(language, { intent: "clinical_or_urgent" });
+    parts.push(urgent.reply);
+    const sidUrgent = serviceId(interp);
+    if (hasIntent(interp, "service_info") && sidUrgent && !hasIntent(interp, "price")) {
+      foundation_hits.push(`service_description:${sidUrgent}`);
+      actions.push("S1_urgent_allow_capability_fact");
+      const built = buildResponse(language, { intent: "service_info", serviceId: sidUrgent });
+      parts.push(built.reply);
+    }
     return {
       actions,
       suppressed,
@@ -127,10 +168,22 @@ export const applyPolicyAndAssemble = (
       foundation_misses,
       route: "phone",
       escalated: true,
-      reply: built.reply,
+      reply: parts.join("\n\n"),
       language,
       primary_intent_label: "clinical_or_urgent"
     };
+  }
+
+  // F1 — clinical judgement without urgency: assessment/contact; keep composing Foundation (F2)
+  let clinicalJudgementActive = false;
+  if (hasClinicalJudgement && !hasUrgency) {
+    clinicalJudgementActive = true;
+    actions.push("S1_clinical_assessment");
+    suppressed.push("booking", "online_registration");
+    parts.push(clinicalAssessmentCopy(language));
+    route = "contact";
+    primary_intent_label = "clinical_or_urgent";
+    escalated = false;
   }
 
   // D2 — unsupported ask family (Foundation absence), even if AI linked a service entity
@@ -169,11 +222,14 @@ export const applyPolicyAndAssemble = (
   }
 
   const wantPrice = hasIntent(interp, "price");
-  const wantAvail = interp.signals.availability || hasIntent(interp, "availability");
-  const wantBook = interp.signals.booking !== "none" || hasIntent(interp, "booking");
+  const wantAvail =
+    !clinicalJudgementActive &&
+    (interp.signals.availability || hasIntent(interp, "availability"));
+  const wantBook =
+    !clinicalJudgementActive &&
+    (interp.signals.booking !== "none" || hasIntent(interp, "booking"));
   const sid = serviceId(interp);
 
-  // D3 — informational blocks that compose with booking/availability (hours, location, …)
   const infoMap: Array<{ type: string; intent: IntentResult["intent"] }> = [
     { type: "clinic_hours", intent: "clinic_hours" },
     { type: "clinic_location", intent: "clinic_location" },
@@ -191,12 +247,11 @@ export const applyPolicyAndAssemble = (
     foundation_hits.push(row.type);
     const built = buildResponse(language, { intent: row.intent });
     parts.push(built.reply);
-    primary_intent_label = row.intent;
+    if (!clinicalJudgementActive) primary_intent_label = row.intent;
   }
 
-  // Composable price
   if (wantPrice) {
-    primary_intent_label = "price_info";
+    if (!clinicalJudgementActive) primary_intent_label = "price_info";
     if (sid) {
       const prices = knowledgeService.getPrices();
       const hit = prices.find((p) => p.serviceId === sid);
@@ -258,7 +313,6 @@ export const applyPolicyAndAssemble = (
     });
     parts.push(built.reply);
   } else if (wantAvail && wantBook) {
-    // Availability restriction takes messaging priority for slots; booking route still contact/online per D1
     actions.push("C2_availability");
     route = bookingRouteFor(interp);
     primary_intent_label = "booking_request";
@@ -279,24 +333,17 @@ export const applyPolicyAndAssemble = (
     parts.push(built.reply);
   }
 
-  // D2 relationship: service_info only authorises service-description fact for that id
   if (hasIntent(interp, "service_info") && !wantPrice && !wantBook && !wantAvail) {
     if (sid) {
       foundation_hits.push(`service_description:${sid}`);
       actions.push("C4_service_description");
-      primary_intent_label = "service_info";
+      if (!clinicalJudgementActive) primary_intent_label = "service_info";
       const built = buildResponse(language, { intent: "service_info", serviceId: sid });
       parts.push(built.reply);
-    } else {
-      // Unresolved service informational ask — do not dump full catalogue as if answering
+    } else if (!clinicalJudgementActive) {
       foundation_misses.push("service_description:unresolved");
       actions.push("D2_unresolved_service_info_clarify");
       primary_intent_label = "service_info";
-      const built = buildResponse(language, {
-        intent: "price_info",
-        needsServiceClarification: true
-      });
-      // Reuse clarify phrasing is imperfect; prefer short contact/unknown
       const fallback = buildResponse(language, { intent: "unknown" });
       parts.push(fallback.reply);
       escalated = true;

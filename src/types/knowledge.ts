@@ -52,6 +52,8 @@ export interface PriceCacheData {
 export interface FallbackData {
   unknown: LocalizedText;
   clinicalOrUrgent: LocalizedText;
+  /** Non-urgent clinical judgement — assessment/contact; no emergency framing (Pre-3B F1). */
+  clinicalAssessment?: LocalizedText;
   languageSwitch: LocalizedText;
   laboratoryInfo?: LocalizedText;
 }
