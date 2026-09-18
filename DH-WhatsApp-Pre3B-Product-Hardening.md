@@ -1,10 +1,10 @@
 # Pre-3B — Product Hardening (change control)
 
 **Date:** 2026-09-18  
-**Status:** **OPEN** 🟡 — F1/F2/F4/F5a/F6 (name/children/lab) ✅; F5b waive decision pending; F3 deferred  
+**Status:** **FUNCTIONAL HARDENING COMPLETE** ✅ — F5b waived (Schema v1 limit); next = Clinic Voice & Response Presentation v1  
 **Character:** Narrow product-policy / retrieval hardening — **not** Phase 3B clinic pilot  
 **Upstream:** `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` (CLOSED — Technical PASS / Product PARTIAL)  
-**Downstream after green:** Clinic Voice & Response Presentation v1 → short owner smoke → Phase 3B protocol  
+**Downstream:** Clinic Voice & Response Presentation v1 → short owner smoke → Phase 3B protocol  
 
 ---
 
@@ -48,8 +48,8 @@ Convert Phase 3A owner evidence into **governed behaviour changes** without:
 | ID | Finding | Action |
 |---|---|---|
 | **F4** | Consultation cue lost in `bookingRouteFor` | **HARDENED + PROD VERIFIED** 🔒 |
-| **F5** | Price / service retrieval incomplete | **OPEN** — RCA locked; slices below |
-| **F6** | Approved Foundation facts not surfaced | **OPEN** — RCA locked; slices below |
+| **F5** | Price / service retrieval incomplete | **CLOSED** — F5a fixed; F5b waived (not an open defect) |
+| **F6** | Approved Foundation facts not surfaced | **HARDENED + PROD VERIFIED** 🔒 (name / children / lab) |
 
 ### Observe / defer
 
@@ -162,17 +162,17 @@ If recovery starts needing **implicit** entities or complex multi-topic behaviou
 
 ---
 
-## F5 / F6 RCA (PROD logs 2026-09-18) — OPEN findings, closed diagnosis
+## F5 / F6 RCA (PROD logs 2026-09-18) — diagnosis closed; slices dispositioned
 
 | Probe | Interpretation | Policy | Class |
 |---|---|---|---|
-| `Kiek kainuoja plomba?` | `price`, `id: null` | `C1_price_clarify` | Intent OK; id unresolved; explicit `plomba` ↔ `fillings` |
-| Hygiene + patikrinimas | `price`, `id: professional_hygiene` only | Hygiene price only | Single-slot multi-topic (**F5b**) |
-| Mokyklinio amžiaus vaikus? | `service_info`, `id: null` | Unresolved → Option C | Intent OK; id unresolved; `vaik*` ↔ paediatric |
-| Clinic name? | `about_clinic` | About dump | **P** — `clinicName` never composed |
-| In-house lab? | PROD flap: `service_info`+null → `other`+unsupported | Option C | **P** — recover via message cues, not AI intent label |
+| `Kiek kainuoja plomba?` | `price`, `id: null` | `C1_price_clarify` | Intent OK; id unresolved; explicit `plomba` ↔ `fillings` → **F5a** |
+| Hygiene + patikrinimas | `price`, `id: professional_hygiene` only | Hygiene price only | Single-slot multi-topic → **F5b waived** |
+| Mokyklinio amžiaus vaikus? | `service_info`, `id: null` | Unresolved → Option C | Intent OK; id unresolved; `vaik*` ↔ paediatric → **F6 children** |
+| Clinic name? | `about_clinic` | About dump | **P** — `clinicName` never composed → **F6 name** |
+| In-house lab? | PROD flap: `service_info`+null → `other`+unsupported | Option C | **P** — recover via message cues → **F6 lab** |
 
-### Implementation slices (close only after PROD verify)
+### Implementation slices
 
 | Slice | Contract | Status |
 |---|---|---|
@@ -180,15 +180,37 @@ If recovery starts needing **implicit** entities or complex multi-topic behaviou
 | **F6 name** | Name/identity ask → `clinicName` (not about essay) | **HARDENED + PROD VERIFIED** 🔒 |
 | **F6 children** | Same service_info null-id bridge → paediatric/family capability | **HARDENED + PROD VERIFIED** 🔒 |
 | **F6 lab** | Explicit lab ask → `laboratoryInfo` via message cues (intent-agnostic) | **HARDENED + PROD VERIFIED** 🔒 |
-| **F5b** | Multi-price topics | **Defer / likely waive** unless trivial after F5a — prefer document Schema limit over Schema-v2-by-stealth |
+| **F5b** | Multi-price topics | **WAIVED** — accepted Schema v1 limitation (below) |
 
----
+### F5b — Multi-price topics: ACCEPTED SCHEMA v1 LIMITATION 🔒
+
+Schema v1 represents one `service_or_topic`. Where a patient requests prices for multiple services in one turn, the interpreter may resolve only one service. Pre-3B will **not** introduce multi-ID price recovery because doing so would extend the single-slot accommodation into a parallel multi-topic representation layer.
+
 | | |
 |---|---|
-| **May** | Clinic offers fillings and crowns as services (Foundation); choice needs dentist |
-| **Withhold** | Which option *they* need; emergency framing |
-| **Route** | Split: factual capability + clinical-boundary → contact |
-| **Suppress** | Personalised choice only — **not** the factual clause |
+| **Boundary** | F5a fixed a defect (one explicit service, one price intent, missing ID). F5b is different: the patient genuinely asks about multiple topics while Schema v1 deliberately represents one. |
+| **Safe behaviour** | May answer one governed price or request clarification; must **not** invent or infer missing prices. |
+| **Reconsider if** | Clinic-pilot evidence shows multi-service price questions are sufficiently frequent or disruptive to justify multi-topic representation in a future schema revision. |
+
+F5b is **not** an unresolved F5 defect after this waiver — it is an explicit product limitation with a reconsideration trigger.
+
+### Final Pre-3B disposition
+
+| Finding | Final disposition |
+|---|---|
+| **F1** Clinical ≠ urgent | ✅ CLOSED — PROD verified |
+| **F2** Clinical + factual composition | ✅ CLOSED — PROD verified |
+| **F3** Correction / reference | ⏸ DEFERRED |
+| **F4** Consultation routing | ✅ CLOSED — PROD verified |
+| **F5a** Named service price recovery | ✅ CLOSED — PROD verified |
+| **F5b** Multi-price | 🟡 WAIVED — Schema v1 limitation |
+| **F6** Foundation surfacing | ✅ CLOSED — name / children / lab PROD verified |
+
+**Functional hardening portion of Pre-3B is complete.** No further natural-language test cycle or 70-case rerun is justified for this gate. Corpus optimisation remains stopped.
+
+### Parked for Clinic Voice (do not fix in Pre-3B policy)
+
+Repeated first-reply boilerplate (`Galiu padėti su informacija…` / `Dėl registracijos ar gydymo klausimų…`) is increasingly conspicuous now that underlying answers are correct. Parked as **presentation**, not correctness.
 
 ### R8 — Explicit urgency + front tooth (005) — APPROVED (clarified)
 | | |
@@ -237,10 +259,10 @@ Improving R2–R4 / R7 must not weaken R6 (assessment phone) or R8 (urgent phone
 
 ## Implementation order
 
-1. **F1/F2** — deterministic policy only (authorised now)  
-2. Re-run R-set on WhatsApp + policy tests  
-3. **F4** then **F5/F6** RCA  
-4. Clinic Voice v1 (separate artefact)  
+1. **F1/F2** — deterministic policy only ✅  
+2. Re-run R-set on WhatsApp + policy tests ✅  
+3. **F4** then **F5/F6** RCA + slices ✅ (F5b waived)  
+4. **Clinic Voice v1** (separate artefact) — **NEXT**  
 
 ---
 
@@ -250,8 +272,8 @@ Improving R2–R4 / R7 must not weaken R6 (assessment phone) or R8 (urgent phone
 |---|---|
 | F1/F2 acceptance examples green on live WhatsApp | ✅ |
 | R8 urgent path still strong | ✅ (unchanged; no regression observed in F4–F6 smokes) |
-| F4–F6 either fixed or explicitly waived with RCA note | ☐ — F4/F5a/F6 ✅; **F5b waive pending** |
+| F4–F6 either fixed or explicitly waived with RCA note | ✅ — F4/F5a/F6 fixed; **F5b waived** |
 | F3 still deferred or newly evidenced | ✅ deferred |
 | No Corpus v0.1 edits; no Aušra invite | ✅ |
 
-Then: Clinic Voice v1 → short owner “comfortable showing Aušra?” smoke → draft Phase 3B protocol.
+**Gate met for Voice.** Next: Clinic Voice & Response Presentation v1 → short owner “comfortable showing Aušra?” smoke → draft Phase 3B protocol.
