@@ -1,7 +1,7 @@
 # Pre-3B — Product Hardening (change control)
 
 **Date:** 2026-09-18  
-**Status:** **OPEN** 🟡 — F1/F2/F4/F5a/F6-name/F6-children ✅; F6 lab ready for deploy verify; F5b pending  
+**Status:** **OPEN** 🟡 — F1/F2/F4/F5a/F6 (name/children/lab) ✅; F5b waive decision pending; F3 deferred  
 **Character:** Narrow product-policy / retrieval hardening — **not** Phase 3B clinic pilot  
 **Upstream:** `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` (CLOSED — Technical PASS / Product PARTIAL)  
 **Downstream after green:** Clinic Voice & Response Presentation v1 → short owner smoke → Phase 3B protocol  
@@ -179,7 +179,7 @@ If recovery starts needing **implicit** entities or complex multi-topic behaviou
 | **F5a** | `price` + null id + **exactly one** explicit Foundation service in message → that price + disclaimer | **HARDENED + PROD VERIFIED** 🔒 |
 | **F6 name** | Name/identity ask → `clinicName` (not about essay) | **HARDENED + PROD VERIFIED** 🔒 |
 | **F6 children** | Same service_info null-id bridge → paediatric/family capability | **HARDENED + PROD VERIFIED** 🔒 |
-| **F6 lab** | Explicit lab ask → `laboratoryInfo` via message cues (intent-agnostic) | **Code ready** — redeploy after other+unsupported miss |
+| **F6 lab** | Explicit lab ask → `laboratoryInfo` via message cues (intent-agnostic) | **HARDENED + PROD VERIFIED** 🔒 |
 | **F5b** | Multi-price topics | **Defer / likely waive** unless trivial after F5a — prefer document Schema limit over Schema-v2-by-stealth |
 
 ---
@@ -248,10 +248,10 @@ Improving R2–R4 / R7 must not weaken R6 (assessment phone) or R8 (urgent phone
 
 | Criterion | Status |
 |---|---|
-| F1/F2 acceptance examples green on live WhatsApp | ☐ |
-| R8 urgent path still strong | ☐ |
-| F4–F6 either fixed or explicitly waived with RCA note | ☐ |
-| F3 still deferred or newly evidenced | ☐ |
-| No Corpus v0.1 edits; no Aušra invite | ☐ |
+| F1/F2 acceptance examples green on live WhatsApp | ✅ |
+| R8 urgent path still strong | ✅ (unchanged; no regression observed in F4–F6 smokes) |
+| F4–F6 either fixed or explicitly waived with RCA note | ☐ — F4/F5a/F6 ✅; **F5b waive pending** |
+| F3 still deferred or newly evidenced | ✅ deferred |
+| No Corpus v0.1 edits; no Aušra invite | ✅ |
 
 Then: Clinic Voice v1 → short owner “comfortable showing Aušra?” smoke → draft Phase 3B protocol.
