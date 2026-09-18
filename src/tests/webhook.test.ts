@@ -4,10 +4,24 @@ import { app } from "../app";
 import { resetInboundMessageDedupForTests } from "../utils/inboundMessageDedup";
 import { logger } from "../utils/logger";
 
+async function waitForLoggerCall(
+  spy: { mock: { calls: unknown[][] } },
+  message: string,
+  timeoutMs = 2000
+): Promise<void> {
+  const started = Date.now();
+  while (Date.now() - started < timeoutMs) {
+    if (spy.mock.calls.some((call) => call[0] === message)) return;
+    await new Promise((r) => setTimeout(r, 15));
+  }
+}
+
 describe("webhook routes", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     resetInboundMessageDedupForTests();
+    delete process.env.AI_ENABLED;
+    delete process.env.AI_FORCE_FAIL;
   });
 
   it("GET /webhook returns challenge for valid token", async () => {
@@ -58,6 +72,7 @@ describe("webhook routes", () => {
     const res = await request(app).post("/webhook").send(payload);
 
     expect(res.status).toBe(200);
+    await waitForLoggerCall(infoSpy, "webhook_inbound_text_processed");
     expect(infoSpy).toHaveBeenCalledWith(
       "webhook_inbound_text_processed",
       expect.objectContaining({
@@ -65,7 +80,9 @@ describe("webhook routes", () => {
         messageText: "Kokios darbo valandos?",
         detectedIntent: "clinic_hours",
         detectedLanguage: "lt",
-        escalated: false
+        escalated: false,
+        path: "v1.1",
+        ai_path_attempted: false
       })
     );
   });
@@ -90,6 +107,7 @@ describe("webhook routes", () => {
     const res = await request(app).post("/webhook").send(payload);
 
     expect(res.status).toBe(200);
+    await new Promise((r) => setTimeout(r, 50));
     expect(infoSpy).not.toHaveBeenCalledWith("webhook_inbound_text_processed", expect.anything());
   });
 
@@ -118,6 +136,7 @@ describe("webhook routes", () => {
     };
 
     await request(app).post("/webhook").send(payload);
+    await waitForLoggerCall(infoSpy, "webhook_inbound_text_processed");
     await request(app).post("/webhook").send(payload);
 
     const processedCalls = infoSpy.mock.calls.filter((call) => call[0] === "webhook_inbound_text_processed");

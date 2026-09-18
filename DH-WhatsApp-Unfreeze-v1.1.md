@@ -1,12 +1,12 @@
 # Unfreeze note — Deterministic v1.1 alignment pass
 
 **Date:** 2026-09-18  
-**Decision:** UNFREEZE — narrow scope only  
-**Authorisation:** Align live deterministic assistant (verified v1 baseline) with clinic-reviewed Foundation / Behaviour v1.1.
+**Decision:** UNFREEZE (narrow) → alignment complete → **RE-FROZEN** 🔒  
+**Authorisation was:** Align live deterministic assistant (verified v1 baseline) with clinic-reviewed Foundation / Behaviour v1.1.
 
 ---
 
-## In scope
+## In scope (completed)
 
 | Area | Change |
 |---|---|
@@ -17,26 +17,33 @@
 | WhatsApp handoff | Monitored; Option C ack uses working-day **08:00–17:00** wording; redirect ≠ team ack |
 | Prices | Behaviour follows **source rule** + approved disclaimer; `prices.json` remains a **temporary cache** of `/kainos/` with source + sync metadata |
 
-## Out of scope (do not expand this pass)
+## Out of scope (still forbidden while frozen)
 
 - Opportunistic classifier expansion / synonym rescue  
-- AI / LLM work  
+- AI / LLM work inside this baseline  
 - Live price scraping or automated synchronisation infrastructure  
+- Language-selection patches from smoke observations  
 - Unrelated product enhancements  
 
 ---
 
-## Engineering follow-up (logged, not blocking v1.1)
+## Exit criteria
 
-**Price-source synchronisation / retrieval automation**  
-Keep `prices.json` as an explicit temporary cache of https://dantuharmonija.lt/kainos/ until a separate engineering task automates refresh. Do not block patient testing on that infrastructure.
+| Criterion | State |
+|---|---|
+| Automated suite green | ✅ 140/140 |
+| Production smoke | ✅ PASS — `DH-WhatsApp-Smoke-v1.1.md` |
+| Foundation v1.1 frozen | ✅ clinic-reviewed baseline |
+| Behaviour v1.1 frozen | ✅ clinic-reviewed baseline |
+| Deterministic implementation v1.1 frozen | ✅ aligned and live |
+
+**Logged observation (not a reopen):** LT clinical → EN safety reply — Phase 2 evidence.  
+**Logged follow-up (not blocking):** automate price-source synchronisation/retrieval.
 
 ---
 
-## Exit criteria → re-freeze
+## Project boundary
 
-1. Automated regression + v1.1 acceptance suite green  
-2. Small production smoke (one case per changed branch)  
-3. Freeze: Foundation v1.1 · Behaviour v1.1 · Deterministic implementation v1.1 · suite green · smoke passed  
+Stop developing the deterministic assistant. It is now the **experimental control baseline**.
 
-Then stop improving the deterministic classifier; move to Phase 2 natural-language evaluation against the frozen baseline.
+Next: `DH-WhatsApp-Phase2-NL-Evaluation-Charter-v1.md` — define evaluation rules **before** building the 60–80 case corpus.

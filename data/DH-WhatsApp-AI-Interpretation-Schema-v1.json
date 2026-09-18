@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dantuharmonija.lt/schemas/whatsapp-ai-interpretation-v1.json",
+  "title": "DHWhatsAppAIInterpretationV1",
+  "description": "Frozen AI interpretation contract for Phase 2B. The model interprets patient meaning; it does not decide clinic truth or policy. knowledge_gap is NOT an AI field — Foundation retrieval + policy own absence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "language",
+    "intents",
+    "service_or_topic",
+    "signals",
+    "references",
+    "overall_confidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "language": {
+      "type": "string",
+      "enum": ["lt", "en", "mixed"]
+    },
+    "intents": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "confidence"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "clinic_hours",
+              "clinic_location",
+              "parking",
+              "contact",
+              "booking",
+              "availability",
+              "service_info",
+              "price",
+              "first_appointment_prep",
+              "first_visit_expectations",
+              "about_clinic",
+              "assistant_capabilities",
+              "clinical",
+              "language_switch",
+              "other"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    "service_or_topic": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["id", "confidence", "source"],
+      "properties": {
+        "id": {
+          "type": ["string", "null"],
+          "description": "Catalogue service id when known (e.g. implants, professional_hygiene), or null if unresolved."
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "source": {
+          "type": "string",
+          "enum": ["current_message", "conversation_context"]
+        }
+      }
+    },
+    "signals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "booking",
+        "availability",
+        "clinical_or_suitability",
+        "unsupported_or_ambiguous"
+      ],
+      "properties": {
+        "booking": {
+          "type": "string",
+          "enum": ["none", "soft", "hard"],
+          "description": "none = no booking desire; soft = interest; hard = explicit schedule/register request."
+        },
+        "availability": {
+          "type": "boolean",
+          "description": "True when asking for free slots / when available / earliest time."
+        },
+        "clinical_or_suitability": {
+          "type": "boolean",
+          "description": "True for pain/urgent/clinical advice or personalised suitability (e.g. man tinka, medical conditions)."
+        },
+        "unsupported_or_ambiguous": {
+          "type": "boolean",
+          "description": "True when the request is unclear or not recognisable as a supported informational intent. Does NOT mean Foundation lacks a fact."
+        }
+      }
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "resolved_to", "source_turn"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "service",
+              "topic",
+              "doctor",
+              "prior_intent",
+              "other"
+            ]
+          },
+          "resolved_to": {
+            "type": ["string", "null"],
+            "description": "Resolved id or short label; null if unresolved."
+          },
+          "source_turn": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "0 = current message; 1 = previous patient turn; etc."
+          }
+        }
+      }
+    },
+    "overall_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Captured for experiment. No policy thresholds in v1."
+    }
+  },
+  "examples": [
+    {
+      "schema_version": "1.0",
+      "language": "lt",
+      "intents": [
+        { "type": "price", "confidence": 0.92 },
+        { "type": "availability", "confidence": 0.88 }
+      ],
+      "service_or_topic": {
+        "id": "implants",
+        "confidence": 0.95,
+        "source": "current_message"
+      },
+      "signals": {
+        "booking": "none",
+        "availability": true,
+        "clinical_or_suitability": false,
+        "unsupported_or_ambiguous": false
+      },
+      "references": [],
+      "overall_confidence": 0.9
+    },
+    {
+      "schema_version": "1.0",
+      "language": "lt",
+      "intents": [
+        { "type": "clinical", "confidence": 0.9 },
+        { "type": "booking", "confidence": 0.85 }
+      ],
+      "service_or_topic": {
+        "id": "professional_hygiene",
+        "confidence": 0.8,
+        "source": "current_message"
+      },
+      "signals": {
+        "booking": "hard",
+        "availability": false,
+        "clinical_or_suitability": true,
+        "unsupported_or_ambiguous": false
+      },
+      "references": [],
+      "overall_confidence": 0.86
+    }
+  ]
+}

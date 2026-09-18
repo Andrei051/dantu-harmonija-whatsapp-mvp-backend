@@ -1,17 +1,37 @@
 # Production smoke — Deterministic v1.1
 
-**When:** after `a96adb5` (or successor) is live  
-**Goal:** one representative case per changed branch — not a full retest
+**When:** 2026-09-18 ~13:48 (live WhatsApp after deploy)  
+**Commits live:** `a96adb5` (+ `cab856d` checklist)  
+**Result:** **PASS** → implementation **RE-FROZEN**
 
-| # | Branch | Suggested message | Expect |
+---
+
+## Results
+
+| # | Branch | Message | Result |
 |---|---|---|---|
-| 1 | Clinic fact | `Koks jūsų darbo laikas?` | Weekdays **08:00–20:00**; no Saturday claim |
-| 2 | Price | `Kiek kainuoja implantai?` | Cached EUR amount + preliminary disclaimer (*galutinę kainą… gydytojas*) |
-| 3 | Online-bookable | `Noriu užsiregistruoti konsultacijai` | Cannot book in-chat; link to `/registracija/`; **no** team-ack promise |
-| 4 | Non-online booking | `Noriu užsakyti implantaciją` | Contact channels; **no** `/registracija/` |
-| 5 | Mixed price/availability | `Kokia implantų kaina? Kada turite laisvų laikų?` | Price + disclaimer, then availability limitation (no invented slot) |
-| 6 | Urgent / clinical | `Skauda dantį, noriu užsiregistruoti higienai` | Safety + **phone**; no registration URL |
-| 7 | WhatsApp handoff | Force unknown/escalation path (or clinical) | Ack: working day **8:00–17:00**; ordinary booking (#3/#4) must **not** get this ack |
+| 1 | Clinic fact | `Koks jūsų darbo laikas?` | ✅ Weekdays 08:00–20:00 |
+| 2 | Price | `Kiek kainuoja implantai?` | ✅ `nuo 860 EUR` + preliminary disclaimer |
+| 3 | Online-bookable | `Noriu užsiregistruoti konsultacijai` | ✅ `/registracija/` + contact; no team-ack |
+| 4 | Non-online booking | `Noriu užsakyti implantaciją` | ✅ Contact only; no `/registracija/` |
+| 5 | Mixed price/availability | `Kokia implantų kaina? Kada turite laisvų laikų?` | ✅ Price + disclaimer; no invented slot; reg/contact |
+| 6 | Urgent / clinical | `Skauda dantį, noriu užsiregistruoti higienai` | ✅ Clinical wins; phone; **no** registration URL |
+| 7 | WhatsApp handoff | Unknown/escalation probe | ✅ Option C **08:00–17:00** |
 
-**Pass rule:** all seven green → re-freeze v1.1 baseline.  
-**Fail rule:** log defect; do not start Phase 2 or opportunistic classifier fixes beyond true Boundary/Safety defects.
+**Not run live (covered by automated v1.1 acceptance):** laboratory enquiry — not blocking freeze.
+
+---
+
+## Observed limitation (do not patch in v1.1)
+
+**Case:** Lithuanian clinical input (`Skauda dantį, noriu užsiregistruoti higienai`) produced **EN** safety/handoff body (+ correct EN Option C window).
+
+- Safety routing / phone / no online registration: **correct**  
+- Language selection: **weakness** — preserve as Phase 2 evaluation evidence  
+- **Do not** opportunistically expand deterministic language handling for this
+
+---
+
+## Freeze decision
+
+Deterministic v1.1 — DEPLOYED ✅ · Suite 140/140 ✅ · Production smoke PASS ✅ · **RE-FROZEN** 🔒

@@ -1,6 +1,6 @@
 # DH WhatsApp Assistant — Behaviour & Scope v1.1
 
-**Status:** Clinic-reviewed baseline (derived) — ready for implementation planning; **implementation not yet unfrozen**  
+**Status:** Clinic-reviewed baseline (derived) — **FROZEN** with Deterministic implementation v1.1 🔒  
 **Date:** 2026-09-18  
 **Governance:** Internal translation of the returned clinic-facing review (`docs/clinic-review/2026.09.18-…-RETURNED.xlsx`). Prefer “clinic-reviewed baseline” over “Clinic Approved.”  
 **Supersedes (proposed):** Behaviour & Scope v1 for next implementation  

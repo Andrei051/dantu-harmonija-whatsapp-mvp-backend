@@ -1,9 +1,9 @@
 # Cross-check v1.1 — final evidence → rule map
 
 **Date:** 2026-09-18  
-**Status:** Gate 1 clinic clarification closed · baselines reconciled · **narrow unfreeze authorised for v1.1 alignment**  
-**Governance label:** *clinic-reviewed baseline* (derived from returned workbook — not a verbatim clinic approval of these internal docs)
-**Unfreeze note:** `DH-WhatsApp-Unfreeze-v1.1.md`
+**Status:** Gate 1 **implementation closed** · Deterministic v1.1 **RE-FROZEN** 🔒  
+**Governance label:** *clinic-reviewed baseline* (derived from returned workbook — not a verbatim clinic approval of these internal docs)  
+**Unfreeze / freeze:** `DH-WhatsApp-Unfreeze-v1.1.md` · smoke: `DH-WhatsApp-Smoke-v1.1.md`
 
 ---
 
@@ -18,9 +18,13 @@
 | Foundation v1.1 reconciled with clinic input | ✅ |
 | Behaviour v1.1 reconciled with clinic input | ✅ |
 | No further clinic clarification currently required | ✅ |
-| Implementation unfreeze | ✅ Narrow pass only — see `DH-WhatsApp-Unfreeze-v1.1.md` |
+| Narrow unfreeze → v1.1 alignment | ✅ |
+| Automated suite | ✅ 140/140 |
+| Production smoke | ✅ PASS |
+| Deterministic v1.1 re-freeze | ✅ |
 
-**Do not** send Aušra another review pack or clarification email on Saturday hours / landline.
+**Do not** send Aušra another review pack or clarification email on Saturday hours / landline.  
+**Do not** reopen deterministic development for language UX or classifier expansion.
 
 ---
 
@@ -31,8 +35,25 @@
 | `docs/clinic-review/2026.09.18-DH-WhatsApp-Clinic-Review-LT-v1-RETURNED.xlsx` | Clinic evidence |
 | `docs/clinic-review/2026.09.18-returned-review-extract.txt` | Comment extract |
 | `DH-WhatsApp-Registration-Inventory-v1.md` | Online bookable set |
-| `DH-WhatsApp-Foundation-v1.1.md` | Knowledge baseline (derived) |
-| `DH-WhatsApp-Behaviour-Scope-v1.1.md` | Behaviour baseline (derived) |
+| `DH-WhatsApp-Foundation-v1.1.md` | Knowledge baseline (frozen) |
+| `DH-WhatsApp-Behaviour-Scope-v1.1.md` | Behaviour baseline (frozen) |
+| `DH-WhatsApp-Smoke-v1.1.md` | Production smoke record |
+| `DH-WhatsApp-Phase2-NL-Evaluation-Charter-v1.md` | Phase 2 charter (signed off) |
+| `DH-WhatsApp-NL-Corpus-v0.1.md` | Corpus manifest (frozen) |
+| `data/DH-WhatsApp-NL-Corpus-v0.1.json` | Corpus cases (frozen) |
+| `DH-WhatsApp-NL-Evaluation-v1.1-summary.md` | Phase 2A results summary (frozen) |
+| `DH-WhatsApp-Phase2-AI-Mandate-Decision.md` | Mandate ACCEPTED (narrow) |
+| `DH-WhatsApp-Phase2B-AI-Interpretation-Layer-Design-v1.md` | Interpretation layer design (agreed) |
+| `DH-WhatsApp-AI-Interpretation-Schema-v1.md` | Interpretation schema (frozen) |
+| `data/DH-WhatsApp-AI-Interpretation-Schema-v1.json` | Executable JSON Schema |
+| `DH-WhatsApp-AI-Signal-Policy-Mapping-v1.md` | Signal → policy mapping (frozen) |
+| `DH-WhatsApp-AI-Interpreter-Prompt-v0.1.md` | Interpreter prompt (frozen) |
+| `DH-WhatsApp-Phase2C-Closed.md` | Phase 2C closed / Context confirmed |
+| `DH-WhatsApp-Phase2D-Policy-Hardening.md` | Phase 2D scope (closed) |
+| `DH-WhatsApp-Phase2D-Closed.md` | Phase 2D closed |
+| `DH-WhatsApp-NL-Evaluation-v2D-offline-summary.md` | Phase 2D offline results |
+| `DH-WhatsApp-Phase3-Productisation-Pilot-Gate.md` | Phase 3 productisation & pilot gate (open) |
+| `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` | Phase 3A controlled PROD validation (authorised, owner/tester) |
 
 ---
 
@@ -56,21 +77,7 @@
 
 ---
 
-## Cleanups applied after internal read
-
-1. Price rule labelled **clinic-requested source rule** (not premature “approved policy”).  
-2. Saturday / landline → **documented source differences**, not parked questions.  
-3. Explicit `clinic_opening_hours` vs `whatsapp_human_response_window` + provenance.  
-4. Catalogue: **Estetinis protezavimas** only (no laminatės Foundation row); synonyms → interpreter.  
-5. Catalogue: **Diagnostika** (not slash dual name); booking types stay in inventory.  
-6. Urgent path: never divert to online registration.  
-7. Interim price cache must carry source + sync metadata.  
-
----
-
-## After implementation
-
-Once code + regression + production smoke match these baselines, freeze as:
+## Frozen baseline set
 
 - Foundation v1.1 — clinic-reviewed baseline  
 - Behaviour & Scope v1.1 — clinic-reviewed baseline  
@@ -78,6 +85,7 @@ Once code + regression + production smoke match these baselines, freeze as:
 - Regression suite — green  
 - Production smoke — passed  
 
-Then treat deterministic v1.1 as the experimental control baseline (Phase 2 NL evaluation). Prefer that wording over “Clinic Approved.”
+Deterministic v1.1 is the **control architecture** for Phase 2 natural-language evaluation. Prefer that wording over “Clinic Approved.”
 
-**Logged follow-up (not in this pass):** automate price-source synchronisation/retrieval.
+**Logged follow-up (engineering, separate):** automate price-source synchronisation/retrieval.  
+**Logged observation (evaluation, not fix):** LT clinical input may yield EN safety/handoff copy.

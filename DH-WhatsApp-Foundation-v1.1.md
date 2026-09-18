@@ -1,6 +1,6 @@
 # DH WhatsApp Assistant — Foundation v1.1 (knowledge model)
 
-**Status:** Clinic-reviewed baseline (derived) — ready for implementation planning; **implementation not yet unfrozen**  
+**Status:** Clinic-reviewed baseline (derived) — **FROZEN** with Deterministic implementation v1.1 🔒  
 **Date:** 2026-09-18  
 **Governance:** Internal translation of the returned clinic-facing review. Aušra did **not** approve this document verbatim — traceability is to `docs/clinic-review/2026.09.18-…-RETURNED.xlsx`. Prefer “clinic-reviewed baseline” over “Clinic Approved.”  
 **Evidence:** Returned review · website · `DH-WhatsApp-Registration-Inventory-v1.md`  

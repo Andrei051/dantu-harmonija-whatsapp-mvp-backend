@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { runAssistantPipeline } from "../services/assistantPipeline";
+import {
+  recordConversationExchange,
+  runMessagePipeline
+} from "../services/ai/messagePipeline";
 import {
   getCapabilityIntroIfFirstReply,
   markCapabilityIntroSent,
@@ -59,19 +62,33 @@ webhookRouter.post("/webhook", (req, res) => {
     return;
   }
 
-  const result = runAssistantPipeline(parsed.messageText);
-
-  logger.info("webhook_inbound_text_processed", {
-    sender: parsed.sender,
-    messageId: parsed.messageId,
-    messageText: parsed.messageText,
-    detectedIntent: result.intent,
-    detectedLanguage: result.language,
-    escalated: result.escalated,
-    response: result.response
-  });
-
   void (async () => {
+    const messageText = parsed.messageText;
+    if (!messageText) {
+      return;
+    }
+
+    const result = await runMessagePipeline({
+      message: messageText,
+      sender: parsed.sender
+    });
+
+    logger.info("webhook_inbound_text_processed", {
+      sender: parsed.sender,
+      messageId: parsed.messageId,
+      messageText,
+      detectedIntent: result.intent,
+      detectedLanguage: result.language,
+      escalated: result.escalated,
+      response: result.response,
+      path: result.path,
+      ai_path_attempted: result.ai_path_attempted,
+      schema_valid: result.schema_valid,
+      fallback_used: result.fallback_used,
+      fallback_reason: result.fallback_reason,
+      context_turns_loaded: result.context_turns_loaded
+    });
+
     if (!parsed.sender) {
       logger.info("outbound_skipped_no_sender");
       return;
@@ -106,7 +123,9 @@ webhookRouter.post("/webhook", (req, res) => {
       sender_key: normalizeSenderKey(parsed.sender),
       escalated: result.escalated,
       optionC_ack_only: result.escalated && result.intent !== "clinical_or_urgent",
-      first_reply_capability: capabilityIntro != null
+      first_reply_capability: capabilityIntro != null,
+      path: result.path,
+      fallback_used: result.fallback_used
     });
 
     const sendResult = await sendWhatsAppTextMessage({
@@ -118,7 +137,16 @@ webhookRouter.post("/webhook", (req, res) => {
       if (capabilityIntro != null || isCapabilityReply) {
         markCapabilityIntroSent(parsed.sender);
       }
-      logger.info("outbound_reply_success", { status: sendResult.status });
+      recordConversationExchange({
+        sender: parsed.sender,
+        patientText: messageText,
+        assistantText: bodyToSend
+      });
+      logger.info("outbound_reply_success", {
+        status: sendResult.status,
+        path: result.path,
+        fallback_used: result.fallback_used
+      });
       return;
     }
 
