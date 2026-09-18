@@ -75,6 +75,12 @@ const bookingRouteFor = (
   return "contact";
 };
 
+/** Same cues as v1.1 classifier looksLikeLaboratoryQuestion — lab is not a patient service. */
+const isLaboratoryAsk = (patientMessage: string): boolean => {
+  const n = normalizeText(patientMessage);
+  return n.includes("laborator") || n.includes("dental lab") || n.includes("in-house lab");
+};
+
 /** Whole-token match only — `nekraujuoja` must not match `kraujuoja`. */
 const hasAuthorisedUrgencySignal = (patientMessage: string): boolean => {
   const n = normalizeText(patientMessage);
@@ -464,6 +470,17 @@ export const applyPolicyAndAssemble = (
       const built = buildResponse(language, { intent: "service_info", serviceId: sid });
       parts.push(built.reply);
     } else if (interp.service_or_topic?.id == null) {
+      // F6 lab: AI often labels lab asks as service_info; lab is Foundation fallback, not a service id
+      if (isLaboratoryAsk(patientMessage)) {
+        actions.push("F6_laboratory_info");
+        foundation_hits.push("fallback.laboratoryInfo");
+        primary_intent_label = "about_clinic";
+        const built = buildResponse(language, {
+          intent: "about_clinic",
+          laboratoryInfo: true
+        });
+        parts.push(built.reply);
+      } else {
       // Single-slot schema bridge: explicit Foundation names in current message (R7 / F6 children)
       const recoveredIds = matchExplicitFoundationServiceIds(patientMessage);
       if (recoveredIds.length > 0) {
@@ -498,6 +515,7 @@ export const applyPolicyAndAssemble = (
         escalated = true;
         route = "option_c";
       }
+      }
     } else if (!clinicalJudgementActive) {
       foundation_misses.push("service_description:unresolved");
       actions.push("D2_unresolved_service_info_clarify");
@@ -517,9 +535,6 @@ export const applyPolicyAndAssemble = (
       ) ||
       (n.includes("spell") && n.includes("clinic")) ||
       (n.includes("pavadinim") && n.includes("klinik"));
-    // Same cues as v1.1 classifier looksLikeLaboratoryQuestion — not a service bridge
-    const isLabAsk =
-      n.includes("laborator") || n.includes("dental lab") || n.includes("in-house lab");
 
     if (isNameAsk) {
       actions.push("F6_clinic_name");
@@ -531,7 +546,7 @@ export const applyPolicyAndAssemble = (
           ? `Our clinic is called ${name}.`
           : `Mūsų klinikos pavadinimas — ${name}.`
       );
-    } else if (isLabAsk) {
+    } else if (isLaboratoryAsk(patientMessage)) {
       actions.push("F6_laboratory_info");
       foundation_hits.push("fallback.laboratoryInfo");
       primary_intent_label = "about_clinic";
