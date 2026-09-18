@@ -517,6 +517,9 @@ export const applyPolicyAndAssemble = (
       ) ||
       (n.includes("spell") && n.includes("clinic")) ||
       (n.includes("pavadinim") && n.includes("klinik"));
+    // Same cues as v1.1 classifier looksLikeLaboratoryQuestion — not a service bridge
+    const isLabAsk =
+      n.includes("laborator") || n.includes("dental lab") || n.includes("in-house lab");
 
     if (isNameAsk) {
       actions.push("F6_clinic_name");
@@ -528,6 +531,15 @@ export const applyPolicyAndAssemble = (
           ? `Our clinic is called ${name}.`
           : `Mūsų klinikos pavadinimas — ${name}.`
       );
+    } else if (isLabAsk) {
+      actions.push("F6_laboratory_info");
+      foundation_hits.push("fallback.laboratoryInfo");
+      primary_intent_label = "about_clinic";
+      const built = buildResponse(language, {
+        intent: "about_clinic",
+        laboratoryInfo: true
+      });
+      parts.push(built.reply);
     } else {
       actions.push("C4_about");
       foundation_hits.push("about_clinic");
