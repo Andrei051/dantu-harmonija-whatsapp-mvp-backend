@@ -68,6 +68,48 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.escalated).toBe(false);
   });
 
+  it("R6: nekraujuoja must not match urgency token kraujuoja", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [
+          { type: "clinical", confidence: 0.95 },
+          { type: "service_info", confidence: 0.85 }
+        ],
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Dar vienas klausimas. Nuskilo dalis danties, bet neskauda ir nekraujuoja. Ar jūsų klinikoje galima tokį dantį sutvarkyti?"
+    );
+
+    expect(policy.actions).toContain("S1_clinical_assessment");
+    expect(policy.actions).not.toContain("S1_urgent_phone");
+    expect(policy.reply).not.toMatch(/skubi(ą|os)? pagalba|nedelsiant/i);
+    expect(policy.escalated).toBe(false);
+  });
+
+  it("R8: kraujuoja as whole token still selects urgent path", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [{ type: "clinical", confidence: 0.95 }],
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Nusilaužiau priekinį dantį, stipriai kraujuoja ir labai skauda. Ką man daryti?"
+    );
+
+    expect(policy.actions).toContain("S1_urgent_phone");
+    expect(policy.reply).toMatch(/nedelsiant|skubi/i);
+    expect(policy.escalated).toBe(true);
+  });
+
   it("R8: explicit urgency → strong phone path", () => {
     const policy = applyPolicyAndAssemble(
       base({

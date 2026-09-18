@@ -67,10 +67,19 @@ const bookingRouteFor = (interp: InterpretationV1): "online_registration" | "con
   return "contact";
 };
 
+/** Whole-token match only — `nekraujuoja` must not match `kraujuoja`. */
 const hasAuthorisedUrgencySignal = (patientMessage: string): boolean => {
   const n = normalizeText(patientMessage);
   if (!n) return false;
-  return URGENCY_CUES.some((cue) => n.includes(normalizeText(cue)));
+  const tokens = new Set(n.split(" ").filter(Boolean));
+  return URGENCY_CUES.some((cue) => {
+    const c = normalizeText(cue);
+    if (!c) return false;
+    if (c.includes(" ")) {
+      return n.includes(c) && c.split(" ").every((part) => tokens.has(part));
+    }
+    return tokens.has(c);
+  });
 };
 
 const clinicalAssessmentCopy = (language: SupportedLanguage): string => {
