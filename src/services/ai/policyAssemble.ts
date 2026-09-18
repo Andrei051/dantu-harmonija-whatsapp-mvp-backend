@@ -96,10 +96,12 @@ const clinicalAssessmentCopy = (language: SupportedLanguage): string => {
 };
 
 /**
- * Controlled single-slot schema bridge (temporary): when interpretation emits
- * service_info but cannot attach a single service_or_topic.id for a multi-service
- * message, recover explicitly named Foundation services from the current message only.
- * Not a general-purpose service classifier.
+ * Controlled single-slot schema bridge (temporary Schema v1 accommodation):
+ * When interpretation established price/service_info but id is null, recover
+ * explicitly named Foundation services from the current patient message only.
+ * - price: exactly one recovered id → governed price (F5a); never multi-price here (F5b)
+ * - service_info: may surface multiple explicit capability facts (R7)
+ * Not a general-purpose classifier; no symptom→service inference.
  */
 const matchExplicitFoundationServiceIds = (patientMessage: string): string[] => {
   const n = normalizeText(patientMessage);
@@ -116,6 +118,57 @@ const matchExplicitFoundationServiceIds = (patientMessage: string): string[] => 
     if (hit) matched.push(service.id);
   }
   return matched;
+};
+
+const emitGovernedPrice = (
+  language: SupportedLanguage,
+  serviceIdForPrice: string,
+  extras: {
+    wantAvail: boolean;
+    wantBook: boolean;
+    interp: InterpretationV1;
+    patientMessage: string;
+  }
+): {
+  ok: boolean;
+  reply?: string;
+  actions: string[];
+  foundation_hits: string[];
+  foundation_misses: string[];
+  route?: string;
+} => {
+  const actions: string[] = [];
+  const foundation_hits: string[] = [];
+  const foundation_misses: string[] = [];
+  const prices = knowledgeService.getPrices();
+  const hit = prices.find((p) => p.serviceId === serviceIdForPrice);
+  if (!hit) {
+    foundation_misses.push(`price:${serviceIdForPrice}`);
+    return { ok: false, actions, foundation_hits, foundation_misses };
+  }
+  foundation_hits.push(`price:${serviceIdForPrice}`);
+  actions.push("C1_price");
+  let route: string | undefined;
+  const intentResult: IntentResult = {
+    intent: "price_info",
+    serviceId: serviceIdForPrice,
+    ...(extras.wantAvail ? { appendAvailabilityGuidance: true as const } : {}),
+    ...(extras.wantBook && !extras.wantAvail
+      ? {
+          appendBookingGuidance: true as const,
+          bookingRoute: bookingRouteFor(extras.interp, extras.patientMessage)
+        }
+      : {})
+  };
+  if (extras.wantAvail) actions.push("C2_availability");
+  if (extras.wantBook && !extras.wantAvail) {
+    actions.push("C3_booking");
+    route = bookingRouteFor(extras.interp, extras.patientMessage);
+  } else if (extras.wantAvail) {
+    route = "contact";
+  }
+  const built = buildResponse(language, intentResult);
+  return { ok: true, reply: built.reply, actions, foundation_hits, foundation_misses, route };
 };
 
 const isGreetingOnly = (message: string): boolean => {
@@ -328,19 +381,49 @@ export const applyPolicyAndAssemble = (
         parts.push(built.reply);
       }
     } else {
-      actions.push("C1_price_clarify");
-      const built = buildResponse(language, {
-        intent: "price_info",
-        needsServiceClarification: true,
-        ...(wantAvail ? { appendAvailabilityGuidance: true as const } : {}),
-        ...(wantBook && !wantAvail
-          ? { appendBookingGuidance: true as const, bookingRoute: bookingRouteFor(interp, patientMessage) }
-          : {})
-      });
-      parts.push(built.reply);
-      if (wantAvail) {
-        actions.push("C2_availability");
-        route = "contact";
+      // F5a — single-slot price bridge: exactly one explicit Foundation service in message
+      const recovered = matchExplicitFoundationServiceIds(patientMessage);
+      if (recovered.length === 1) {
+        const bridged = emitGovernedPrice(language, recovered[0], {
+          wantAvail,
+          wantBook,
+          interp,
+          patientMessage
+        });
+        actions.push("F5a_single_slot_price_bridge", ...bridged.actions);
+        foundation_hits.push(...bridged.foundation_hits);
+        foundation_misses.push(...bridged.foundation_misses);
+        if (bridged.ok && bridged.reply) {
+          parts.push(bridged.reply);
+          if (bridged.route) route = bridged.route;
+        } else {
+          actions.push("C1_price_clarify");
+          const built = buildResponse(language, {
+            intent: "price_info",
+            needsServiceClarification: true
+          });
+          parts.push(built.reply);
+        }
+      } else {
+        // 0 matches → clarify; 2+ matches → F5b multi-price (do not auto-compose)
+        if (recovered.length > 1) {
+          actions.push("F5b_multi_price_not_bridged");
+          foundation_misses.push("price:multi_explicit_services");
+        }
+        actions.push("C1_price_clarify");
+        const built = buildResponse(language, {
+          intent: "price_info",
+          needsServiceClarification: true,
+          ...(wantAvail ? { appendAvailabilityGuidance: true as const } : {}),
+          ...(wantBook && !wantAvail
+            ? { appendBookingGuidance: true as const, bookingRoute: bookingRouteFor(interp, patientMessage) }
+            : {})
+        });
+        parts.push(built.reply);
+        if (wantAvail) {
+          actions.push("C2_availability");
+          route = "contact";
+        }
       }
     }
   } else if (wantAvail && !wantBook) {

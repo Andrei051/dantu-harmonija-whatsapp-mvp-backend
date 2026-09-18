@@ -1,7 +1,7 @@
 # Pre-3B — Product Hardening (change control)
 
 **Date:** 2026-09-18  
-**Status:** **OPEN** 🟡 — **F1 + F2 + F4 HARDENED + PROD VERIFIED** 🔒; F5/F6 RCA next  
+**Status:** **OPEN** 🟡 — F1/F2/F4 ✅; **F5/F6 OPEN** (RCA locked; F5a implementing)  
 **Character:** Narrow product-policy / retrieval hardening — **not** Phase 3B clinic pilot  
 **Upstream:** `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` (CLOSED — Technical PASS / Product PARTIAL)  
 **Downstream after green:** Clinic Voice & Response Presentation v1 → short owner smoke → Phase 3B protocol  
@@ -47,9 +47,9 @@ Convert Phase 3A owner evidence into **governed behaviour changes** without:
 
 | ID | Finding | Action |
 |---|---|---|
-| **F4** | Consultation cue lost in `bookingRouteFor` | **HARDENED + PROD VERIFIED** 🔒 (consultation → online; implant treatment → contact) |
-| **F5** | Price / service retrieval incomplete | Trace before change |
-| **F6** | Approved Foundation facts not surfaced | Trace which layer dropped |
+| **F4** | Consultation cue lost in `bookingRouteFor` | **HARDENED + PROD VERIFIED** 🔒 |
+| **F5** | Price / service retrieval incomplete | **OPEN** — RCA locked; slices below |
+| **F6** | Approved Foundation facts not surfaced | **OPEN** — RCA locked; slices below |
 
 ### Observe / defer
 
@@ -145,14 +145,42 @@ policy before bridge: S1_clinical_assessment only; foundation_hits: []
 
 F2 therefore had no Foundation-addressable service block to compose with the clinical-assessment response. This is a **representation limitation**, not a failed interpretation.
 
-**Controlled single-slot schema bridge** (temporary architectural accommodation, not expansion of the interpretation contract):
+**Controlled single-slot explicit-service recovery bridge** (temporary Schema v1 accommodation — not expansion of the interpretation contract):
 
-- Fires only when: `service_info` present ∧ clinical judgement active ∧ `service_or_topic.id == null`
-- Scans **current patient message only** against Foundation service keywords/names
-- Surfaces only authorised service descriptions
-- Must not infer treatment choice, sequencing, suitability, or diagnosis
-- Must not become a general-purpose service classifier (no match on vague “what can you do for my tooth?”)
-- If multi-topic failures proliferate → revisit Schema v1 multi-topic; do **not** stack more bridges
+When the interpreter has already established a **service-related intent** (`price` or `service_info`) but Schema v1 supplies **no service ID**, policy may recover **explicitly named** Foundation services from the **current patient message** using the bounded Foundation keyword/name map.
+
+Recovered IDs may be used **only** for that already-established intent:
+
+| Intent | Recovery rule |
+|---|---|
+| `price` (**F5a**) | **Exactly one** recovered id → governed price + disclaimer. **Not** multi-price (F5b). |
+| `service_info` (R7 / later F6 children) | Explicit matches → governed service/capability facts |
+
+Must not: infer services from symptoms; create new intents; sequence/recommend treatment; become a general classifier.
+
+If recovery starts needing **implicit** entities or complex multi-topic behaviour → **stop extending**; reconsider Schema v1.
+
+---
+
+## F5 / F6 RCA (PROD logs 2026-09-18) — OPEN findings, closed diagnosis
+
+| Probe | Interpretation | Policy | Class |
+|---|---|---|---|
+| `Kiek kainuoja plomba?` | `price`, `id: null` | `C1_price_clarify` | Intent OK; id unresolved; explicit `plomba` ↔ `fillings` |
+| Hygiene + patikrinimas | `price`, `id: professional_hygiene` only | Hygiene price only | Single-slot multi-topic (**F5b**) |
+| Mokyklinio amžiaus vaikus? | `service_info`, `id: null` | Unresolved → Option C | Intent OK; id unresolved; `vaik*` ↔ paediatric |
+| Clinic name? | `about_clinic` | About dump | **P** — `clinicName` never composed |
+| In-house lab? | `about_clinic` | About dump | **P** — not `laboratoryInfo` path |
+
+### Implementation slices (close only after PROD verify)
+
+| Slice | Contract | Status |
+|---|---|---|
+| **F5a** | `price` + null id + **exactly one** explicit Foundation service in message → that price + disclaimer | Implementing |
+| **F6 name** | Name/identity ask → `clinicName` (not about essay) | Pending after F5a |
+| **F6 children** | Same service_info null-id bridge → paediatric/family capability | Pending (prefer general bridge) |
+| **F6 lab** | Explicit lab ask → `laboratoryInfo` (not service bridge) | Pending separate |
+| **F5b** | Multi-price topics | **Defer / likely waive** unless trivial after F5a — prefer document Schema limit over Schema-v2-by-stealth |
 
 ---
 | | |

@@ -314,4 +314,53 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.route).toBe("contact");
     expect(policy.reply).not.toMatch(/registracija\/\)/i);
   });
+
+  it("F5a: price + null id + explicit plomba → fillings price", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [{ type: "price", confidence: 0.95 }],
+        service_or_topic: {
+          id: null,
+          confidence: 0.6,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Kiek kainuoja plomba?"
+    );
+
+    expect(policy.actions).toContain("F5a_single_slot_price_bridge");
+    expect(policy.actions).toContain("C1_price");
+    expect(policy.reply).toMatch(/EUR|plomb/i);
+    expect(policy.reply).not.toMatch(/Kokios paslaugos kainą/i);
+  });
+
+  it("F5a: multi explicit services in price ask → clarify (F5b not bridged)", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        intents: [{ type: "price", confidence: 0.95 }],
+        service_or_topic: {
+          id: null,
+          confidence: 0.5,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Kiek kainuoja plomba ir balinimas?"
+    );
+
+    expect(policy.actions).toContain("F5b_multi_price_not_bridged");
+    expect(policy.actions).toContain("C1_price_clarify");
+    expect(policy.actions).not.toContain("F5a_single_slot_price_bridge");
+  });
 });
