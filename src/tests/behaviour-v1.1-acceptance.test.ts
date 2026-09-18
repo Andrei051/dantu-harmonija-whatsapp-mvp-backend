@@ -116,8 +116,14 @@ describe("Behaviour v1.1 acceptance", () => {
   });
 
   describe("WhatsApp handoff vs ordinary redirect", () => {
-    it("team escalation uses 08–17 wording", () => {
+    it("escalated unknown with reply body keeps that reply (Voice §18 — no Option C replace)", () => {
       const body = getOutboundBodyOptionC(true, "lt", "Fallback text", "unknown");
+      expect(body).toBe("Fallback text");
+      expect(body).not.toContain("atsakysime darbo dieną");
+    });
+
+    it("Option C ack remains available for empty escalated body", () => {
+      const body = getOutboundBodyOptionC(true, "lt", "   ", "unknown");
       expect(body).toContain("8:00");
       expect(body).toContain("17:00");
       expect(body.toLowerCase()).not.toContain("soon");

@@ -20,16 +20,18 @@ describe("whatsappOutbound Option C", () => {
     expect(body).not.toContain("We have received your enquiry");
   });
 
-  it("returns only ack for unknown escalation", () => {
-    const body = getOutboundBodyOptionC(
-      true,
-      "lt",
-      "Kol kas galiu atsakyti tik pagal oficialią informaciją.",
-      "unknown"
-    );
-    expect(body).not.toContain("oficialią informaciją");
+  it("returns only ack for unknown escalation when response empty", () => {
+    const body = getOutboundBodyOptionC(true, "lt", "   ", "unknown");
     expect(body).toContain("Jūsų užklausą gavome");
     expect(body).toContain("17:00");
+  });
+
+  it("unknown with authorised redirect keeps redirect — no Option C promise", () => {
+    const redirect =
+      "I can only help with information about Dantų Harmonija — its services, prices and appointments.";
+    const body = getOutboundBodyOptionC(true, "en", redirect, "unknown");
+    expect(body).toBe(redirect);
+    expect(body).not.toContain("We have received your enquiry");
   });
 
   it("defaults to ack-only when escalated clinical but empty response", () => {

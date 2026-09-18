@@ -1,15 +1,23 @@
 {
   "unknown": {
-    "lt": "Šios informacijos patvirtinti negaliu. Dėl to geriausia pasitikslinti tiesiogiai klinikoje.",
-    "en": "I can't confirm that from the clinic's official information. Please check directly with the clinic."
+    "lt": "Galiu padėti tik su informacija apie Dantų Harmoniją — paslaugas, kainas ir registraciją.",
+    "en": "I can only help with information about Dantų Harmonija — its services, prices and appointments."
+  },
+  "unknownClinicUnsupported": {
+    "lt": "Tokios informacijos patvirtinti negaliu. Dėl klausimų apie kliniką, kurie čia neaptarti, susisiekite tiesiogiai su klinika.",
+    "en": "I don't have information confirming that. For clinic questions not covered here, please contact the clinic directly."
   },
   "clinicalOrUrgent": {
     "lt": "Pagal jūsų aprašymą reikėtų nedelsiant susisiekti su klinika telefonu +370 610 11222. Jei reikia skubios medicininės pagalbos, kreipkitės į skubios pagalbos tarnybas.",
     "en": "Based on what you described, please contact the clinic immediately on +370 610 11222. If you need emergency medical care, contact emergency services."
   },
   "clinicalAssessment": {
-    "lt": "Kuris gydymo variantas tiktų jūsų atveju, reikėtų įvertinti gydytojui. Dėl įvertinimo galite susisiekti su klinika telefonu +370 610 11222.",
-    "en": "Which treatment option is right for your case needs a dentist's assessment. Please contact the clinic on +370 610 11222 for an evaluation."
+    "lt": "Koks gydymas būtų tinkamas jūsų atveju, reikėtų įvertinti gydytojui. Dėl įvertinimo galite susisiekti su klinika telefonu +370 610 11222.",
+    "en": "What treatment would be right for your case needs a dentist's assessment. Please contact the clinic on +370 610 11222 for an evaluation."
+  },
+  "clinicalAssessmentSuitability": {
+    "lt": "Ar šis gydymas būtų tinkamas jūsų atveju, reikėtų įvertinti gydytojui. Dėl įvertinimo galite susisiekti su klinika telefonu +370 610 11222.",
+    "en": "Whether this treatment would suit your case needs a dentist's assessment. Please contact the clinic on +370 610 11222 for an evaluation."
   },
   "languageSwitch": {
     "lt": "Galiu tęsti lietuviškai arba angliškai. Parašykite, kuria kalba patogiau.",

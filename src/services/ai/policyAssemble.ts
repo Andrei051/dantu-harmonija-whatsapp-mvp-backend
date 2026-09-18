@@ -81,6 +81,57 @@ const isLaboratoryAsk = (patientMessage: string): boolean => {
   return n.includes("laborator") || n.includes("dental lab") || n.includes("in-house lab");
 };
 
+/** Clinic-related cues — used to choose unsupported-clinic vs out-of-scope Voice copy. */
+const hasClinicRelatedCue = (patientMessage: string): boolean => {
+  const n = normalizeText(patientMessage);
+  return (
+    n.includes("klinik") ||
+    n.includes("clinic") ||
+    n.includes("paslaug") ||
+    n.includes("service") ||
+    n.includes("vizit") ||
+    n.includes("appointment") ||
+    n.includes("gydyt") ||
+    n.includes("dentist") ||
+    n.includes("odont") ||
+    n.includes("dantu") ||
+    n.includes("tooth") ||
+    n.includes("teeth") ||
+    n.includes("sleep") ||
+    n.includes("miegot") ||
+    n.includes("nakvot")
+  );
+};
+
+const isSuitabilityAsk = (patientMessage: string): boolean => {
+  const n = normalizeText(patientMessage);
+  return (
+    n.includes("tinka") ||
+    n.includes("tinkam") ||
+    n.includes("suitable") ||
+    n.includes("suitability") ||
+    n.includes("right for me") ||
+    n.includes("good for me") ||
+    /\b(ar|does|is|would)\b.*\b(man|me)\b/.test(n)
+  );
+};
+
+const clinicalAssessmentCopy = (language: SupportedLanguage, patientMessage = ""): string => {
+  const fb = knowledgeService.getFallback();
+  if (isSuitabilityAsk(patientMessage) && fb.clinicalAssessmentSuitability?.[language]) {
+    return fb.clinicalAssessmentSuitability[language];
+  }
+  return fb.clinicalAssessment?.[language] ?? fb.clinicalOrUrgent[language];
+};
+
+const unknownHandoffCopy = (language: SupportedLanguage, patientMessage: string): string => {
+  const fb = knowledgeService.getFallback();
+  if (hasClinicRelatedCue(patientMessage) && fb.unknownClinicUnsupported?.[language]) {
+    return fb.unknownClinicUnsupported[language];
+  }
+  return fb.unknown[language];
+};
+
 /** Whole-token match only — `nekraujuoja` must not match `kraujuoja`. */
 const hasAuthorisedUrgencySignal = (patientMessage: string): boolean => {
   const n = normalizeText(patientMessage);
@@ -94,11 +145,6 @@ const hasAuthorisedUrgencySignal = (patientMessage: string): boolean => {
     }
     return tokens.has(c);
   });
-};
-
-const clinicalAssessmentCopy = (language: SupportedLanguage): string => {
-  const fb = knowledgeService.getFallback();
-  return fb.clinicalAssessment?.[language] ?? fb.clinicalOrUrgent[language];
 };
 
 /**
@@ -279,7 +325,7 @@ export const applyPolicyAndAssemble = (
     clinicalJudgementActive = true;
     actions.push("S1_clinical_assessment");
     suppressed.push("booking", "online_registration");
-    parts.push(clinicalAssessmentCopy(language));
+    parts.push(clinicalAssessmentCopy(language, patientMessage));
     route = "contact";
     primary_intent_label = "clinical_or_urgent";
     escalated = false;
@@ -290,7 +336,6 @@ export const applyPolicyAndAssemble = (
     actions.push("D2_unsupported_absence_family_handoff");
     foundation_misses.push("unsupported_ask_family");
     suppressed.push("service_info_substitution");
-    const built = buildResponse(language, { intent: "unknown" });
     return {
       actions,
       suppressed,
@@ -298,7 +343,7 @@ export const applyPolicyAndAssemble = (
       foundation_misses,
       route: "option_c",
       escalated: true,
-      reply: built.reply,
+      reply: unknownHandoffCopy(language, patientMessage),
       language,
       primary_intent_label: "unknown"
     };
@@ -306,7 +351,6 @@ export const applyPolicyAndAssemble = (
 
   if (interp.signals.unsupported_or_ambiguous && interp.intents.length === 0) {
     actions.push("ambiguous_unknown");
-    const built = buildResponse(language, { intent: "unknown" });
     return {
       actions,
       suppressed,
@@ -314,7 +358,7 @@ export const applyPolicyAndAssemble = (
       foundation_misses,
       route: "option_c",
       escalated: true,
-      reply: built.reply,
+      reply: unknownHandoffCopy(language, patientMessage),
       language,
       primary_intent_label: "unknown"
     };
@@ -510,8 +554,7 @@ export const applyPolicyAndAssemble = (
         foundation_misses.push("service_description:unresolved");
         actions.push("D2_unresolved_service_info_clarify");
         primary_intent_label = "service_info";
-        const fallback = buildResponse(language, { intent: "unknown" });
-        parts.push(fallback.reply);
+        parts.push(unknownHandoffCopy(language, patientMessage));
         escalated = true;
         route = "option_c";
       }
@@ -520,8 +563,7 @@ export const applyPolicyAndAssemble = (
       foundation_misses.push("service_description:unresolved");
       actions.push("D2_unresolved_service_info_clarify");
       primary_intent_label = "service_info";
-      const fallback = buildResponse(language, { intent: "unknown" });
-      parts.push(fallback.reply);
+      parts.push(unknownHandoffCopy(language, patientMessage));
       escalated = true;
       route = "option_c";
     }
@@ -582,11 +624,10 @@ export const applyPolicyAndAssemble = (
       } else {
         actions.push("safe_unknown");
       }
-      const built = buildResponse(language, { intent: "unknown" });
       escalated = true;
       route = "option_c";
       primary_intent_label = "unknown";
-      parts.push(built.reply);
+      parts.push(unknownHandoffCopy(language, patientMessage));
     }
   }
 

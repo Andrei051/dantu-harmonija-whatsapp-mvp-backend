@@ -51,9 +51,13 @@ export interface PriceCacheData {
 
 export interface FallbackData {
   unknown: LocalizedText;
+  /** Clinic-related but not in Foundation — redirect to clinic, no human WhatsApp promise. */
+  unknownClinicUnsupported?: LocalizedText;
   clinicalOrUrgent: LocalizedText;
-  /** Non-urgent clinical judgement — assessment/contact; no emergency framing (Pre-3B F1). */
+  /** Non-urgent clinical judgement — general assessment/contact (Pre-3B F1). */
   clinicalAssessment?: LocalizedText;
+  /** Non-urgent suitability ask (“ar man tinka…”) — same boundary, topic-neutral suitability wording. */
+  clinicalAssessmentSuitability?: LocalizedText;
   languageSwitch: LocalizedText;
   laboratoryInfo?: LocalizedText;
 }

@@ -1,6 +1,6 @@
 # Dantų Harmonija — Clinic Voice & Response Presentation v1
 
-**Status:** DRAFT — architecture **SIGNED** (A-first / B deferred) · Option A **implemented locally** — pending §21 WhatsApp acceptance  
+**Status:** DRAFT — architecture **SIGNED** (A-first / B deferred) · Option A **ACCEPTANCE PARTIAL** · narrow refinement implemented locally  
 **Phase:** Pre-3B — Clinic Voice  
 **Date:** 2026-09-18  
 **Purpose:** Define how governed assistant responses should be presented to patients before clinic-side pilot.  
@@ -568,3 +568,26 @@ No Option B implementation should begin merely to improve style beyond what is n
 **Architecture scope note:** Option A is the architecture for Clinic Voice v1 / Phase 3B readiness — not a permanent claim that a presentation model will never be used. Clinic-pilot evidence may later reopen Option B.
 
 **Status:** **SIGNED** 🔒 — A-first / B-deferred — Voice implementation authorised.
+
+---
+
+## 24. Option A acceptance — 2026-09-18 (owner WhatsApp §21)
+
+**Result:** **ACCEPTANCE PARTIAL**
+
+| | |
+|---|---|
+| Functional regressions | **0** |
+| Voice blockers | Unsupported/unrelated Option C misuse (§18) |
+| Minor presentation | Price field stitching; taxonomy phrasing; assessment wording reuse; first-visit completeness |
+| Option B | Remains **DEFERRED** |
+
+First-visit yellow: prep-only reply matches authorised `first_appointment_prep` for that interpretation — **not** a Voice omission of visit-expectations. Left alone this pass.
+
+### Narrow refinement pass (authorised)
+
+1. Option C only when no authorised reply body; unsupported/unrelated get scope/redirect copy.
+2. Naturalise service + price presentation (no record-label stitching).
+3. Two assessment primitives: suitability vs general — not scenario templates.
+
+**Status after refinement:** pending re-smoke of blocker cases + yellow cells.

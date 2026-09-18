@@ -8,6 +8,7 @@ import {
   ServiceItem
 } from "../types/knowledge";
 import { knowledgeService } from "./knowledgeService";
+import { normalizeText } from "../utils/normalizeText";
 
 const bookingContactBlock = (language: SupportedLanguage, profile: ClinicProfile): string =>
   language === "lt"
@@ -46,6 +47,55 @@ const withPriceDisclaimer = (body: string, language: SupportedLanguage): string 
   const disclaimer = knowledgeService.getPriceDisclaimer()[language];
   return `${body}\n\n${disclaimer}`;
 };
+
+/** Voice: turn authorised price fields into a patient sentence — do not stitch label onto raw detail. */
+const formatAuthorisedPrice = (
+  language: SupportedLanguage,
+  label: string,
+  amountText: string
+): string => {
+  const amount = amountText.trim();
+  if (language === "lt") {
+    if (/priekinio danties\s*:/i.test(amount)) {
+      return amount
+        .replace(/priekinio danties\s*:\s*/i, "Priekinio danties plombavimas kainuoja ")
+        .replace(/;\s*šoninio\s*:\s*/i, ", šoninio – ")
+        .replace(/\bEUR\b/g, "€");
+    }
+    if (new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(amount) || /kainuoja/i.test(amount)) {
+      return amount;
+    }
+    return `${label} kainuoja ${amount}`;
+  }
+  if (/front tooth\s*:/i.test(amount)) {
+    return amount
+      .replace(/front tooth\s*:\s*/i, "Front-tooth filling costs ")
+      .replace(/;\s*side tooth\s*:\s*/i, "; side tooth – ");
+  }
+  if (new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(amount) || /\bcosts\b/i.test(amount)) {
+    return amount;
+  }
+  return `${label} costs ${amount}`;
+};
+
+/** Voice §5: natural capability sentence from authorised name + description. */
+const formatServiceCapability = (language: SupportedLanguage, service: ServiceItem): string => {
+  const name = service.name[language].trim().replace(/\.$/, "");
+  const desc = service.description[language].trim().replace(/\.$/, "");
+  if (language === "lt") {
+    if (desc && normalizeText(desc) !== normalizeText(name)) {
+      return `Taip, klinikoje atliekamas ${name} – ${lowerFirst(desc)}.`;
+    }
+    return `Taip, klinikoje atliekamas ${name}.`;
+  }
+  if (desc && desc.toLowerCase() !== name.toLowerCase()) {
+    return `Yes, the clinic offers ${name} — ${lowerFirst(desc)}.`;
+  }
+  return `Yes, the clinic offers ${name}.`;
+};
+
+const lowerFirst = (s: string): string =>
+  s.length ? s.charAt(0).toLowerCase() + s.slice(1) : s;
 
 const appendActionGuidance = (
   body: string,
@@ -253,16 +303,11 @@ export const buildResponse = (
         };
       }
 
-      // Voice §5: patient-facing sentence, not "Name: description" field label
-      const reply =
-        language === "lt"
-          ? `Taip, klinikoje teikiama paslauga „${service.name.lt}“. ${service.description.lt}`
-          : `Yes, the clinic offers ${service.name.en}. ${service.description.en}`;
-
+      // Voice §5: patient-facing sentence from authorised name + description
       return {
         language,
         intent: "service_info",
-        reply,
+        reply: formatServiceCapability(language, service),
         escalated: false
       };
     }
@@ -302,15 +347,19 @@ export const buildResponse = (
         };
       }
 
-      const priceBody =
-        language === "lt"
-          ? `${price.label.lt} kainuoja ${price.amountText.lt}${price.notes ? `\n\n${price.notes.lt}` : ""}`
-          : `${price.label.en} costs ${price.amountText.en}${price.notes ? `\n\n${price.notes.en}` : ""}`;
+      const priceBody = formatAuthorisedPrice(
+        language,
+        price.label[language],
+        price.amountText[language]
+      );
+      const withNotes = price.notes
+        ? `${priceBody}\n\n${price.notes[language]}`
+        : priceBody;
 
       return {
         language,
         intent: "price_info",
-        reply: appendActionGuidance(withPriceDisclaimer(priceBody, language), language, profile, intentResult),
+        reply: appendActionGuidance(withPriceDisclaimer(withNotes, language), language, profile, intentResult),
         escalated: false
       };
     }
