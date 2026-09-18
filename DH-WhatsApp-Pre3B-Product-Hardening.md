@@ -1,10 +1,10 @@
 # Pre-3B — Product Hardening (change control)
 
 **Date:** 2026-09-18  
-**Status:** **FUNCTIONAL HARDENING COMPLETE** ✅ — F5b waived (Schema v1 limit); next = Clinic Voice & Response Presentation v1  
+**Status:** **COMPLETE** ✅ — functional hardening + Clinic Voice Option A frozen  
 **Character:** Narrow product-policy / retrieval hardening — **not** Phase 3B clinic pilot  
 **Upstream:** `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` (CLOSED — Technical PASS / Product PARTIAL)  
-**Downstream:** `DH-WhatsApp-Clinic-Voice-Response-Presentation-v1.md` (DRAFT) → short owner smoke → Phase 3B protocol  
+**Downstream:** `DH-WhatsApp-Clinic-Voice-Response-Presentation-v1.md` (**FROZEN**) → owner “comfortable showing Aušra?” smoke → Phase 3B protocol  
 
 ---
 
@@ -262,7 +262,7 @@ Improving R2–R4 / R7 must not weaken R6 (assessment phone) or R8 (urgent phone
 1. **F1/F2** — deterministic policy only ✅  
 2. Re-run R-set on WhatsApp + policy tests ✅  
 3. **F4** then **F5/F6** RCA + slices ✅ (F5b waived)  
-4. **Clinic Voice v1** (separate artefact) — **NEXT**  
+4. **Clinic Voice v1** (separate artefact) — **FROZEN** ✅  
 
 ---
 
@@ -275,5 +275,6 @@ Improving R2–R4 / R7 must not weaken R6 (assessment phone) or R8 (urgent phone
 | F4–F6 either fixed or explicitly waived with RCA note | ✅ — F4/F5a/F6 fixed; **F5b waived** |
 | F3 still deferred or newly evidenced | ✅ deferred |
 | No Corpus v0.1 edits; no Aušra invite | ✅ |
+| Clinic Voice Option A validated | ✅ **FROZEN** |
 
-**Gate met for Voice.** Next: Clinic Voice & Response Presentation v1 → short owner “comfortable showing Aušra?” smoke → draft Phase 3B protocol.
+**Pre-3B product gate met.** Next: short owner “Would I be comfortable showing this to Aušra?” smoke → draft Phase 3B protocol.

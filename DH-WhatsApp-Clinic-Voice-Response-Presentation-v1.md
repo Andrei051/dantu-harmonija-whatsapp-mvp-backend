@@ -1,11 +1,11 @@
 # Dantų Harmonija — Clinic Voice & Response Presentation v1
 
-**Status:** DRAFT — architecture **SIGNED** (A-first / B deferred) · Option A **ACCEPTANCE PARTIAL** · narrow refinement implemented locally  
+**Status:** **FROZEN** 🔒 — Option A **VALIDATED**; Option B **DEFERRED**; Clinic Voice acceptance **PASS**  
 **Phase:** Pre-3B — Clinic Voice  
 **Date:** 2026-09-18  
 **Purpose:** Define how governed assistant responses should be presented to patients before clinic-side pilot.  
 **Upstream:** `DH-WhatsApp-Pre3B-Product-Hardening.md` (functional hardening complete)  
-**Downstream after freeze:** short owner WhatsApp smoke → Phase 3B clinic-side pilot gate  
+**Downstream:** short owner “comfortable showing Aušra?” smoke → Phase 3B clinic-side pilot gate  
 
 ---
 
@@ -573,6 +573,8 @@ No Option B implementation should begin merely to improve style beyond what is n
 
 ## 24. Option A acceptance — 2026-09-18 (owner WhatsApp §21)
 
+### Pass 1 — initial §21 set
+
 **Result:** **ACCEPTANCE PARTIAL**
 
 | | |
@@ -582,12 +584,37 @@ No Option B implementation should begin merely to improve style beyond what is n
 | Minor presentation | Price field stitching; taxonomy phrasing; assessment wording reuse; first-visit completeness |
 | Option B | Remains **DEFERRED** |
 
-First-visit yellow: prep-only reply matches authorised `first_appointment_prep` for that interpretation — **not** a Voice omission of visit-expectations. Left alone this pass.
+First-visit yellow: prep-only reply matches authorised `first_appointment_prep` for that interpretation — **not** a Voice omission of visit-expectations. Left alone.
 
-### Narrow refinement pass (authorised)
+### Narrow refinement pass
 
 1. Option C only when no authorised reply body; unsupported/unrelated get scope/redirect copy.
 2. Naturalise service + price presentation (no record-label stitching).
 3. Two assessment primitives: suitability vs general — not scenario templates.
 
-**Status after refinement:** pending re-smoke of blocker cases + yellow cells.
+### Pass 2 — refinement re-smoke + urgent sentinel
+
+| Case | Result |
+|---|---|
+| Filling price | ✅ PASS |
+| Children | ✅ PASS |
+| Fillings + crowns | ✅ PASS |
+| Whitening suitability | ✅ PASS |
+| Non-urgent chipped tooth | ✅ PASS |
+| Unsupported clinic (`sleep`) | ✅ PASS — no Option C |
+| Unrelated (`bitcoin`) | ✅ PASS — no Option C |
+| Urgent bleeding/pain | ✅ PASS — immediate phone/safety; no Option C |
+
+Minor stylistic observations (e.g. `atliekamas Vaikų…`, repeated `Taip, klinikoje atliekamas…`) **accepted for pilot** — not fixed; avoids copy-polishing loop.
+
+### Final disposition 🔒
+
+| Item | Status |
+|---|---|
+| **Clinic Voice acceptance** | **PASS** 🔒 |
+| **Option A** | **VALIDATED / FROZEN** |
+| **Option B** | **DEFERRED** — not required for Phase 3B |
+| **Functional regressions** | **0** |
+| **Minor stylistic observations** | Accepted for pilot |
+
+**Next:** short owner WhatsApp smoke — “Would I be comfortable showing this to Aušra?” → Phase 3B clinic-side pilot gate.
