@@ -12,6 +12,8 @@ export interface ClinicProfile {
   parking: LocalizedText;
   /** Official or approved Google Maps / place link */
   googleMapsUrl?: string;
+  /** Online registration for specialist consultations + oral hygiene */
+  onlineRegistrationUrl?: string;
 }
 
 export interface ServiceItem {
@@ -35,10 +37,23 @@ export interface PriceItem {
   notes?: LocalizedText;
 }
 
+export interface PriceCacheMeta {
+  source: string;
+  synchronisedAt: string;
+  note?: string;
+  disclaimer: LocalizedText;
+}
+
+export interface PriceCacheData {
+  meta: PriceCacheMeta;
+  items: PriceItem[];
+}
+
 export interface FallbackData {
   unknown: LocalizedText;
   clinicalOrUrgent: LocalizedText;
   languageSwitch: LocalizedText;
+  laboratoryInfo?: LocalizedText;
 }
 
 export interface FirstVisitPatientData {
@@ -55,6 +70,8 @@ export interface AboutClinicData {
 
 export type AboutClinicFocus = "default" | "family" | "team" | "fullService";
 
+export type BookingRoute = "online_registration" | "contact";
+
 export interface IntentResult {
   intent: MessageIntent;
   serviceId?: string;
@@ -65,12 +82,16 @@ export interface IntentResult {
   needsServiceClarification?: boolean;
   /** LT "ar darote …?" / EN "do you offer …?" — prefix reply with yes + service blurb */
   serviceAvailabilityYesNo?: boolean;
-  /** Price question also asks about booking — append contact redirect after price */
+  /** Price question also asks about booking — append contact/online booking guidance after price */
   appendBookingGuidance?: boolean;
   /** Price/availability mix — append availability contact redirect (not Option C) */
   appendAvailabilityGuidance?: boolean;
   /** Availability-only enquiry — contact redirect, no slot invention */
   availabilityOnly?: boolean;
+  /** How booking_request should be answered */
+  bookingRoute?: BookingRoute;
   /** Contact intent: short doctor/specialist question without escalation */
   contactContext?: "doctor";
+  /** Laboratory is not a patient service */
+  laboratoryInfo?: boolean;
 }

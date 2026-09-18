@@ -1,10 +1,10 @@
 {
   "appointmentPrep": {
-    "lt": "Pirmam vizitui: atvykite 10–15 min. anksčiau. Atsineškite tapatybės dokumentą.\n\nRuoškite klausimus iš anksto.",
-    "en": "For your first visit: arrive 10-15 minutes early. Bring a valid identity document.\n\nPrepare any questions in advance."
+    "lt": "Rekomenduojame atvykti 10–15 min. anksčiau, kad ramiai sutvarkytume dokumentus. Su savimi turėkite asmens tapatybės dokumentą.\n\nParkavimas: prie pagrindinio įėjimo yra nemokama 5 vietų aikštelė; netoliese yra ir mokamų vietų.",
+    "en": "We recommend arriving 10–15 minutes early so documents can be completed calmly. Please bring an identity document.\n\nParking: there is a free 5-space area at the main entrance; paid parking is also available nearby."
   },
   "visitExpectations": {
-    "lt": "Registratūroje užpildote anketą ir pasirašote sutartį; gali būti prašoma susipažinti su klinikos taisyklėmis.\n\nGydytojas atlieka apžiūrą. Jei reikia, skiriama diagnostika.\n\nGydymo variantai ir kainos aptariamos po įvertinimo. Galutinis gydymo planas ir kaina priklauso nuo individualios konsultacijos po apžiūros.",
-    "en": "At reception you complete a questionnaire and sign the service agreement; you may be asked to read the clinic rules.\n\nThe dentist performs an examination. Diagnostics may be prescribed if needed.\n\nTreatment options and prices are discussed after assessment. The exact treatment plan and fees depend on an individual consultation after examination."
+    "lt": "Registratūroje gali tekti užpildyti anketą ir pasirašyti dokumentus; gali prireikti sutikimų procedūroms.\n\nGydytojas atlieka apžiūrą. Jei reikia, skiriama diagnostika.\n\nSudaromas gydymo planas; variantai ir kainos aptariami po įvertinimo. Galutinę kainą įvardina gydytojas.",
+    "en": "At reception you may complete a form and sign documents; procedure consents may also be required.\n\nThe dentist examines you. Diagnostics may be prescribed if needed.\n\nA treatment plan is drawn up; options and fees are discussed after assessment. The dentist states the final fee."
   }
 }

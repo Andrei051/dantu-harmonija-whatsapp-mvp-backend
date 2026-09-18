@@ -25,8 +25,8 @@ describe("Behaviour v1 acceptance", () => {
     );
   });
 
-  describe("2. Booking is contact redirect, not team ack", () => {
-    it("booking reply redirects to clinic channels without Option C promise", async () => {
+  describe("2. Booking is redirect, not team ack", () => {
+    it("generic booking redirects without Option C promise", async () => {
       const res = await request(app)
         .post("/messages/test")
         .send({ message: "Noriu užsakyti vizitą" });
@@ -34,7 +34,8 @@ describe("Behaviour v1 acceptance", () => {
       expect(res.body.intent).toBe("booking_request");
       expect(res.body.escalated).toBe(false);
       expect(String(res.body.response).toLowerCase()).toContain("registruoti negaliu");
-      expect(String(res.body.response).toLowerCase()).not.toContain("komandos narys peržiūrės");
+      expect(String(res.body.response).toLowerCase()).not.toContain("komandos narys");
+      expect(String(res.body.response).toLowerCase()).not.toContain("atsakysime darbo dieną");
     });
   });
 
@@ -47,11 +48,14 @@ describe("Behaviour v1 acceptance", () => {
     });
 
     it("returns booking contact redirect, not implant description", async () => {
+      expect(classifyIntent(ausraBooking, services).bookingRoute).toBe("contact");
       const res = await request(app).post("/messages/test").send({ message: ausraBooking });
       expect(res.body.intent).toBe("booking_request");
       expect(res.body.escalated).toBe(false);
       const reply = String(res.body.response).toLowerCase();
       expect(reply).toContain("registruoti negaliu");
+      expect(reply).not.toContain("/registracija/");
+      expect(reply).not.toContain("implantavimas:");
       expect(reply).not.toContain("implantacija:");
     });
 
@@ -83,7 +87,8 @@ describe("Behaviour v1 acceptance", () => {
       ).toEqual({
         intent: "price_info",
         serviceId: "teeth_whitening",
-        appendBookingGuidance: true
+        appendBookingGuidance: true,
+        bookingRoute: "contact"
       });
     });
 

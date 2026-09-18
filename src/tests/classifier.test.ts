@@ -174,7 +174,8 @@ describe("classifier", () => {
     expect(classifyIntent("kiek kainuoja balinimas ir ar galit uzrasyti", services)).toEqual({
       intent: "price_info",
       serviceId: "teeth_whitening",
-      appendBookingGuidance: true
+      appendBookingGuidance: true,
+      bookingRoute: "contact"
     });
   });
 
@@ -182,7 +183,8 @@ describe("classifier", () => {
     expect(classifyIntent("how much whitening and can I book", services)).toEqual({
       intent: "price_info",
       serviceId: "teeth_whitening",
-      appendBookingGuidance: true
+      appendBookingGuidance: true,
+      bookingRoute: "contact"
     });
   });
 

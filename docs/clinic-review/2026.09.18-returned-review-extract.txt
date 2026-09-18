@@ -1,0 +1,404 @@
+ARCHIVED: C:\Users\semio\DH\docs\clinic-review\2026.09.18-DH-WhatsApp-Clinic-Review-LT-v1-RETURNED.xlsx
+COMMENTS_IN_D:
+--- R11 ---
+SECTION: 1. Veikimo principas
+ITEM: Atsakyti į bendrus klausimus apie kliniką
+CURRENT: Asistentas gali
+COMMENT: +
+
+--- R12 ---
+SECTION: 1. Veikimo principas
+ITEM: Pateikti informaciją apie klinikos paslaugas
+CURRENT: Asistentas gali
+COMMENT: +
+
+--- R13 ---
+SECTION: 1. Veikimo principas
+ITEM: Pateikti patvirtintas / paskelbtas kainas
+CURRENT: Asistentas gali
+COMMENT: ? Reikia įspėti, kad kainos orientacinės, tik gydytojas vizito metu, įvertinės situaciją, tada galės įvardinti tikslią kainą
+
+--- R14 ---
+SECTION: 1. Veikimo principas
+ITEM: Pateikti adresą, darbo laiką ir kontaktus
+CURRENT: Asistentas gali
+COMMENT: +
+
+--- R15 ---
+SECTION: 1. Veikimo principas
+ITEM: Paaiškinti pagrindinę informaciją apie pirmą vizitą
+CURRENT: Asistentas gali
+COMMENT: +
+
+--- R16 ---
+SECTION: 1. Veikimo principas
+ITEM: Atsakyti lietuvių arba anglų kalba
+CURRENT: Asistentas gali
+COMMENT: +
+
+--- R17 ---
+SECTION: 1. Veikimo principas
+ITEM: Diagnozuoti ar vertinti paciento sveikatos būklės
+CURRENT: Asistentas negali
+COMMENT: +
+
+--- R18 ---
+SECTION: 1. Veikimo principas
+ITEM: Teikti medicininių ar gydymo rekomendacijų
+CURRENT: Asistentas negali
+COMMENT: +
+
+--- R19 ---
+SECTION: 1. Veikimo principas
+ITEM: Parinkti ar rekomenduoti gydymo
+CURRENT: Asistentas negali
+COMMENT: +
+
+--- R20 ---
+SECTION: 1. Veikimo principas
+ITEM: Registruoti, keisti ar atšaukti vizitų
+CURRENT: Asistentas negali
+COMMENT: gali nukreipti į online registraciją Konsultacijai pas specialistus, Higienai
+
+--- R21 ---
+SECTION: 1. Veikimo principas
+ITEM: Matyti ar nurodyti laisvų vizito laikų
+CURRENT: Asistentas negali
+COMMENT: +
+
+--- R22 ---
+SECTION: 1. Veikimo principas
+ITEM: Pateikti informacijos, kurios klinika nėra patvirtinusi
+CURRENT: Asistentas negali
+COMMENT: +
+
+--- R23 ---
+SECTION: 2. Kai reikalingas darbuotojas
+ITEM: Registracija / laisvi laikai
+CURRENT: Asistentas nukreipia į kliniką (tel., el. paštas, svetainė) — nesako, kad žinutę jau peržiūrėjo darbuotojas
+COMMENT: ir gali nukreipti į online registraciją Konsultacijai pas specialistus, Higienai
+
+--- R24 ---
+SECTION: 2. Kai reikalingas darbuotojas
+ITEM: Galima žinutė pacientui (tik jei stebima WhatsApp)
+CURRENT: „Ačiū už žinutę. Komandos narys peržiūrės pranešimą ir atsakys artimiausiu metu.“
+COMMENT: Jūsų užklausą gavome, atsakysime darbo dieną nuo 8:00 iki 17:00.
+
+--- R25 ---
+SECTION: 2. Kai reikalingas darbuotojas
+ITEM: Ar klinikoje kas nors reguliariai peržiūrės šiuo numeriu gautas WhatsApp žinutes ir galės į jas atsakyti?
+CURRENT: Pasirinkite dešinėje: Taip = galime informuoti, kad žinutę peržiūrės darbuotojas; Ne = asistentas tik pateikia kontaktus
+COMMENT: Taip
+
+--- R26 ---
+SECTION: 3. Klinikos informacija
+ITEM: Klinika
+CURRENT: Dantų Harmonija
+COMMENT: +
+
+--- R27 ---
+SECTION: 3. Klinikos informacija
+ITEM: Adresas
+CURRENT: Olimpiečių g. 1A-24, LT-09235 Vilnius
+COMMENT: +
+
+--- R28 ---
+SECTION: 3. Klinikos informacija
+ITEM: Darbo laikas
+CURRENT: Darbo dienomis 08:00–20:00; šeštadieniais 09:00–14:00 tik su išankstine registracija; sekmadieniais nedirbama
+COMMENT: Darbo dienomis 08:00–20:00
+
+--- R29 ---
+SECTION: 3. Klinikos informacija
+ITEM: Telefonai
+CURRENT: +370 610 11 222 / (8-5) 27 222 11
+COMMENT: +370 610 11222
+
+--- R30 ---
+SECTION: 3. Klinikos informacija
+ITEM: El. paštas
+CURRENT: klinika@dantuharmonija.lt
+COMMENT: +
+
+--- R31 ---
+SECTION: 3. Klinikos informacija
+ITEM: Svetainė
+CURRENT: dantuharmonija.lt
+COMMENT: +
+
+--- R32 ---
+SECTION: 4. Paslaugos
+ITEM: Profesionali burnos higiena
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: +
+
+--- R33 ---
+SECTION: 4. Paslaugos
+ITEM: Dantų implantacija
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: +
+
+--- R34 ---
+SECTION: 4. Paslaugos
+ITEM: Ortodontinis gydymas
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: +
+
+--- R35 ---
+SECTION: 4. Paslaugos
+ITEM: Dantų balinimas
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: +
+
+--- R36 ---
+SECTION: 4. Paslaugos
+ITEM: Fizioterapija / žandikaulio terapija
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: Kineziterapija / žandikaulio terapija
+
+--- R37 ---
+SECTION: 4. Paslaugos
+ITEM: Vaikų odontologija
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: +
+
+--- R38 ---
+SECTION: 4. Paslaugos
+ITEM: Konsultacijos ir diagnostika
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: +
+
+--- R39 ---
+SECTION: 4. Paslaugos
+ITEM: Dantų plombavimas
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: +
+
+--- R40 ---
+SECTION: 4. Paslaugos
+ITEM: Dantų šaknų kanalų gydymas
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: +
+
+--- R41 ---
+SECTION: 4. Paslaugos
+ITEM: Dantų šalinimas
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: +
+
+--- R42 ---
+SECTION: 4. Paslaugos
+ITEM: Dantų laminatės
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: +
+
+--- R43 ---
+SECTION: 4. Paslaugos
+ITEM: Periodontologinis gydymas
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: ką turima omenyje?
+
+--- R44 ---
+SECTION: 4. Paslaugos
+ITEM: Dantų protezavimas
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: ką turima omenyje?
+
+--- R45 ---
+SECTION: 4. Paslaugos
+ITEM: Anestezija
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: +
+
+--- R48 ---
+SECTION: 4. Paslaugos
+ITEM: Dantų technikosų laboratorija
+CURRENT: Įtraukta į asistento sąrašą
+COMMENT: ne paslauga pacientams, o tiesiog informacija, kad procesai vyksta greičiau ir tiksliau, nes laboratorija yra vietoje
+
+--- R49 ---
+SECTION: 5. Kainos
+ITEM: Profesionali burnos higiena
+CURRENT: 80–100 EUR čia šiandien, o rytoj gali būti kitokios
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R50 ---
+SECTION: 5. Kainos
+ITEM: Dantų implantacija
+CURRENT: nuo 860 EUR
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R51 ---
+SECTION: 5. Kainos
+ITEM: Ortodontinis gydymas
+CURRENT: Konsultacija: 50–80 EUR; metaliniai breketai: nuo 750 EUR / žandikaulį; kapos (aligneriai): apie 4000–5000 EUR
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R52 ---
+SECTION: 5. Kainos
+ITEM: Dantų balinimas
+CURRENT: Kapomis: 200 EUR; Zoom: 299 EUR; po procedūros kapomis: 100 EUR
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R53 ---
+SECTION: 5. Kainos
+ITEM: Fizioterapija / žandikaulio terapija
+CURRENT: Konsultacija: 75 EUR; TMJ gydymas: 65 EUR; miofunkcinė terapija: 55 EUR
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R54 ---
+SECTION: 5. Kainos
+ITEM: Vaikų odontologija
+CURRENT: Konsultacija: 40–50 EUR; gydymas priklauso nuo procedūros (pvz. plombavimas 60–120 EUR)
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R55 ---
+SECTION: 5. Kainos
+ITEM: Konsultacijos ir diagnostika
+CURRENT: Konsultacija: 50 EUR; rentgenas: 10 EUR; panoraminis: 30 EUR; KT: 100 EUR
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R56 ---
+SECTION: 5. Kainos
+ITEM: Dantų plombavimas
+CURRENT: Dažniausiai 60–150 EUR už paviršių; estetinis priekinis: apie 50–120 EUR
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R57 ---
+SECTION: 5. Kainos
+ITEM: Dantų šaknų kanalų gydymas
+CURRENT: nuo 150 EUR iki 400 EUR (priklauso nuo danties ir sudėtingumo)
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R58 ---
+SECTION: 5. Kainos
+ITEM: Dantų šalinimas
+CURRENT: Paprastas: nuo 50 EUR; chirurginis: nuo 150 EUR
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R59 ---
+SECTION: 5. Kainos
+ITEM: Dantų laminatės
+CURRENT: nuo 300 EUR už dantį
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R60 ---
+SECTION: 5. Kainos
+ITEM: Periodontologinis gydymas
+CURRENT: Skalinimas / higiena: nuo 80 EUR; toliau — pagal dantenų būklę
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R61 ---
+SECTION: 5. Kainos
+ITEM: Dantų protezavimas
+CURRENT: Vainikelis: nuo 350 EUR; tiltas: nuo 600 EUR; protezas: nuo 900 EUR
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R62 ---
+SECTION: 5. Kainos
+ITEM: Anestezija
+CURRENT: Vietinė: 10–15 EUR; bendroji narkozė: 150–550 EUR
+COMMENT: Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą
+
+--- R63 ---
+SECTION: 
+ITEM: Estetinis plombavimas
+CURRENT: 
+COMMENT: Reikėtų sutikrinti visas paslaugas, kaip mes skelbiame puslapyje
+
+--- R64 ---
+SECTION: 
+ITEM: Estetinis protezavimas
+CURRENT: 
+COMMENT: Reikėtų sutikrinti visas paslaugas, kaip mes skelbiame puslapyje
+
+--- R65 ---
+SECTION: 5. Kainos
+ITEM: Dantų technikų laboratorija
+CURRENT: Atskiros kainos asistentas neturi
+COMMENT: Laboratorijai darbus užsako gydytojas, tai darbų kainos pacientas ir neturi matyti, nes ji įskaičiuota į gydytojo paslaugą
+
+--- R66 ---
+SECTION: 5. Kainos
+ITEM: Pastaba prie kainų
+CURRENT: „Pateikiamos kainos yra orientacinės. Tikslią kainą gydytojas pasako po individualios konsultacijos.“
+COMMENT: Siūlau: Kaina yra preliminari ir galutinę kainą įvardins tik gydytojas
+
+--- R67 ---
+SECTION: 6. Pirmas vizitas
+ITEM: Prieš pirmą vizitą
+CURRENT: Atvykti 10–15 min. anksčiau, turėti asmens dokumentą ir, jei reikia, iš anksto pasiruošti klausimus.
+COMMENT: Rekomenduojame atvykti 10–15 min. anksčiau, kad ramiai sutvarkytume dokumentus. Su savimi turėkite asmens tapatybės dokumentą. Įtraukti informaciją apie parkavimą. +Vizito metu
+
+--- R68 ---
+SECTION: 6. Pirmas vizitas
+ITEM: Vizito metu
+CURRENT: Registratūroje užpildoma anketa ir pasirašoma sutartis; gydytojas atlieka apžiūrą; jei reikia, skiriama diagnostika; gydymo variantai ir kainos aptariami po įvertinimo. Galutinis gydymo planas ir kaina priklauso nuo individualios konsultacijos.
+COMMENT: Gali tekti užpildyti Sutikimus procedūroms. Sudaromas gydymo planas.
+
+--- R69 ---
+SECTION: 6. Pirmas vizitas
+ITEM: Parkavimas
+CURRENT: 
+COMMENT: Informacija iš mūsų svetainės
+
+ALL_ROWS_FROM_11:
+R11|1. Veikimo principas|Atsakyti į bendrus klausimus apie kliniką|D='+' [HAS_D]
+R12|1. Veikimo principas|Pateikti informaciją apie klinikos paslaugas|D='+' [HAS_D]
+R13|1. Veikimo principas|Pateikti patvirtintas / paskelbtas kainas|D='? Reikia įspėti, kad kainos orientacinės, tik gydytojas vizito metu, įvertinės situaciją, tada galės įvardinti tikslią kainą' [HAS_D]
+R14|1. Veikimo principas|Pateikti adresą, darbo laiką ir kontaktus|D='+' [HAS_D]
+R15|1. Veikimo principas|Paaiškinti pagrindinę informaciją apie pirmą vizitą|D='+' [HAS_D]
+R16|1. Veikimo principas|Atsakyti lietuvių arba anglų kalba|D='+' [HAS_D]
+R17|1. Veikimo principas|Diagnozuoti ar vertinti paciento sveikatos būklės|D='+' [HAS_D]
+R18|1. Veikimo principas|Teikti medicininių ar gydymo rekomendacijų|D='+' [HAS_D]
+R19|1. Veikimo principas|Parinkti ar rekomenduoti gydymo|D='+' [HAS_D]
+R20|1. Veikimo principas|Registruoti, keisti ar atšaukti vizitų|D='gali nukreipti į online registraciją Konsultacijai pas specialistus, Higienai' [HAS_D]
+R21|1. Veikimo principas|Matyti ar nurodyti laisvų vizito laikų|D='+' [HAS_D]
+R22|1. Veikimo principas|Pateikti informacijos, kurios klinika nėra patvirtinusi|D='+' [HAS_D]
+R23|2. Kai reikalingas darbuotojas|Registracija / laisvi laikai|D='ir gali nukreipti į online registraciją Konsultacijai pas specialistus, Higienai' [HAS_D]
+R24|2. Kai reikalingas darbuotojas|Galima žinutė pacientui (tik jei stebima WhatsApp)|D='Jūsų užklausą gavome, atsakysime darbo dieną nuo 8:00 iki 17:00.' [HAS_D]
+R25|2. Kai reikalingas darbuotojas|Ar klinikoje kas nors reguliariai peržiūrės šiuo numeriu gautas WhatsApp žinutes ir galės į jas atsakyti?|D='Taip' [HAS_D]
+R26|3. Klinikos informacija|Klinika|D='+' [HAS_D]
+R27|3. Klinikos informacija|Adresas|D='+' [HAS_D]
+R28|3. Klinikos informacija|Darbo laikas|D='Darbo dienomis 08:00–20:00' [HAS_D]
+R29|3. Klinikos informacija|Telefonai|D='+370 610 11222' [HAS_D]
+R30|3. Klinikos informacija|El. paštas|D='+' [HAS_D]
+R31|3. Klinikos informacija|Svetainė|D='+' [HAS_D]
+R32|4. Paslaugos|Profesionali burnos higiena|D='+' [HAS_D]
+R33|4. Paslaugos|Dantų implantacija|D='+' [HAS_D]
+R34|4. Paslaugos|Ortodontinis gydymas|D='+' [HAS_D]
+R35|4. Paslaugos|Dantų balinimas|D='+' [HAS_D]
+R36|4. Paslaugos|Fizioterapija / žandikaulio terapija|D='Kineziterapija / žandikaulio terapija' [HAS_D]
+R37|4. Paslaugos|Vaikų odontologija|D='+' [HAS_D]
+R38|4. Paslaugos|Konsultacijos ir diagnostika|D='+' [HAS_D]
+R39|4. Paslaugos|Dantų plombavimas|D='+' [HAS_D]
+R40|4. Paslaugos|Dantų šaknų kanalų gydymas|D='+' [HAS_D]
+R41|4. Paslaugos|Dantų šalinimas|D='+' [HAS_D]
+R42|4. Paslaugos|Dantų laminatės|D='+' [HAS_D]
+R43|4. Paslaugos|Periodontologinis gydymas|D='ką turima omenyje?' [HAS_D]
+R44|4. Paslaugos|Dantų protezavimas|D='ką turima omenyje?' [HAS_D]
+R45|4. Paslaugos|Anestezija|D='+' [HAS_D]
+R46||Estetinis plombavimas|D=''
+R47||Estetinis protezavimas|D=''
+R48|4. Paslaugos|Dantų technikosų laboratorija|D='ne paslauga pacientams, o tiesiog informacija, kad procesai vyksta greičiau ir tiksliau, nes laboratorija yra vietoje' [HAS_D]
+R49|5. Kainos|Profesionali burnos higiena|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R50|5. Kainos|Dantų implantacija|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R51|5. Kainos|Ortodontinis gydymas|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R52|5. Kainos|Dantų balinimas|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R53|5. Kainos|Fizioterapija / žandikaulio terapija|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R54|5. Kainos|Vaikų odontologija|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R55|5. Kainos|Konsultacijos ir diagnostika|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R56|5. Kainos|Dantų plombavimas|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R57|5. Kainos|Dantų šaknų kanalų gydymas|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R58|5. Kainos|Dantų šalinimas|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R59|5. Kainos|Dantų laminatės|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R60|5. Kainos|Periodontologinis gydymas|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R61|5. Kainos|Dantų protezavimas|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R62|5. Kainos|Anestezija|D='Kainos gali keistis, reikėtų, kad Agentas pats "imtų" iš konkrečios vietos kainų intervalą' [HAS_D]
+R63||Estetinis plombavimas|D='Reikėtų sutikrinti visas paslaugas, kaip mes skelbiame puslapyje' [HAS_D]
+R64||Estetinis protezavimas|D='Reikėtų sutikrinti visas paslaugas, kaip mes skelbiame puslapyje' [HAS_D]
+R65|5. Kainos|Dantų technikų laboratorija|D='Laboratorijai darbus užsako gydytojas, tai darbų kainos pacientas ir neturi matyti, nes ji įskaičiuota į gydytojo paslaugą' [HAS_D]
+R66|5. Kainos|Pastaba prie kainų|D='Siūlau: Kaina yra preliminari ir galutinę kainą įvardins tik gydytojas' [HAS_D]
+R67|6. Pirmas vizitas|Prieš pirmą vizitą|D='Rekomenduojame atvykti 10–15 min. anksčiau, kad ramiai sutvarkytume dokumentus. Su savimi turėkite asmens tapatybės dokumentą. Įtraukti informaciją apie parkavimą. +Vizito metu' [HAS_D]
+R68|6. Pirmas vizitas|Vizito metu|D='Gali tekti užpildyti Sutikimus procedūroms. Sudaromas gydymo planas.' [HAS_D]
+R69|6. Pirmas vizitas|Parkavimas|D='Informacija iš mūsų svetainės' [HAS_D]

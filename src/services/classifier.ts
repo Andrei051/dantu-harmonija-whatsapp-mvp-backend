@@ -1,5 +1,5 @@
 import { MessageIntent } from "../types/message";
-import { AboutClinicFocus, IntentResult, ServiceItem } from "../types/knowledge";
+import { AboutClinicFocus, BookingRoute, IntentResult, ServiceItem } from "../types/knowledge";
 import { normalizeText } from "../utils/normalizeText";
 
 const keywordMap: Record<MessageIntent, string[]> = {
@@ -774,13 +774,44 @@ const resolveMixedSupportedAndAction = (normalized: string, services: ServiceIte
   if (!serviceId) {
     return null;
   }
+  const bookingRoute = booking ? resolveBookingRoute(normalized, serviceId) : undefined;
   return {
     intent: "price_info",
     serviceId,
-    ...(booking ? { appendBookingGuidance: true as const } : {}),
+    ...(booking ? { appendBookingGuidance: true as const, bookingRoute } : {}),
     ...(availability && !booking ? { appendAvailabilityGuidance: true as const } : {})
   };
 };
+
+const hasConsultationCue = (normalized: string): boolean =>
+  normalized.includes("konsultac") ||
+  normalized.includes("consultation") ||
+  normalized.includes("consult");
+
+const hasHygieneCue = (normalized: string): boolean =>
+  normalized.includes("higien") ||
+  normalized.includes("hygiene") ||
+  normalized.includes("scaling") ||
+  normalized.includes("profesional");
+
+/** Specialist consultation + oral hygiene → online registration; treatment booking → contact */
+const resolveBookingRoute = (normalized: string, serviceId?: string): BookingRoute => {
+  if (hasHygieneCue(normalized) || serviceId === "professional_hygiene") {
+    return "online_registration";
+  }
+  if (hasConsultationCue(normalized) || serviceId === "diagnostics") {
+    return "online_registration";
+  }
+  // Generic booking with no treatment service → registration page
+  if (!serviceId) {
+    return "online_registration";
+  }
+  // Treatment-specific booking without consultation cue → clinic contact
+  return "contact";
+};
+
+const looksLikeLaboratoryQuestion = (normalized: string): boolean =>
+  normalized.includes("laborator") || normalized.includes("dental lab") || normalized.includes("in-house lab");
 
 export const classifyIntent = (message: string, services: ServiceItem[]): IntentResult => {
   const normalized = normalizeText(message);
@@ -792,6 +823,19 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
   }
 
   if (matchesDecisionSeekingQuestion(normalized)) {
+    return { intent: "clinical_or_urgent" };
+  }
+
+  // Medical condition / suitability — never answer from service blurbs
+  if (
+    normalized.includes("diabet") ||
+    normalized.includes("sergu") ||
+    normalized.includes("nescia") ||
+    normalized.includes("nescio") ||
+    normalized.includes("pregnan") ||
+    normalized.includes("alergij") ||
+    normalized.includes("allerg")
+  ) {
     return { intent: "clinical_or_urgent" };
   }
 
@@ -830,11 +874,20 @@ export const classifyIntent = (message: string, services: ServiceItem[]): Intent
   }
 
   if (hasBookingCue(normalized)) {
-    return { intent: "booking_request" };
+    const serviceId = detectService(normalized, services);
+    return {
+      intent: "booking_request",
+      serviceId,
+      bookingRoute: resolveBookingRoute(normalized, serviceId)
+    };
   }
 
   if (hasAvailabilityCue(normalized)) {
-    return { intent: "booking_request", availabilityOnly: true };
+    return { intent: "booking_request", availabilityOnly: true, bookingRoute: "contact" };
+  }
+
+  if (looksLikeLaboratoryQuestion(normalized)) {
+    return { intent: "about_clinic", laboratoryInfo: true };
   }
 
   if (keywordMap.clinic_hours.some((keyword) => normalized.includes(normalizeText(keyword)))) {

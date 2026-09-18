@@ -23,7 +23,7 @@ describe("POST /messages/test integration", () => {
     expect(res.body.intent).toBe("price_info");
     expect(res.body.response).not.toBe("");
     expect(String(res.body.response)).toContain("EUR");
-    expect(String(res.body.response).toLowerCase()).toContain("orientac");
+    expect(String(res.body.response).toLowerCase()).toContain("preliminari");
   });
 
   it("returns urgent escalation and avoids service explanation", async () => {

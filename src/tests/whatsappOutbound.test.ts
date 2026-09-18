@@ -10,26 +10,35 @@ describe("whatsappOutbound Option C", () => {
     const clinical = "Apgailestauju, tačiau negaliu vertinti klinikinės būklės.";
     const body = getOutboundBodyOptionC(true, "lt", clinical, "clinical_or_urgent");
     expect(body).toContain(clinical);
-    expect(body).toContain("Ačiū už žinutę");
-    expect(body).toContain("Komandos narys");
+    expect(body).toContain("Jūsų užklausą gavome");
+    expect(body).toContain("8:00");
+    expect(body).toContain("17:00");
   });
 
   it("prepends EN clinical guidance before ack when escalated clinical_or_urgent", () => {
     const clinical = "I am sorry, but I cannot assess clinical conditions.";
     const body = getOutboundBodyOptionC(true, "en", clinical, "clinical_or_urgent");
     expect(body).toContain(clinical);
-    expect(body).toContain("Thanks for your message");
+    expect(body).toContain("We have received your enquiry");
+    expect(body).toContain("08:00");
+    expect(body).toContain("17:00");
   });
 
   it("returns only ack for unknown escalation", () => {
-    const body = getOutboundBodyOptionC(true, "lt", "Kol kas galiu atsakyti tik pagal oficialią informaciją.", "unknown");
+    const body = getOutboundBodyOptionC(
+      true,
+      "lt",
+      "Kol kas galiu atsakyti tik pagal oficialią informaciją.",
+      "unknown"
+    );
     expect(body).not.toContain("oficialią informaciją");
-    expect(body).toContain("Ačiū už žinutę");
+    expect(body).toContain("Jūsų užklausą gavome");
+    expect(body).toContain("17:00");
   });
 
   it("defaults to ack-only when escalated clinical but empty response", () => {
     const body = getOutboundBodyOptionC(true, "lt", "   ", "clinical_or_urgent");
     expect(body).toBeTruthy();
-    expect(body).toContain("Ačiū");
+    expect(body).toContain("Jūsų užklausą gavome");
   });
 });

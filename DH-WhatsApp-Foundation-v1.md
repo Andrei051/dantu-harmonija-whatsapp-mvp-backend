@@ -1,9 +1,18 @@
 # DH WhatsApp Assistant — Foundation v1 (Knowledge for clinic review)
 
-**Status:** Draft for clinic review (Aušra / Marius) — **not yet approved**  
+**Status:** Structure READY FOR CLINIC REVIEW — **not approved**; knowledge content still requires Aušra / Marius sign-off  
 **Date:** 2026-09-17  
-**Source:** Current bot knowledge files in `src/data/` (as deployed)  
-**Paired with:** `DH-WhatsApp-Behaviour-Scope-v1.md`
+**Source:** Current bot knowledge files in `src/data/` (as deployed; implementation frozen pending clinic review)  
+**Paired with:** `DH-WhatsApp-Behaviour-Scope-v1.md` (behaviour LIVE VERIFIED)
+
+| Gate | State |
+|---|---|
+| Foundation structure assembled from live KB | READY FOR CLINIC REVIEW ✅ |
+| Clinic approval of Foundation facts | Pending |
+| Behaviour + Foundation approval package | Pending clinic review |
+| Patient QR pilot | **Not opened** — Foundation approval is required, not only behavioural fidelity |
+
+Live verification of Behaviour does **not** mean this Foundation is approved or that the assistant is ready for patients.
 
 ---
 

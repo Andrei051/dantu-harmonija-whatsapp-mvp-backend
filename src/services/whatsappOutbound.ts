@@ -1,8 +1,8 @@
 import { MessageIntent, SupportedLanguage } from "../types/message";
 
 const ESCALATION_ACK_OPTION_C: Record<SupportedLanguage, string> = {
-  lt: "Ačiū už žinutę. Komandos narys peržiūrės pranešimą ir atsakys artimiausiu metu.",
-  en: "Thanks for your message. A team member will review it and get back to you soon."
+  lt: "Jūsų užklausą gavome, atsakysime darbo dieną nuo 8:00 iki 17:00.",
+  en: "We have received your enquiry and will reply on a working day between 08:00 and 17:00."
 };
 
 /** Option C: team ack only when escalated (unknown / clinical follow-up expected). Contact redirects must not set escalated. */

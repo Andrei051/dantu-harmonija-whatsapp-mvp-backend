@@ -14,15 +14,20 @@ import {
   FaqItem,
   FirstVisitPatientData,
   LocalizedText,
+  PriceCacheData,
   PriceItem,
   ServiceItem
 } from "../types/knowledge";
+
+const priceCache = pricesData as PriceCacheData;
 
 export const knowledgeService = {
   getClinicProfile: (): ClinicProfile => clinicProfileData as ClinicProfile,
   getServices: (): ServiceItem[] => servicesData as ServiceItem[],
   getFaq: (): FaqItem[] => faqData as FaqItem[],
-  getPrices: (): PriceItem[] => pricesData as PriceItem[],
+  getPrices: (): PriceItem[] => priceCache.items,
+  getPriceCacheMeta: (): PriceCacheData["meta"] => priceCache.meta,
+  getPriceDisclaimer: (): LocalizedText => priceCache.meta.disclaimer,
   getFallback: (): FallbackData => fallbackData as FallbackData,
   getFirstVisitPatient: (): FirstVisitPatientData => firstVisitPatientData as FirstVisitPatientData,
   getAboutClinic: (): AboutClinicData => aboutClinicData as AboutClinicData,

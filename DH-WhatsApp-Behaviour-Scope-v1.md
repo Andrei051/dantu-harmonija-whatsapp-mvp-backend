@@ -1,8 +1,19 @@
 # DH WhatsApp Assistant — Behaviour & Scope v1
 
-**Status:** Draft for clinic review (Aušra / Marius)  
+**Status:** Implementation LIVE VERIFIED against this document — ready for clinic review (Aušra / Marius)  
 **Date:** 2026-09-17  
-**Audience:** Clinic leadership (non-technical)
+**Audience:** Clinic leadership (non-technical)  
+**Implementation freeze:** No further product changes from our side until clinic correction or a genuine acceptance defect.
+
+| Gate | State |
+|---|---|
+| Behaviour v1 implemented as specified | LIVE VERIFIED ✅ |
+| Automated tests | 127/127 ✅ |
+| Production smoke (greeting, location 1A-24, named-doctor booking, price+availability, bare price clarify, standard price) | PASS ✅ |
+| Clinic approval of Behaviour & Scope | Pending |
+| Patient QR pilot | **Not opened** — requires clinic approval of Behaviour + Foundation |
+
+This document describes how the live assistant behaves today. Approving it means approving that behaviour — not an aspiration.
 
 ---
 

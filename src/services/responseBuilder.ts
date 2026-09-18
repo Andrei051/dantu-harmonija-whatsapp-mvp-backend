@@ -1,21 +1,51 @@
 import { AssistantResponse, SupportedLanguage } from "../types/message";
-import { AboutClinicFocus, ClinicProfile, IntentResult, PriceItem, ServiceItem } from "../types/knowledge";
+import {
+  AboutClinicFocus,
+  BookingRoute,
+  ClinicProfile,
+  IntentResult,
+  PriceItem,
+  ServiceItem
+} from "../types/knowledge";
 import { knowledgeService } from "./knowledgeService";
 
-const bookingLimitationBlock = (language: SupportedLanguage, profile: ClinicProfile): string =>
+const bookingContactBlock = (language: SupportedLanguage, profile: ClinicProfile): string =>
   language === "lt"
     ? `Per šį kanalą vizitų registruoti negaliu.\n\nRegistruokitės arba susisiekite su klinika įprastu būdu:\n\nSvetainė: ${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
     : `I can't register visits through this channel.\n\nTo schedule a visit, please follow the clinic's usual process:\n\nWebsite: ${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`;
 
-const availabilityLimitationBlock = (language: SupportedLanguage, profile: ClinicProfile): string =>
-  language === "lt"
-    ? `Laisvų laikų per šį kanalą pasakyti negaliu.\n\nDėl terminų susisiekite su klinika:\n\nSvetainė: ${profile.website}\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
-    : `I can't provide available appointment times through this channel.\n\nPlease contact the clinic for scheduling:\n\nWebsite: ${profile.website}\nPhone: ${profile.phone}\nEmail: ${profile.email}`;
+const bookingOnlineRegistrationBlock = (language: SupportedLanguage, profile: ClinicProfile): string => {
+  const url = profile.onlineRegistrationUrl ?? `${profile.website}registracija/`;
+  return language === "lt"
+    ? `Per šį kanalą vizitų registruoti negaliu.\n\nKonsultacijoms ir burnos higienai galite registruotis internetu:\n${url}\n\nKitu klausimu dėl vizito susisiekite:\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
+    : `I can't register visits through this channel.\n\nFor specialist consultations and oral hygiene, you can book online:\n${url}\n\nFor other visit questions, contact the clinic:\nPhone: ${profile.phone}\nEmail: ${profile.email}`;
+};
+
+const bookingGuidanceBlock = (
+  language: SupportedLanguage,
+  profile: ClinicProfile,
+  route?: BookingRoute
+): string =>
+  route === "online_registration"
+    ? bookingOnlineRegistrationBlock(language, profile)
+    : bookingContactBlock(language, profile);
+
+const availabilityLimitationBlock = (language: SupportedLanguage, profile: ClinicProfile): string => {
+  const url = profile.onlineRegistrationUrl ?? `${profile.website}registracija/`;
+  return language === "lt"
+    ? `Laisvų laikų per šį kanalą pasakyti negaliu.\n\nTerminų ieškokite internetinėje registracijoje (${url}) arba susisiekite su klinika:\nTel.: ${profile.phone}\nEl. paštas: ${profile.email}`
+    : `I can't provide available appointment times through this channel.\n\nPlease check online registration (${url}) or contact the clinic:\nPhone: ${profile.phone}\nEmail: ${profile.email}`;
+};
 
 const priceServiceClarification = (language: SupportedLanguage): string =>
   language === "lt"
     ? "Kokios paslaugos kainą norėtumėte sužinoti?"
     : "Which service's price would you like to know?";
+
+const withPriceDisclaimer = (body: string, language: SupportedLanguage): string => {
+  const disclaimer = knowledgeService.getPriceDisclaimer()[language];
+  return `${body}\n\n${disclaimer}`;
+};
 
 const appendActionGuidance = (
   body: string,
@@ -25,7 +55,7 @@ const appendActionGuidance = (
 ): string => {
   const parts = [body];
   if (intentResult.appendBookingGuidance === true) {
-    parts.push(bookingLimitationBlock(language, profile));
+    parts.push(bookingGuidanceBlock(language, profile, intentResult.bookingRoute));
   } else if (intentResult.appendAvailabilityGuidance === true) {
     parts.push(availabilityLimitationBlock(language, profile));
   }
@@ -137,7 +167,7 @@ export const buildResponse = (
         reply:
           intentResult.availabilityOnly === true
             ? availabilityLimitationBlock(language, profile)
-            : bookingLimitationBlock(language, profile),
+            : bookingGuidanceBlock(language, profile, intentResult.bookingRoute),
         escalated: false
       };
 
@@ -162,6 +192,20 @@ export const buildResponse = (
     }
 
     case "about_clinic": {
+      if (intentResult.laboratoryInfo === true) {
+        const lab = fallback.laboratoryInfo;
+        return {
+          language,
+          intent: "about_clinic",
+          reply:
+            lab?.[language] ??
+            (language === "lt"
+              ? "Dantų laboratorija nėra atskira pacientų paslauga."
+              : "The dental laboratory is not a separate patient service."),
+          escalated: false
+        };
+      }
+
       const about = knowledgeService.getAboutClinic();
       const focus: AboutClinicFocus = intentResult.aboutFocus ?? "default";
       const pick = (key: keyof typeof about) => about[key][language];
@@ -269,7 +313,7 @@ export const buildResponse = (
       return {
         language,
         intent: "price_info",
-        reply: appendActionGuidance(priceBody, language, profile, intentResult),
+        reply: appendActionGuidance(withPriceDisclaimer(priceBody, language), language, profile, intentResult),
         escalated: false
       };
     }

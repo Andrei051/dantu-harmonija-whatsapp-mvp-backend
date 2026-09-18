@@ -42,30 +42,41 @@ describe("responseBuilder", () => {
   });
 
   it("builds booking_request response without booking action", () => {
-    const resultLt = buildResponse("lt", { intent: "booking_request" });
+    const resultLt = buildResponse("lt", { intent: "booking_request", bookingRoute: "contact" });
     expect(resultLt.intent).toBe("booking_request");
     expect(resultLt.escalated).toBe(false);
     expect(resultLt.reply).toContain("registruoti negaliu");
     expect(resultLt.reply).toContain("https://");
 
-    const resultEn = buildResponse("en", { intent: "booking_request" });
+    const resultEn = buildResponse("en", { intent: "booking_request", bookingRoute: "contact" });
     expect(resultEn.intent).toBe("booking_request");
     expect(resultEn.escalated).toBe(false);
     expect(resultEn.reply.toLowerCase()).toContain("can't register");
+  });
+
+  it("builds online-registration booking guidance", () => {
+    const result = buildResponse("lt", {
+      intent: "booking_request",
+      bookingRoute: "online_registration"
+    });
+    expect(result.escalated).toBe(false);
+    expect(result.reply).toContain("registruoti negaliu");
+    expect(result.reply).toContain("/registracija/");
   });
 
   it("builds service_info response", () => {
     const result = buildResponse("lt", { intent: "service_info", serviceId: "implants" });
     expect(result.intent).toBe("service_info");
     expect(result.escalated).toBe(false);
-    expect(result.reply).toContain("Dantų implantacija");
+    expect(result.reply).toContain("Dantų implantavimas");
   });
 
-  it("builds price_info response", () => {
+  it("builds price_info response with disclaimer", () => {
     const result = buildResponse("en", { intent: "price_info", serviceId: "implants" });
     expect(result.intent).toBe("price_info");
     expect(result.escalated).toBe(false);
     expect(result.reply).toContain("Dental implants");
+    expect(result.reply).toContain("preliminary");
   });
 
   it("builds language_switch response", () => {
@@ -99,7 +110,7 @@ describe("responseBuilder", () => {
     const result = buildResponse("en", { intent: "first_appointment_prep" });
     expect(result.intent).toBe("first_appointment_prep");
     expect(result.escalated).toBe(false);
-    expect(result.reply).toContain("10-15");
+    expect(result.reply).toMatch(/10.15/);
   });
 
   it("builds first_visit_expectations from knowledge", () => {

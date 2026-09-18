@@ -4,11 +4,15 @@
     "en": "Thanks for your message. I currently answer only from official clinic information. If your question is more complex, I will route it to a team member."
   },
   "clinicalOrUrgent": {
-    "lt": "Apgailestauju, tačiau negaliu vertinti klinikinės būklės. Dėl skubios ar klinikinės situacijos prašome nedelsiant susisiekti su klinika telefonu arba kreiptis į skubią pagalbą.",
-    "en": "I am sorry, but I cannot assess clinical conditions. For urgent or clinical situations, please contact the clinic by phone immediately or seek emergency care."
+    "lt": "Apgailestauju, tačiau negaliu vertinti klinikinės būklės. Dėl skubios ar klinikinės situacijos prašome nedelsiant skambinti į kliniką telefonu +370 610 11222 arba kreiptis į skubią pagalbą.",
+    "en": "I am sorry, but I cannot assess clinical conditions. For urgent or clinical situations, please call the clinic immediately on +370 610 11222 or seek emergency care."
   },
   "languageSwitch": {
     "lt": "Galiu tęsti lietuviškai arba angliškai. Parašykite, kuria kalba patogiau.",
     "en": "I can continue in Lithuanian or English. Please tell me which language you prefer."
+  },
+  "laboratoryInfo": {
+    "lt": "Dantų laboratorija nėra atskira pacientų paslauga registracijai. Ji padeda greičiau ir tiksliau atlikti gydytojo paskirtus darbus; laboratorijos darbų kainos pacientui atskirai nerodomos.",
+    "en": "The dental laboratory is not a separate patient service for booking. It supports faster, more precise clinician-ordered work; laboratory work prices are not shown separately to patients."
   }
 }

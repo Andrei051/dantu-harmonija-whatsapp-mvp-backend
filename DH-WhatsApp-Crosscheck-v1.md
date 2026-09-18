@@ -1,29 +1,49 @@
 # Cross-check: Behaviour & Scope v1 ↔ Foundation v1 ↔ WhatsApp implementation
 
-**Status:** Implementation aligned with Behaviour v1 (2026-09-17)  
+**Status:** CLOSED — implementation LIVE VERIFIED (2026-09-17)  
 **Documents:** `DH-WhatsApp-Behaviour-Scope-v1.md` · `DH-WhatsApp-Foundation-v1.md`  
-**Acceptance tests:** `src/tests/behaviour-v1-acceptance.test.ts`
+**Acceptance tests:** `src/tests/behaviour-v1-acceptance.test.ts` (127/127)  
+**Implementation freeze:** No further changes until clinic correction or genuine acceptance defect.
 
 ---
 
-## Verdict
+## Formal gate record
 
-**Knowledge side:** structurally ready for clinic review (Foundation unchanged in coverage).  
-**Behaviour side:** five mismatches resolved in code so Behaviour & Scope describes demonstrable behaviour — do not weaken Behaviour to match the old prototype.
+| Item | State |
+|---|---|
+| Behaviour v1 implementation | LIVE VERIFIED ✅ |
+| Automated tests | 127/127 ✅ |
+| Production smoke tests | PASS ✅ |
+| Foundation structure | READY FOR CLINIC REVIEW ✅ |
+| Foundation / Behaviour clinic approval | Pending |
+| Patient QR pilot | **Not opened** |
 
-**Gate:** Align implementation ✅ → acceptance pack green → then clinic reviews Behaviour + Foundation → limited-live-use.
+**Distinction to preserve:** Live fidelity means the bot faithfully represents the *proposed* Behaviour & Scope. It does **not** mean Foundation v1 is approved or that the assistant is ready for the patient QR pilot. Remaining gate: clinic approval of how it behaves and what it knows.
 
 ---
 
-## Resolved mismatches
+## Production smoke (2026-09-17)
+
+| Scenario | Live result | Status |
+|---|---|---|
+| Sveiki | Capability response, no Option C | ✅ |
+| Location | Correct 1A-24 address | ✅ |
+| Named doctor + booking | Booking/contact redirect over implant service | ✅ |
+| Price + availability | Known price first, then availability redirect | ✅ |
+| Kokia kaina? | Requests service clarification | ✅ |
+| Standard price | Whitening prices + indicative-price disclaimer | ✅ |
+
+---
+
+## Earlier mismatch resolutions (kept for history)
 
 | Item | Resolution |
 |---|---|
-| Greeting | `Sveiki` / `Labas` / `Hello` → `assistant_capabilities`, `escalated: false` |
-| Booking “handoff” | Docs: **contact redirect** vs **Option C team ack**. Booking never implies WhatsApp team follow-up |
-| Named doctor + booking | `vizita`/`vizitą`/`paskirti` stems → `booking_request` before service (Aušra phrase covered) |
-| Mixed questions | Supported price (when service known) + availability/booking contact append — principle-based |
-| Insufficient price | `Kokia kaina?` → clarify which service (no send-away, no Option C) |
+| Greeting | Capability reply, `escalated: false` |
+| Booking “handoff” | Contact redirect ≠ Option C team ack |
+| Named doctor + booking | `vizit*` / `paskirti` → booking before service |
+| Mixed questions | Supported component + action contact append |
+| Insufficient price | Clarify which service |
 
 ## Option C governance
 
