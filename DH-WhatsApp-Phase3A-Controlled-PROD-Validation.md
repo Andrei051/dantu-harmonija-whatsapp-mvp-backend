@@ -1,120 +1,114 @@
 # Phase 3A — Controlled PROD technical validation
 
 **Date:** 2026-09-18  
-**Status:** **ENGINEERING** 🟡 (optional v2 path on frozen v1.1; PROD deploy not yet)  
+**Status:** **CLOSED** 🔒  
 **Parent:** `DH-WhatsApp-Phase3-Productisation-Pilot-Gate.md`  
-**Implementation principle:** v2 is an optional interpretation path around frozen v1.1 — not a rewrite. Sole activation gate = `AI_ENABLED`. Forced fallback for anchor #11 = `AI_FORCE_FAIL=api|schema` (temporary). Allowlist deferred to Phase 3B when Aušra joins.
+**Successor:** `DH-WhatsApp-Pre3B-Product-Hardening.md` (product-policy hardening — **not** Phase 3B)
 
 ---
 
-## Purpose
+## Formal outcome
 
-Prove the **production plumbing**, not re-score intelligence.
+| Gate | Result |
+|---|---|
+| **Technical gate** | **PASS** ✅ |
+| **Patient-product assessment** | **PARTIAL** ⚠️ |
 
-Offline 2D already showed architecture + policy can work. 3A must show:
+**Verdict:** Phase 3A **validated the production architecture** (optional v2 path on frozen v1.1 through real WhatsApp) and **identified product-policy / retrieval issues** that require a **controlled Pre-3B hardening** step before any clinic-side pilot.
+
+| Authorisation | Status |
+|---|---|
+| Owner/tester PROD validation | Completed |
+| **Aušra / clinic pilot (Phase 3B)** | **NOT AUTHORISED** 🔒 |
+| Patient / public AI v2 use | **NOT AUTHORISED** 🔒 |
+
+Corpus v0.1 was **not** re-opened. No prompt/corpus chasing during 3A.
+
+---
+
+## What was validated (technical PASS)
+
+Live path on Render with `AI_ENABLED=true`:
 
 ```text
-WhatsApp → webhook → conversation identity/context
-  → AI interpreter → schema validation
-  → deterministic policy → Foundation
-  → response assembly → WhatsApp
+WhatsApp → webhook → AI_ENABLED?
+  → bounded prior turns → AI interpreter → Schema v1
+  → Phase 2D deterministic policy → Foundation
+  → outbound  |  on failure → observable v1.1 fallback
 ```
 
-Especially: **multi-turn context must survive real message boundaries** (the 7/7 win used corpus-supplied prior turns — not yet live WhatsApp state).
-
----
-
-## Authorisation boundary
-
-| Allowed | Not allowed |
+| Capability | Evidence |
 |---|---|
-| Deploy v2 into **production infrastructure / WhatsApp channel** for controlled testing | Presenting v2 as a live clinic/patient service |
-| Owner / designated technical testers only | Aušra clinic pilot (Phase 3B — later) |
-| Deterministic safety/policy remains authoritative | Prompt-tuning against Corpus v0.1 |
-| Kill switch / rollback to deterministic v1.1 | Public or real-patient AI use |
+| Optional path (not rewrite) | Non-AI / kill switch remains pure v1.1 |
+| Schema gating | Invalid / forced-fail → no silent repair |
+| Observable fallback | `#11`: `forced_api_failure`, `forced_invalid_schema`; recovery → `path: "v2"` |
+| Multi-turn context across webhooks | Anchor `#9`–`#10`; owner sims |
+| Reference + topic replacement | e.g. implant → whitening; `O kiek?` / `jis` |
+| Policy remains authoritative | S1/D2 fired when signals present; no invented slots/prices/bookings |
+| Layered diagnostics | `ai_path_inbound_context` → `ai_path_interpretation` → `ai_path_policy_outbound` |
+
+Kill switch / activation: `AI_ENABLED` only (allowlist deferred to Phase 3B). Temporary `AI_FORCE_FAIL` used for `#11` only.
 
 ---
 
-## Before first WhatsApp message (checklist)
+## Scripted anchors (after correct deploy `718e94b`)
 
-### 1. Pilot / test boundary
-- [x] Single owner/tester; WhatsApp not in live patient use for this window
-- [ ] Rough duration / volume (lightweight — stop on repetition)
-- [ ] Explicit: **experimental; not for real patient clinical enquiries**
-
-### 2. Operational safeguards
-- [x] Model/API failure → deterministic v1.1 fallback (`fallback_used` / `fallback_reason` logged)
-- [x] Schema-invalid output → no silent repair; safe fallback
-- [x] Deterministic S1 clinical / booking / Foundation-miss policy still enforced (Phase 2D `applyPolicyAndAssemble`)
-- [x] Layered logs: `ai_path_inbound_context` → `ai_path_interpretation` → `ai_path_policy_outbound`
-- [x] **Kill switch** `AI_ENABLED=false` → frozen v1.1
-- [x] Anchor #11: `AI_FORCE_FAIL=api|schema` (temporary; no prompt tricks)
-
-### 3. Data boundary
-- [ ] Document exactly what text reaches the model provider
-- [ ] What is logged, retention, access
-- [ ] Avoid unnecessary patient/health data in this internal phase
-- [ ] Confirm contractual/privacy stance for OpenAI (or chosen provider)
-
-### 4. Evidence capture
-- [ ] Per conversation: transcript/result, appropriate? (Y/N/partial), notes, provenance `owner-observed` / `internal-tester`
-- [ ] Store in a **new** empirical folder/dataset — **never** into Corpus v0.1
-
----
-
-## Smoke anchors (manual WhatsApp — not all 70)
-
-Reproduce a **small** set through the real channel:
-
-| # | Scenario | Expect |
+| # | Result | Notes |
 |---|---|---|
-| 1 | `Sveiki` | Capabilities (not Option C-only) |
-| 2 | Implant price | Cached price + disclaimer |
-| 3 | Price + availability | Both compose; no invented slot |
-| 4 | Consultation booking | Online registration path |
-| 5 | Treatment booking (e.g. implant) | Contact; not false online completion |
-| 6 | Unresolved-service booking (e.g. filling shorthand) | **Contact**, not `/registracija/` |
-| 7 | Suitability / clinical | Phone; booking suppressed |
-| 8 | Insurance / reimbursement | Foundation miss / handoff — **not** implant blurb |
-| 9 | 3–4 turn (Aušra-like): implant topic → booking → `O kiek kainuos?` | Context survives WhatsApp turns |
-| 10 | Reference follow-ups: `O kada?` / `O kiek?` / whitening “same” | Context / safe limitation |
-| 11 | *(if safe)* Force model failure or invalid schema | Fallback works |
+| 1–3 | PASS | Capabilities; implant price; price+availability |
+| 4 | **FAIL** (waiver) | Interpretation correct (`orthodontics` + hard booking); `bookingRouteFor` ignored consultation cue → contact (**F4**) |
+| 5–8 | PASS | Treatment/filling contact; S1 suitability; D2 insurance |
+| 9–10 | PASS | Context + references + topic switch; availability→`/registracija/` wording noted as UX observation |
+| 11 | PASS | API + schema force-fail + v2 recovery (after env hygiene) |
 
-Also use **natural** tester behaviour: typos, shorthand, topic switches, delayed follow-ups, LT/EN mix, two questions in one message — not only known passes.
-
-| Finding type | Action |
-|---|---|
-| Serious safety / policy defect | **Stop**; fix under change control |
-| Awkward Understanding miss that safely hands off | **Log** only; do not polish immediately |
+Early Pass 1 on `cab856d` exercised **v1.1 only** — discarded for v2 scoring.
 
 ---
 
-## Pass criteria for 3A → unlock 3B design
+## Owner-observed natural simulations
 
-- Anchors 1–10 behave as expected on live WhatsApp (or documented waivers)
-- Context holds across real multi-turn (anchor 9–10)
-- Fallback/kill switch verified or explicitly deferred with risk note
-- No uncontrolled patient exposure occurred
+| ID | Journey | Assessment |
+|---|---|---|
+| **001** | General dental concern / broken tooth (LT) | **PARTIALLY APPROPRIATE** — logistics/booking safe; clinical turns over-urgent |
+| **002** | Elective whitening journey (LT) | **PARTIALLY APPROPRIATE** — opening price OK; suitability/process → emergency S1 |
+| **003** | Price shopper (LT) | **PARTIALLY APPROPRIATE** — **no S1**; multi-intent / filling price misses (**F5**) |
+| **004** | Parent / child (LT) | **NOT APPROPRIATE** (UX) — children + first-visit Foundation miss / S1; still safe |
+| **005** | EN exploratory / stress | **PARTIALLY APPROPRIATE** — stable under provocation; reinforces F1/F5/F6 |
 
-Then: finish **Phase 3B clinic-pilot protocol** (boundary, safeguards, data, evidence + **value** criterion) → only then invite Aušra.
-
----
-
-## Explicit non-goals
-
-- Re-running Corpus v0.1 as the success metric  
-- Asking Aušra to QA plumbing  
-- Declaring patient production use  
+Comparative control: **003 never hit S1**; **001 / 002 / 004** repeatedly did → F1/F2 are journey-boundary issues, not random instability.
 
 ---
 
-## Next engineering (when implementing 3A)
+## Findings (evidence level at 3A close)
 
-Smallest deployable internal v2 on existing webhook with:
+| ID | Finding | Level |
+|---|---|---|
+| **F1** | Clinical judgement ≠ urgent situation — S1 uses emergency-framed phone language for ordinary clinical uncertainty | **Systematic** (001, 002, 004; compatible 005) |
+| **F2** | Safety suppression too coarse — mixed turns lose safe Foundation-backed components | **Systematic** (001, 002, 004) |
+| **F3** | Correction / negation / some references incomplete (e.g. `higienos nereikia`) | **Observe / defer** (001) |
+| **F4** | Consultation booking routing loses consultation cue after resolved specialty id | **Confirmed** (anchor #4) |
+| **F5** | Price / service retrieval & compound price handling incomplete | **Recurring** (001, 003, 005) |
+| **F6** | Approved Foundation knowledge not reliably surfaced (clinic name, lab, children, …) | **Recurring** (004, 005) |
 
-- conversation-scoped prior turns (minimum needed)
-- schema validation
-- Phase 2D policy assembly
-- deterministic v1.1 fallback + kill switch  
+Additional observation (not elevated): implant **availability** copy may point at generic online registration while treatment context is implant — related to F4 family.
 
-Implementation starts only when this checklist’s data/ops items are accepted — then code against production infrastructure under the boundaries above.
+---
+
+## Explicit non-goals (unchanged)
+
+- Re-running Corpus v0.1 as success metric  
+- Prompt polishing for tone while F1/F2 remain wrong  
+- Clinic Voice / presentation pass (deferred until behaviour is right)  
+- Inviting Aušra  
+- Patient production use  
+
+---
+
+## Next (not 3B)
+
+1. Open **Pre-3B Product Hardening** — design F1/F2 replacement behaviour from owner evidence **before code**  
+2. Gate blockers: **F1 + F2**; candidates **F4–F6** after RCA; defer **F3**  
+3. Clinic Voice & Response Presentation v1 — **after** F1/F2 green  
+4. Short owner smoke → only then design **Phase 3B** clinic-pilot protocol  
+
+**Do not conflate:** Pre-3B hardening ≠ Phase 3B Aušra pilot.

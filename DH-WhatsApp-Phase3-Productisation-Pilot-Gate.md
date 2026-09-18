@@ -13,7 +13,8 @@
 | Phase 2D | CLOSED 🔒 |
 | AI interpretation architecture | VALIDATED for continued product consideration ✅ |
 | Corpus v0.1 optimisation | **STOP** 🛑 |
-| Production infrastructure deployment | **Authorised for Phase 3A controlled owner/tester validation only** |
+| Production infrastructure deployment | Phase **3A CLOSED** — Technical PASS / Product PARTIAL 🔒 |
+| Pre-3B product hardening | **OPEN** — see `DH-WhatsApp-Pre3B-Product-Hardening.md` |
 | Clinic pilot (Aušra) | **NOT YET AUTHORISED** |
 | Patient / public WhatsApp use of AI v2 | **NOT AUTHORISED** 🔒 |
 
@@ -53,18 +54,22 @@ Any pilot must produce evidence of **workflow / patient value**, not merely that
 ## Sequence (authorised order)
 
 ```text
-Phase 3A — Production-like technical validation (owner/tester)
+Phase 3A — Production-like technical validation (owner/tester) — CLOSED
         ↓
-       Internal simulated-patient use (natural WhatsApp behaviour)
+Pre-3B Product Hardening (F1/F2 primary; not clinic pilot)
         ↓
-Phase 3B — Clinic-side pilot (Aušra) — only after 3A passes
+Clinic Voice & Response Presentation v1 (after behaviour is right)
+        ↓
+Short owner smoke (“comfortable showing Aušra?”)
+        ↓
+Phase 3B — Clinic-side pilot (Aušra) — only when explicitly authorised
         ↓
        Pilot review → Outcome A / B iterate / C
         ↓
        Limited patient pilot — only if explicitly authorised
 ```
 
-**Do not ask Aušra to participate until Phase 3A is complete and the clinic-pilot protocol + safeguards are finished.** Her role is value judgment, not discovering webhook bugs.
+**Do not ask Aušra to participate until Pre-3B hardening + voice smoke are accepted and the clinic-pilot protocol + safeguards are finished.** Her role is value judgment, not discovering webhook bugs.
 
 ---
 
@@ -91,8 +96,9 @@ Preferred first clinic path (when ready): **clinic-side pilot**, not public pati
 
 ## Related artefacts
 
-- `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` — 3A protocol (authorised now)  
-- Phase 3B clinic-pilot protocol — draft after 3A passes (boundary, safeguards, data, evidence)
+- `DH-WhatsApp-Phase3A-Controlled-PROD-Validation.md` — **CLOSED** (Technical PASS / Product PARTIAL)  
+- `DH-WhatsApp-Pre3B-Product-Hardening.md` — F1–F6 change control (open)  
+- Phase 3B clinic-pilot protocol — draft only after Pre-3B + voice gate
 
 ---
 
