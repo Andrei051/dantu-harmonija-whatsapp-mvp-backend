@@ -49,12 +49,34 @@ const withPriceDisclaimer = (body: string, language: SupportedLanguage): string 
 };
 
 /** Voice: turn authorised price fields into a patient sentence — do not stitch label onto raw detail. */
+const isPointerOnlyAmount = (amountText: string): boolean => {
+  const a = amountText.trim();
+  if (!a) return false;
+  // Directive / see-page with no monetary digits
+  if (!/\d/.test(a) && /(see price page|zr\.?\s*kain|žr\.?\s*kain)/i.test(a)) return true;
+  if (/^see price page/i.test(a) || /^žr\.?\s*kain/i.test(a) || /^zr\.?\s*kain/i.test(a)) return true;
+  if (/fees?\s*[—–-]\s*see price page/i.test(a) && !/\d/.test(a)) return true;
+  if (/kainos?\s*[—–-]\s*(žr|zr)/i.test(a) && !/\d/.test(a)) return true;
+  return false;
+};
+
+const isSimpleAmountText = (amountText: string): boolean => {
+  const a = amountText.trim();
+  // Leading monetary amount (optional from/nuo/about/iki)
+  return /^(from |nuo |about |apie |iki )?[\d]/.test(a);
+};
+
 const formatAuthorisedPrice = (
   language: SupportedLanguage,
   label: string,
   amountText: string
 ): string => {
   const amount = amountText.trim();
+  if (isPointerOnlyAmount(amount)) {
+    return language === "lt"
+      ? `Dėl „${label}“ kainų: ${amount}`
+      : `For ${label} pricing: ${amount}`;
+  }
   if (language === "lt") {
     if (/priekinio danties\s*:/i.test(amount)) {
       return amount
@@ -65,7 +87,11 @@ const formatAuthorisedPrice = (
     if (new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(amount) || /kainuoja/i.test(amount)) {
       return amount;
     }
-    return `${label} kainuoja ${amount}`;
+    if (isSimpleAmountText(amount)) {
+      return `${label} kainuoja ${amount}`;
+    }
+    // Structured / hybrid — preserve authorised phrase without forcing “kainuoja”
+    return `${label}: ${amount}`;
   }
   if (/front tooth\s*:/i.test(amount)) {
     return amount
@@ -75,7 +101,10 @@ const formatAuthorisedPrice = (
   if (new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(amount) || /\bcosts\b/i.test(amount)) {
     return amount;
   }
-  return `${label} costs ${amount}`;
+  if (isSimpleAmountText(amount)) {
+    return `${label} costs ${amount}`;
+  }
+  return `${label}: ${amount}`;
 };
 
 /** Voice §5: natural capability sentence from authorised name + description. */

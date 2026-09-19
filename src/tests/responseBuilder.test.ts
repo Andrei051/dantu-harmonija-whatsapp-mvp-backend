@@ -76,7 +76,41 @@ describe("responseBuilder", () => {
     expect(result.intent).toBe("price_info");
     expect(result.escalated).toBe(false);
     expect(result.reply).toContain("Dental implants");
+    expect(result.reply).toMatch(/costs from 860 EUR|from 860 EUR/);
     expect(result.reply).toContain("preliminary");
+  });
+
+  it("N5: pointer-only anaesthesia amountText is not 'costs See price page'", () => {
+    const result = buildResponse("en", { intent: "price_info", serviceId: "anaesthesia" });
+    expect(result.reply).toMatch(/For Anaesthesia pricing:/i);
+    expect(result.reply).toContain("See price page");
+    expect(result.reply).not.toMatch(/Anaesthesia costs See/i);
+    expect(result.reply).toContain("preliminary");
+  });
+
+  it("N5: pointer-only diagnostics and periodontics", () => {
+    const diagnostics = buildResponse("en", { intent: "price_info", serviceId: "diagnostics" });
+    expect(diagnostics.reply).toMatch(/For Diagnostics pricing:/i);
+    expect(diagnostics.reply).not.toMatch(/Diagnostics costs /i);
+
+    const perio = buildResponse("en", { intent: "price_info", serviceId: "periodontics" });
+    expect(perio.reply).toMatch(/For Periodontics pricing:/i);
+    expect(perio.reply).not.toMatch(/Periodontics costs /i);
+  });
+
+  it("N5: structured whitening keeps authorised tiers without 'costs Trays'", () => {
+    const result = buildResponse("en", { intent: "price_info", serviceId: "teeth_whitening" });
+    expect(result.reply).toContain("Trays: 214 EUR");
+    expect(result.reply).not.toMatch(/Teeth whitening costs Trays/i);
+    expect(result.reply).toMatch(/Teeth whitening:/i);
+  });
+
+  it("N5: hybrid orthodontics preserves see-page clause without 'costs Orthodontist'", () => {
+    const result = buildResponse("en", { intent: "price_info", serviceId: "orthodontics" });
+    expect(result.reply).toContain("Orthodontist consultations: from 50 EUR");
+    expect(result.reply).toContain("see price page");
+    expect(result.reply).not.toMatch(/Teeth straightening costs Orthodontist/i);
+    expect(result.reply).toMatch(/Teeth straightening:/i);
   });
 
   it("builds language_switch response", () => {

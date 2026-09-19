@@ -516,6 +516,51 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.actions).not.toContain("D2_unresolved_service_info_clarify");
   });
 
+  it("N4: tell me more about services → same catalogue path as N2", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "service_info", confidence: 0.9 }],
+        service_or_topic: {
+          id: null,
+          confidence: 0.7,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "tell me more about services"
+    );
+
+    expect(policy.actions).toContain("N2_service_catalogue_list");
+    expect(policy.escalated).toBe(false);
+    expect(policy.actions).not.toContain("D2_unresolved_service_info_clarify");
+  });
+
+  it("N4 LT: papasakokite daugiau apie paslaugas → catalogue", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "lt",
+        intents: [{ type: "service_info", confidence: 0.9 }],
+        service_or_topic: { id: null, confidence: 0.8, source: "current_message" },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Papasakokite daugiau apie paslaugas"
+    );
+
+    expect(policy.actions).toContain("N2_service_catalogue_list");
+    expect(policy.reply).toMatch(/pagrindinės paslaugos/i);
+  });
+
   it("N2: service_info + null + LT catalogue ask → generic services list", () => {
     const policy = applyPolicyAndAssemble(
       base({

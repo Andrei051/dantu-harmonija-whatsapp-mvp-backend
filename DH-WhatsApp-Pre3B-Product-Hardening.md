@@ -303,33 +303,61 @@ Owner free-play after Voice freeze (not in §21 acceptance set).
 
 **N1 remains accepted / untouched.** 🔒
 
-### N3 — Generic registration-information / conversational correction (2026-09-19)
+### N3 — CLOSED / PROD VERIFIED 🔒 (2026-09-19)
 
-| Symptom | Ask | Observed | Classification |
-|---|---|---|---|
-| **N3a** | “ok, tell me about registration” | Booking/contact block (no registration URL) | **RCA incomplete** — need Turn 1 `ai_path_interpretation` + policy actions. Reply shape implies booking→contact. |
-| **N3b** | Clarification + “I want to know more about the registration” | Was catalogue → unsupported redirect | **CLOSED / PROD VERIFIED** 🔒 |
+| ID | Disposition |
+|---|---|
+| **N3a** | **CLOSED / PROD VERIFIED** — registration-info policy bridge |
+| **N3b** | **CLOSED / PROD VERIFIED** — N2 cue tighten |
 
-### N3b — CLOSED / PROD VERIFIED 🔒
+**N3 whole:** greeting-advertised registration info fulfils first ask and conversational correction.
 
-**PROD 2026-09-19T11:20:34Z**
+**Broader lesson (record only):** greeting’s four advertised capabilities are an implicit interface contract — natural testing found routing gaps on services (N2) and registration (N3). Do not casually expand the greeting.
+
+---
+
+## Natural-use findings continued (2026-09-19 afternoon)
+
+Long price-discovery conversation after catalogue. **Positive evidence:** multi-turn single-service price exploration works (hygiene, orthodontics, whitening, kinesiotherapy, paediatric). Reinforces **N1/F5b remain waived** — patients can explore one service at a time.
+
+| ID | Observation | Disposition |
+|---|---|---|
+| **V2** | “Hello! how are you?” → rigid out-of-scope reply | **Voice observation only** — accept for pilot; no Voice reopen |
+| **N4** | “Tell me more about services” → unsupported; “which services do you have?” → catalogue PASS | **FIX AUTHORISED / implemented locally** — extend N2 cues |
+| **N5** | “what about Anaesthesia?” → `Anaesthesia costs See price page…` | **FIX AUTHORISED / implemented locally** — generic amountText presentation |
+
+### N4 — FIX (pending PROD verify)
+
+Extend `N2_service_catalogue_list` cues: `tell me (more) about services` / LT equivalents. Preserve N3b negative + D2. No new policy action.
+
+### N5 — FIX (pending PROD verify)
+
+| Shape | Presentation |
+|---|---|
+| Simple amount | `[label] costs [amount]` |
+| Structured / hybrid | `[label]: [amountText]` (exact Foundation text) |
+| Pointer-only (no digits + see-page) | `For [label] pricing: [amountText]` — never `costs See…` |
+
+No price-data edits; disclaimer unchanged.
+
+### N4 — RCA (closed by FIX AUTHORISED)
 
 | | |
 |---|---|
-| Cause | N2 catalogue-cue false positive |
-| Fix | Adjacent catalogue cues only |
-| Result | No `N2_service_catalogue_list`; fell through to `D2_unresolved_service_info_clarify` |
-| Interpretation | Still `service_info` + null; reference `registration` present but unused by policy |
+| Ask | `tell me more about services` |
+| Interpretation | `service_info` + `id: null` — **same shape as successful N2** |
+| Was | `D2_unresolved_service_info_clarify` (lexical cue miss) |
+| Fix | Extend `isServiceCatalogueAsk` only; keep N3b adjacent cues + D2 |
 
-### N3a — FIX AUTHORISED / implemented locally (pending PROD verify)
+### N5 — RCA inventory → FIX AUTHORISED
 
-**PROD RCA Turn 1:** `booking` / soft → `C3_booking` → contact.
+| Shape | Count | Service IDs |
+|---|---|---|
+| Simple amount | 3 | `professional_hygiene`, `implants`, `extraction` |
+| Structured phrase | 5 | `teeth_whitening`, `physiotherapy`, `fillings`, `aesthetic_fillings`, `prosthetics` |
+| Hybrid | 4 | `orthodontics`, `paediatric_dentistry`, `root_canal`, `aesthetic_prosthetics` |
+| Pointer-only | 3 | `anaesthesia`, `diagnostics`, `periodontics` |
 
-| | |
-|---|---|
-| **Scope** | Explicit generic registration-information ask → authorised registration options (online URL for consultations/hygiene + clinic contact for other; no WhatsApp booking claim) |
-| **Implementation** | Policy `N3_registration_info` (even if interpreter says booking/soft) |
-| **Out of scope** | Broad prompt change; Foundation; Voice; booking/availability/urgent behaviour |
-| **Also covers** | Second-turn “I want to know more about the registration” |
+Defect was presentation assuming every `amountText` completes “costs …”. Fix at `formatAuthorisedPrice` only.
 
-**Broader lesson (record only):** greeting’s four advertised capabilities are an implicit interface contract — natural testing found routing gaps on services (N2) and registration (N3a). Do not casually expand the greeting.
+**Still parked / waived:** **V2** (accept for pilot). **N1/F5b** remain waived.

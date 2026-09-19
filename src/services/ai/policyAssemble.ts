@@ -89,15 +89,20 @@ const isLaboratoryAsk = (patientMessage: string): boolean => {
 const isServiceCatalogueAsk = (patientMessage: string): boolean => {
   const n = normalizeText(patientMessage);
   if (!n) return false;
-  // Require catalogue focus on the current ask — no long-span what … services
+  // Require catalogue focus on the current ask — no long-span what … services (N3b)
   if (/\b(which|what)\s+services?\b/.test(n)) return true;
   if (/\blist\s+(of\s+)?(the\s+|your\s+|clinic\s+)?services?\b/.test(n)) return true;
   if (/\bservices?\b\s+(do you\s+)?(provide|offer|have|list)\b/.test(n)) return true;
   if (/\b(provide|offer)\s+(me\s+)?(a\s+)?(list\s+of\s+)?(your\s+|the\s+|clinic\s+)?services?\b/.test(n)) {
     return true;
   }
+  // N4: explicit “tell me (more) about services” — not bare “information about clinic services” in a quote
+  if (/\btell me (more )?about (the )?(clinic )?services?\b/.test(n)) return true;
+  if (/\bmore about (the )?(clinic )?services?\b/.test(n) && !/\bregistr/.test(n)) return true;
   if (/\bkokias?\s+paslaug/.test(n)) return true;
   if (/\bpaslaug\w*\s+(teikiate|teikia|atliekate|siulote|siulo|turite|turit)\b/.test(n)) return true;
+  if (/\b(papasakok\w*|pasakyk\w*) (daugiau )?apie (klinikos )?paslaug/.test(n)) return true;
+  if (/\bdaugiau apie (klinikos )?paslaug/.test(n)) return true;
   if (n.includes("paslaugu saras") || n.includes("paslaugu sarasa")) return true;
   return false;
 };
