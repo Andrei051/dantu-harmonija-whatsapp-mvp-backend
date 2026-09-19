@@ -367,8 +367,8 @@ Ordinary planned-visit journey: parking + what to bring; Sunday hours; parking r
 
 | ID | Observation | Disposition |
 |---|---|---|
-| **N6** | Parking duplicated on multi-ask turn; parking reappears on later ID-only ask | **FIX AUTHORISED / implemented locally** |
-| **N7** | Unsolicited booking/contact block after “planning my visit … tomorrow” | **FIX AUTHORISED / implemented locally** |
+| **N6** | Parking duplicated on multi-ask turn; parking reappears on later ID-only ask | **CLOSED / PROD VERIFIED** 🔒 |
+| **N7** | Unsolicited booking/contact block after “planning my visit … tomorrow” | **CLOSED / PROD VERIFIED** 🔒 |
 | **Obs** | Parking reservation ask → repeats parking facts, no reserve/turn-up answer | **Observation** — Foundation has no reservation fact; safe non-invention |
 | **Obs** | “do you work Sundays?” → weekdays hours only (inferable closed) | **Observation** — no hours×stated-date cross-check contract; not an MVP defect |
 | **Obs** | Hours trailing “If you want, I can guide you to the next step.” | **Voice observation** — park with V2; no Voice reopen |
@@ -391,9 +391,11 @@ Ordinary planned-visit journey: parking + what to bring; Sunday hours; parking r
 1. **Preferred (presentation/composition):** when composing `parking` + `first_appointment_prep`, emit prep once and skip the standalone parking block (or strip duplicate parking paragraphs).
 2. **Foundation:** remove parking from `appointmentPrep` so parking only comes from the parking intent — needs authorisation (content change).
 
-### N6 — FIX AUTHORISED / implemented locally (pending PROD verify)
+### N6 — CLOSED / PROD VERIFIED 🔒 (2026-09-19T12:06:36Z)
 
 Composition only: `parking` + `first_appointment_prep` → emit prep once (`N6_parking_subsumed_by_prep`); Foundation prep blob untouched. ID-only prep breadth accepted for pilot.
+
+**PROD:** actions `N6_parking_subsumed_by_prep` + `C4_info:first_appointment_prep`; one prep reply (bring + parking once). Standalone `Where can I park?` → `C4_info:parking` only.
 
 ### N7 — RCA LOCKED (PROD 2026-09-19T11:50:05Z)
 
@@ -413,9 +415,11 @@ Composition only: `parking` + `first_appointment_prep` → emit prep once (`N6_p
 1. **Narrow policy:** suppress `C3_booking` when the only info intents are logistics (parking / first_appointment_prep / hours / location) and there is no explicit booking intent / hard book cue.
 2. Broader “soft booking” reinterpret — riskier; prefer (1) if authorised.
 
-### N7 — FIX AUTHORISED / implemented locally (pending PROD verify)
+### N7 — CLOSED / PROD VERIFIED 🔒 (2026-09-19)
 
 Policy only: soft + exclusively logistics/info intents + no `booking` intent → suppress C3 (`N7_suppress_soft_booking_c3`). Hard / booking intent / availability / registration paths unchanged. Soft = booking *relevance*, not booking *request*.
+
+**PROD smoke 12:06Z:** planned-visit logistics → no C3 (this run: interpreter `booking: none`; soft-suppress path covered by unit test + original soft RCA). Positives: `How do I book?` → `booking` + `hard` → `C3_booking`; implant book → `C3_booking` contact.
 
 Positive regression: “I'm planning to visit… How do I book?” → still C3.
 
@@ -425,6 +429,60 @@ Positive regression: “I'm planning to visit… How do I book?” → still C3.
 |---|---|---|
 | `do you work Sundays?` | `clinic_hours` only; `booking: none` | Governed hours; no closed-Sunday transform |
 | parking reservation | `parking` only; `booking: none` | Correct non-invention |
-| `what id documents…` | `first_appointment_prep` only | N6 embedded-content manifestation |
+| `what id documents…` | `first_appointment_prep` only | N6 embedded-content manifestation — **accepted** (not a defect) |
 
-**No fix without authorisation.**
+**N6 / N7 closed.** No further fix without new authorisation.
+
+### Readiness ledger (post N6/N7)
+
+| Closed / PROD verified | Accepted / deferred | Pilot observation |
+|---|---|---|
+| F1, F2, F4, F5a, F6, N2, N3, N4, N5, N6, N7 | F3; F5b / N1 | V2; prep-blob breadth on ID asks |
+
+---
+
+## Natural-use findings — implant / anaesthesia clinical (2026-09-19)
+
+| Turn | Ask | Result | Disposition |
+|---|---|---|---|
+| 1 | “I think I need an implant” | Assessment → contact | **PASS** — no treatment validation |
+| 2 | “the clinic provides dental implants, right?” | Capability fact | **PASS** — F2 holding |
+| 3 | “I may need … anesthesia during the procedure” | Same assessment primitive | **Accept** — safe boundary for “I may need” |
+| 4 | “what if I am allergic to anesthesia?” | Same generic treatment-assessment copy | **N8 — RCA LOCKED** (below) |
+
+### N8 — RCA LOCKED (PROD 2026-09-19T12:11:58Z)
+
+**Allergy turn interpretation:**
+
+| Field | Value |
+|---|---|
+| intents | `clinical` (0.95) only |
+| `clinical_or_suitability` | `true` |
+| `service_or_topic` | `implants` from **conversation_context** — **not** anaesthesia |
+| Allergy / concern | **Not representable** in Schema v1 |
+| actions | `S1_clinical_assessment` only |
+| Copy | General `clinicalAssessment` (“What treatment would be right…”) |
+
+**“I may need anaesthesia” turn (same shape):** `clinical` + `implants` (context) + `clinical_or_suitability: true` → same `S1_clinical_assessment`. Anaesthesia never becomes `service_or_topic`.
+
+**Cause (locked):**
+
+1. **Schema limit** — boolean clinical signal only; no concern/allergy subtype; topic stuck on prior implant context.  
+2. **Policy flatten** — any non-urgent clinical → one `S1_clinical_assessment` path.  
+3. **Voice consequence** — only general vs suitability primitives; allergy is neither → treatment-assessment wording.
+
+Not an unsafe clinical answer. Not an interpreter “miss” relative to Schema v1 — it correctly marks clinical and has nowhere else to put allergy.
+
+### N8 — FIX AUTHORISED / implemented locally (pending PROD verify)
+
+**Presentation only** within existing `S1_clinical_assessment` (same contact route; no schema / interpreter / urgency change).
+
+| Primitive | When |
+|---|---|
+| Suitability | Existing suitability cues |
+| General | Default non-urgent clinical |
+| **Concern / tell-the-dentist** | Narrow current-message cue: EN `allerg*` / LT `alerg*` only |
+
+Copy acknowledges the concern and directs the patient to tell the dentist — no advice, safety claims, or treatment content. Not an allergy feature; cue only selects phrasing.
+
+**No fix without authorisation.** Do not invent clinical content.

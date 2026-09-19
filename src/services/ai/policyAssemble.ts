@@ -219,8 +219,25 @@ const isSuitabilityAsk = (patientMessage: string): boolean => {
   );
 };
 
+/**
+ * N8: explicit patient-stated concern in the current message only.
+ * Bounded lexical cue — chooses tell-the-dentist presentation; never changes clinical routing.
+ */
+const isPatientStatedClinicalConcernAsk = (patientMessage: string): boolean => {
+  const n = normalizeText(patientMessage);
+  if (!n) return false;
+  // EN: allergic / allergy (explicit self-statement family)
+  if (/\ballerg/.test(n)) return true;
+  // LT: alergija / alergišk*
+  if (/\balerg/.test(n)) return true;
+  return false;
+};
+
 const clinicalAssessmentCopy = (language: SupportedLanguage, patientMessage = ""): string => {
   const fb = knowledgeService.getFallback();
+  if (isPatientStatedClinicalConcernAsk(patientMessage) && fb.clinicalAssessmentConcern?.[language]) {
+    return fb.clinicalAssessmentConcern[language];
+  }
   if (isSuitabilityAsk(patientMessage) && fb.clinicalAssessmentSuitability?.[language]) {
     return fb.clinicalAssessmentSuitability[language];
   }
@@ -427,6 +444,9 @@ export const applyPolicyAndAssemble = (
   if (hasClinicalJudgement && !hasUrgency) {
     clinicalJudgementActive = true;
     actions.push("S1_clinical_assessment");
+    if (isPatientStatedClinicalConcernAsk(patientMessage)) {
+      actions.push("N8_clinical_concern_presentation");
+    }
     suppressed.push("booking", "online_registration");
     parts.push(clinicalAssessmentCopy(language, patientMessage));
     route = "contact";

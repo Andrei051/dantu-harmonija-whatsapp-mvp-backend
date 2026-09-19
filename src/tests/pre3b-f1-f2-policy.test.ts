@@ -49,6 +49,61 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.route).toBe("contact");
   });
 
+  it("N8: allergy concern → tell-the-dentist copy, same S1 contact route", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "clinical", confidence: 0.95 }],
+        service_or_topic: {
+          id: "implants",
+          confidence: 0.9,
+          source: "conversation_context"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "what if I am allergic to anesthesia?"
+    );
+
+    expect(policy.actions).toContain("S1_clinical_assessment");
+    expect(policy.actions).toContain("N8_clinical_concern_presentation");
+    expect(policy.actions).not.toContain("S1_urgent_phone");
+    expect(policy.route).toBe("contact");
+    expect(policy.reply).toMatch(/tell the dentist about this concern/i);
+    expect(policy.reply).toMatch(/11222/);
+    expect(policy.reply).not.toMatch(/What treatment would be right/i);
+    expect(policy.reply).not.toMatch(/safe|alternative|test|sedation|local anaesthetic/i);
+  });
+
+  it("N8 negative: may need anaesthesia without allergy cue → general assessment", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "clinical", confidence: 0.9 }],
+        service_or_topic: {
+          id: "implants",
+          confidence: 0.8,
+          source: "conversation_context"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "ok, great! I think I may need to have anesthesia during the procedure"
+    );
+
+    expect(policy.actions).toContain("S1_clinical_assessment");
+    expect(policy.actions).not.toContain("N8_clinical_concern_presentation");
+    expect(policy.reply).toMatch(/What treatment would be right/i);
+  });
+
   it("R6: broken tooth without urgency cue → assessment, not emergency", () => {
     const policy = applyPolicyAndAssemble(
       base({

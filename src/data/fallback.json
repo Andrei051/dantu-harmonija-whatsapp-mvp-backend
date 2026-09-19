@@ -19,6 +19,10 @@
     "lt": "Ar šis gydymas būtų tinkamas jūsų atveju, reikėtų įvertinti gydytojui. Dėl įvertinimo galite susisiekti su klinika telefonu +370 610 11222.",
     "en": "Whether this treatment would suit your case needs a dentist's assessment. Please contact the clinic on +370 610 11222 for an evaluation."
   },
+  "clinicalAssessmentConcern": {
+    "lt": "Prašome prieš gydymą pasakyti gydytojui apie šį susirūpinimą, kad jis galėtų įvertinti kartu su jumis. Dėl įvertinimo galite susisiekti su klinika telefonu +370 610 11222.",
+    "en": "Please tell the dentist about this concern before treatment so they can assess it with you. You can contact the clinic on +370 610 11222."
+  },
   "languageSwitch": {
     "lt": "Galiu tęsti lietuviškai arba angliškai. Parašykite, kuria kalba patogiau.",
     "en": "I can continue in Lithuanian or English. Please tell me which language you prefer."

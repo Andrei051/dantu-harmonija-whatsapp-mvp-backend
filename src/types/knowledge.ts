@@ -58,6 +58,8 @@ export interface FallbackData {
   clinicalAssessment?: LocalizedText;
   /** Non-urgent suitability ask (“ar man tinka…”) — same boundary, topic-neutral suitability wording. */
   clinicalAssessmentSuitability?: LocalizedText;
+  /** Patient-stated concern (e.g. allergy) — tell-the-dentist wording; same contact route, no clinical advice. */
+  clinicalAssessmentConcern?: LocalizedText;
   languageSwitch: LocalizedText;
   laboratoryInfo?: LocalizedText;
 }
