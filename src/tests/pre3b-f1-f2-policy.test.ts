@@ -590,5 +590,132 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
 
     expect(policy.actions).not.toContain("N2_service_catalogue_list");
     expect(policy.reply).not.toMatch(/Main services offered/i);
+    // After N3a: this utterance is an explicit registration-info ask
+    expect(policy.actions).toContain("N3_registration_info");
+  });
+
+  it("N3a: tell me about registration + booking/soft → registration info (not contact-only)", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "booking", confidence: 0.9 }],
+        service_or_topic: { id: null, confidence: 0, source: "current_message" },
+        signals: {
+          booking: "soft",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "ok, tell me about registration"
+    );
+
+    expect(policy.actions).toContain("N3_registration_info");
+    expect(policy.actions).not.toContain("C3_booking");
+    expect(policy.reply).toMatch(/Online registration|registracija/i);
+    expect(policy.reply).toContain("dantuharmonija.lt/registracija");
+    expect(policy.escalated).toBe(false);
+  });
+
+  it("N3a: know more about registration (second-turn shape) → registration info", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "service_info", confidence: 0.9 }],
+        service_or_topic: { id: null, confidence: 0.8, source: "conversation_context" },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        },
+        references: [{ type: "service_info", resolved_to: "registration", source_turn: 1 }]
+      }),
+      "I want to know more about the registration"
+    );
+
+    expect(policy.actions).toContain("N3_registration_info");
+    expect(policy.actions).not.toContain("D2_unresolved_service_info_clarify");
+    expect(policy.reply).toMatch(/Online registration/i);
+  });
+
+  it("N3a LT: apie registraciją → registration info", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "lt",
+        intents: [{ type: "booking", confidence: 0.85 }],
+        signals: {
+          booking: "soft",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Papasakokite apie registraciją"
+    );
+
+    expect(policy.actions).toContain("N3_registration_info");
+    expect(policy.reply).toMatch(/Internetu galite registruotis|registracija/i);
+  });
+
+  it("N3a negative: book orthodontist consultation → still C3 online", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "booking", confidence: 0.95 }],
+        service_or_topic: { id: "orthodontics", confidence: 0.9, source: "current_message" },
+        signals: {
+          booking: "hard",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "I want to book an orthodontist consultation"
+    );
+
+    expect(policy.actions).toContain("C3_booking");
+    expect(policy.actions).not.toContain("N3_registration_info");
+    expect(policy.route).toBe("online_registration");
+  });
+
+  it("N3a negative: book implant → still C3 contact", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "booking", confidence: 0.95 }],
+        service_or_topic: { id: "implants", confidence: 0.9, source: "current_message" },
+        signals: {
+          booking: "hard",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "I want to book an implant appointment"
+    );
+
+    expect(policy.actions).toContain("C3_booking");
+    expect(policy.actions).not.toContain("N3_registration_info");
+    expect(policy.route).toBe("contact");
+  });
+
+  it("N3a negative: availability tomorrow → still C2", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "availability", confidence: 0.9 }],
+        signals: {
+          booking: "none",
+          availability: true,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Do you have anything tomorrow?"
+    );
+
+    expect(policy.actions).toContain("C2_availability");
+    expect(policy.actions).not.toContain("N3_registration_info");
   });
 });

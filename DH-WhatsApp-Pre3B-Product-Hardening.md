@@ -308,19 +308,28 @@ Owner free-play after Voice freeze (not in §21 acceptance set).
 | Symptom | Ask | Observed | Classification |
 |---|---|---|---|
 | **N3a** | “ok, tell me about registration” | Booking/contact block (no registration URL) | **RCA incomplete** — need Turn 1 `ai_path_interpretation` + policy actions. Reply shape implies booking→contact. |
-| **N3b** | Clarification + “I want to know more about the registration” | Full services catalogue | **FIX AUTHORISED / implemented locally** — N2 cue false positive |
+| **N3b** | Clarification + “I want to know more about the registration” | Was catalogue → unsupported redirect | **CLOSED / PROD VERIFIED** 🔒 |
 
-### N3b — FIX (pending PROD verify)
+### N3b — CLOSED / PROD VERIFIED 🔒
 
-**PROD RCA 2026-09-19T11:12:16Z**
+**PROD 2026-09-19T11:20:34Z**
 
 | | |
 |---|---|
-| Interpretation | `service_info` + `id: null`; `booking: none` |
-| References | `resolved_to: "registration"` (ignored by catalogue path) |
-| Policy | Was `N2_service_catalogue_list` |
-| Cause | N2 cue `\bwhat\b.*\bservices?\b` spanned quoted greeting |
-| Fix | Adjacent catalogue cues only (`what services` / `which services` / …); N3b-shaped negative regression |
-| Out of scope | Interpreter, Foundation, Voice, registration policy (N3a) |
+| Cause | N2 catalogue-cue false positive |
+| Fix | Adjacent catalogue cues only |
+| Result | No `N2_service_catalogue_list`; fell through to `D2_unresolved_service_info_clarify` |
+| Interpretation | Still `service_info` + null; reference `registration` present but unused by policy |
 
-**N3a:** OPEN / RCA PENDING — need Turn 1 trace.
+### N3a — FIX AUTHORISED / implemented locally (pending PROD verify)
+
+**PROD RCA Turn 1:** `booking` / soft → `C3_booking` → contact.
+
+| | |
+|---|---|
+| **Scope** | Explicit generic registration-information ask → authorised registration options (online URL for consultations/hygiene + clinic contact for other; no WhatsApp booking claim) |
+| **Implementation** | Policy `N3_registration_info` (even if interpreter says booking/soft) |
+| **Out of scope** | Broad prompt change; Foundation; Voice; booking/availability/urgent behaviour |
+| **Also covers** | Second-turn “I want to know more about the registration” |
+
+**Broader lesson (record only):** greeting’s four advertised capabilities are an implicit interface contract — natural testing found routing gaps on services (N2) and registration (N3a). Do not casually expand the greeting.

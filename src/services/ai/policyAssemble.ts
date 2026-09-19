@@ -102,6 +102,50 @@ const isServiceCatalogueAsk = (patientMessage: string): boolean => {
   return false;
 };
 
+/**
+ * Explicit generic registration-information ask (N3a) — not “I want to book/register”.
+ * Interpreter may still emit booking/soft; policy overrides to authorised registration info.
+ */
+const isRegistrationInfoAsk = (patientMessage: string): boolean => {
+  const n = normalizeText(patientMessage);
+  if (!n || !n.includes("registr")) return false;
+  // Hard appointment-action overrides (keep existing C3 booking behaviour)
+  if (/\b(book|register)\s+(me|an?|for|my)\b/.test(n)) return false;
+  if (/\bi want to (book|register)\b/.test(n) && !/\b(know|hear|learn|tell)\b/.test(n)) return false;
+  if (/\b(noriu uzsiregistruoti|uzregistruok|uzsakyti vizita|noriu uzsakyti)\b/.test(n)) return false;
+  if (/\b(anything|slot|available|laisv)\b.*\b(tomorrow|rytoj|siandien|today)\b/.test(n)) return false;
+  // Informational constructions
+  if (
+    /\b(tell me|know more|more about|information about|info about|how does|how do|explain)\b.*\bregistr/.test(
+      n
+    )
+  ) {
+    return true;
+  }
+  if (/\babout (the )?registr/.test(n)) return true;
+  if (/\bregistr\w*\b.*\b(work|process|options|online|inform)\b/.test(n)) return true;
+  if (/\b(papasakok|pasakyk|suzinoti|informacij)\b.*\bregistrac/.test(n)) return true;
+  if (/\bapie registrac/.test(n)) return true;
+  return false;
+};
+
+const registrationInfoReply = (language: SupportedLanguage): string => {
+  const profile = knowledgeService.getClinicProfile();
+  const url = profile.onlineRegistrationUrl ?? `${profile.website}registracija/`;
+  if (language === "lt") {
+    return (
+      `Internetu galite registruotis specialistų konsultacijoms ir burnos higienai:\n${url}\n\n` +
+      `Dėl kitų vizitų susisiekite su klinika:\n${profile.phone}\n\n` +
+      `Per WhatsApp vizito užregistruoti negaliu.`
+    );
+  }
+  return (
+    `Online registration is available for specialist consultations and oral hygiene:\n${url}\n\n` +
+    `For other appointments, please contact the clinic:\n${profile.phone}\n\n` +
+    `I can't complete a booking on WhatsApp.`
+  );
+};
+
 /** Clinic-related cues — used to choose unsupported-clinic vs out-of-scope Voice copy. */
 const hasClinicRelatedCue = (patientMessage: string): boolean => {
   const n = normalizeText(patientMessage);
@@ -382,6 +426,28 @@ export const applyPolicyAndAssemble = (
       reply: unknownHandoffCopy(language, patientMessage),
       language,
       primary_intent_label: "unknown"
+    };
+  }
+
+  // N3a: explicit registration-information ask → authorised options (even if AI said booking/soft)
+  if (
+    isRegistrationInfoAsk(patientMessage) &&
+    !clinicalJudgementActive &&
+    !hasUrgency &&
+    !interp.signals.availability
+  ) {
+    actions.push("N3_registration_info");
+    foundation_hits.push("clinic_profile.onlineRegistrationUrl");
+    return {
+      actions,
+      suppressed,
+      foundation_hits,
+      foundation_misses,
+      route: "online_registration",
+      escalated: false,
+      reply: registrationInfoReply(language),
+      language,
+      primary_intent_label: "booking_request"
     };
   }
 
