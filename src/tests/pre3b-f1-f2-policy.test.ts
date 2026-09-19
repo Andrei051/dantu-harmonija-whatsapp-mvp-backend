@@ -487,4 +487,83 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.escalated).toBe(false);
     expect(policy.actions).not.toContain("foundation_or_unsupported_handoff");
   });
+
+  it("N2: service_info + null + EN catalogue ask → generic services list", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "service_info", confidence: 0.9 }],
+        service_or_topic: {
+          id: null,
+          confidence: 0.8,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "which services do you provide?"
+    );
+
+    expect(policy.actions).toContain("N2_service_catalogue_list");
+    expect(policy.foundation_hits).toContain("services_catalogue");
+    expect(policy.reply).toMatch(/Main services offered/i);
+    expect(policy.reply).toMatch(/Oral hygiene|Dental implants/i);
+    expect(policy.escalated).toBe(false);
+    expect(policy.actions).not.toContain("D2_unresolved_service_info_clarify");
+  });
+
+  it("N2: service_info + null + LT catalogue ask → generic services list", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "lt",
+        intents: [{ type: "service_info", confidence: 0.9 }],
+        service_or_topic: {
+          id: null,
+          confidence: 0.8,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Kokias paslaugas teikiate?"
+    );
+
+    expect(policy.actions).toContain("N2_service_catalogue_list");
+    expect(policy.reply).toMatch(/pagrindinės paslaugos/i);
+    expect(policy.escalated).toBe(false);
+    expect(policy.actions).not.toContain("D2_unresolved_service_info_clarify");
+  });
+
+  it("N2 negative: service_info + null without catalogue cues → D2 still fires", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "service_info", confidence: 0.9 }],
+        service_or_topic: {
+          id: null,
+          confidence: 0.7,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Can you fix my tooth?"
+    );
+
+    expect(policy.actions).toContain("D2_unresolved_service_info_clarify");
+    expect(policy.actions).not.toContain("N2_service_catalogue_list");
+    expect(policy.escalated).toBe(true);
+  });
 });

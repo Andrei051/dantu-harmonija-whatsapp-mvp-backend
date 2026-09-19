@@ -278,3 +278,26 @@ Improving R2–R4 / R7 must not weaken R6 (assessment phone) or R8 (urgent phone
 | Clinic Voice Option A validated | ✅ **FROZEN** |
 
 **Pre-3B product gate met.** Next: short owner “Would I be comfortable showing this to Aušra?” smoke → draft Phase 3B protocol.
+
+---
+
+## Post-freeze natural-use findings (2026-09-19)
+
+Owner free-play after Voice freeze (not in §21 acceptance set).
+
+| # | Patient ask | Observed reply | Classification | Note |
+|---|---|---|---|---|
+| **N1** | “Tell me about clinic services and prices” | Price clarification (“Which service's price…?”) | **Accepted Schema v1 / F5b-adjacent** 🔒 | Multi-need / catalogue-wide price ask collapses to single-slot clarify. **Untouched.** |
+| **N2** | “Which services do you provide?” | Unsupported clinic redirect | **CLOSED — policy fix authorised** | PROD RCA: `service_info` + `id: null` → `D2_unresolved_service_info_clarify`. Interpreter correct; Foundation sufficient; Voice unchanged. |
+
+### N2 — CLOSED (pending PROD verify)
+
+| | |
+|---|---|
+| **Cause** | Policy routing gap |
+| **Interpreter** | Correct (`service_info` + null) |
+| **Foundation** | Sufficient (catalogue present) |
+| **Voice** | Unchanged |
+| **Fix** | Explicit generic service-list ask → existing `genericServicesReply` (`N2_service_catalogue_list`). Non-list `service_info`+null still → D2. |
+
+**N1 remains accepted / untouched.** 🔒

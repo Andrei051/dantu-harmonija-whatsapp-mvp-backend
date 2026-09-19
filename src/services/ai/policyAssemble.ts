@@ -81,6 +81,22 @@ const isLaboratoryAsk = (patientMessage: string): boolean => {
   return n.includes("laborator") || n.includes("dental lab") || n.includes("in-house lab");
 };
 
+/**
+ * Explicit catalogue / list-services ask (N2) — not merely service_info + null.
+ * Must not fire for unresolved specific treatment asks (“can you fix my tooth?”).
+ */
+const isServiceCatalogueAsk = (patientMessage: string): boolean => {
+  const n = normalizeText(patientMessage);
+  if (!n) return false;
+  if (/\b(which|what|list)\b.*\bservices?\b/.test(n)) return true;
+  if (/\bservices?\b.*\b(provide|offer|have|list|available)\b/.test(n)) return true;
+  if (/\b(provide|offer)\b.*\bservices?\b/.test(n)) return true;
+  if (/\bkokias?\b.*\bpaslaug/.test(n)) return true;
+  if (/\bpaslaug.*\b(teikiate|teikia|atliekate|siulote|siulo|turite|turit)\b/.test(n)) return true;
+  if (n.includes("paslaugu saras") || n.includes("paslaugu sarasa")) return true;
+  return false;
+};
+
 /** Clinic-related cues — used to choose unsupported-clinic vs out-of-scope Voice copy. */
 const hasClinicRelatedCue = (patientMessage: string): boolean => {
   const n = normalizeText(patientMessage);
@@ -523,6 +539,13 @@ export const applyPolicyAndAssemble = (
           intent: "about_clinic",
           laboratoryInfo: true
         });
+        parts.push(built.reply);
+      } else if (isServiceCatalogueAsk(patientMessage) && !clinicalJudgementActive) {
+        // N2: explicit catalogue ask → existing genericServicesReply (not D2)
+        actions.push("N2_service_catalogue_list");
+        foundation_hits.push("services_catalogue");
+        primary_intent_label = "service_info";
+        const built = buildResponse(language, { intent: "service_info" });
         parts.push(built.reply);
       } else {
       // Single-slot schema bridge: explicit Foundation names in current message (R7 / F6 children)
