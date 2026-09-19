@@ -763,4 +763,98 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.actions).toContain("C2_availability");
     expect(policy.actions).not.toContain("N3_registration_info");
   });
+
+  it("N6+N7: planned visit parking+bring + soft → prep once, no C3, no duplicate parking", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [
+          { type: "parking", confidence: 0.9 },
+          { type: "first_appointment_prep", confidence: 0.8 }
+        ],
+        signals: {
+          booking: "soft",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "hello! I am planning my visit to the clinic at 11AM tomorrow (sunday). Where can I park my car and what do I need to bring?"
+    );
+
+    expect(policy.actions).toContain("N6_parking_subsumed_by_prep");
+    expect(policy.actions).toContain("C4_info:first_appointment_prep");
+    expect(policy.actions).not.toContain("C4_info:parking");
+    expect(policy.actions).toContain("N7_suppress_soft_booking_c3");
+    expect(policy.actions).not.toContain("C3_booking");
+    expect(policy.primary_intent_label).toBe("first_appointment_prep");
+    expect(policy.reply).toMatch(/identity document/i);
+    expect(policy.reply).toMatch(/parking|5-space/i);
+    // Standalone parking sentence must not appear twice
+    const parkingHits = policy.reply.match(/free 5-space parking area/gi) ?? [];
+    expect(parkingHits.length).toBe(1);
+    expect(policy.reply).not.toMatch(/can't book appointments on WhatsApp/i);
+  });
+
+  it("N6: parking alone still emits parking", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "parking", confidence: 0.9 }],
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Where can I park?"
+    );
+
+    expect(policy.actions).toContain("C4_info:parking");
+    expect(policy.actions).not.toContain("N6_parking_subsumed_by_prep");
+    expect(policy.reply).toMatch(/5-space parking/i);
+  });
+
+  it("N7 positive: planning visit + how do I book → still C3", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "booking", confidence: 0.9 }],
+        signals: {
+          booking: "soft",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "I'm planning to visit the clinic. How do I book?"
+    );
+
+    expect(policy.actions).toContain("C3_booking");
+    expect(policy.actions).not.toContain("N7_suppress_soft_booking_c3");
+    expect(policy.reply).toMatch(/can't book appointments on WhatsApp|contact the clinic/i);
+  });
+
+  it("N7: hard booking + logistics intents still C3", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [
+          { type: "parking", confidence: 0.8 },
+          { type: "first_appointment_prep", confidence: 0.8 }
+        ],
+        signals: {
+          booking: "hard",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Book me in and tell me where to park and what to bring"
+    );
+
+    expect(policy.actions).toContain("C3_booking");
+    expect(policy.actions).not.toContain("N7_suppress_soft_booking_c3");
+  });
 });

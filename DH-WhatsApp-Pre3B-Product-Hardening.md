@@ -323,41 +323,108 @@ Long price-discovery conversation after catalogue. **Positive evidence:** multi-
 | ID | Observation | Disposition |
 |---|---|---|
 | **V2** | “Hello! how are you?” → rigid out-of-scope reply | **Voice observation only** — accept for pilot; no Voice reopen |
-| **N4** | “Tell me more about services” → unsupported; “which services do you have?” → catalogue PASS | **FIX AUTHORISED / implemented locally** — extend N2 cues |
-| **N5** | “what about Anaesthesia?” → `Anaesthesia costs See price page…` | **FIX AUTHORISED / implemented locally** — generic amountText presentation |
+| **N4** | “Tell me more about services” → unsupported; “which services do you have?” → catalogue PASS | **CLOSED / PROD VERIFIED** 🔒 |
+| **N5** | “what about Anaesthesia?” → `Anaesthesia costs See price page…` | **CLOSED / PROD VERIFIED** 🔒 |
 
-### N4 — FIX (pending PROD verify)
+### N4 — CLOSED / PROD VERIFIED 🔒 (2026-09-19)
 
-Extend `N2_service_catalogue_list` cues: `tell me (more) about services` / LT equivalents. Preserve N3b negative + D2. No new policy action.
-
-### N5 — FIX (pending PROD verify)
-
-| Shape | Presentation |
+| Ask | Result |
 |---|---|
-| Simple amount | `[label] costs [amount]` |
-| Structured / hybrid | `[label]: [amountText]` (exact Foundation text) |
-| Pointer-only (no digits + see-page) | `For [label] pricing: [amountText]` — never `costs See…` |
+| `tell me more about services` | EN catalogue list |
+| `which services do you have?` | Same catalogue |
+| `Papasakokite daugiau apie paslaugas` | LT catalogue |
+| N3b quoted-greeting + registration | Registration options — **not** catalogue |
 
-No price-data edits; disclaimer unchanged.
+Fix: extend `isServiceCatalogueAsk` only; N3b adjacent cues + D2 preserved.
 
-### N4 — RCA (closed by FIX AUTHORISED)
+### N5 — CLOSED / PROD VERIFIED 🔒 (2026-09-19)
+
+| Shape | PROD example |
+|---|---|
+| Simple | `Dental implants costs from 860 EUR` + disclaimer |
+| Structured | `Teeth whitening: Trays: 214 EUR; …` + disclaimer |
+| Pointer-only | `For Diagnostics/Periodontics pricing: … see price page` — never `costs See…` |
+
+No price-data edits. Slash-line anaesthesia→LT reply treated as **test artifact** (not opened); reopen only if a clean EN ask switches language.
+
+**N1/F5b reinforcer:** `whitening or orthodontics price` → clarify which → `whitening` → correct pricing. Safe Schema-v1 recovery.
+
+**Still parked / waived:** **V2** (accept for pilot). **N1/F5b** remain waived.
+
+### Readiness ledger (post N4/N5)
+
+| Closed / PROD verified | Accepted / deferred | Pilot observation |
+|---|---|---|
+| F1, F2, F4, F5a, F6, N2, N3, N4, N5 | F3; F5b / N1 | V2 |
+
+No currently known ordinary-path functional defect awaiting a fix.
+
+---
+
+## Natural-use findings — visit logistics (2026-09-19)
+
+Ordinary planned-visit journey: parking + what to bring; Sunday hours; parking reservation; ID documents.
+
+| ID | Observation | Disposition |
+|---|---|---|
+| **N6** | Parking duplicated on multi-ask turn; parking reappears on later ID-only ask | **FIX AUTHORISED / implemented locally** |
+| **N7** | Unsolicited booking/contact block after “planning my visit … tomorrow” | **FIX AUTHORISED / implemented locally** |
+| **Obs** | Parking reservation ask → repeats parking facts, no reserve/turn-up answer | **Observation** — Foundation has no reservation fact; safe non-invention |
+| **Obs** | “do you work Sundays?” → weekdays hours only (inferable closed) | **Observation** — no hours×stated-date cross-check contract; not an MVP defect |
+| **Obs** | Hours trailing “If you want, I can guide you to the next step.” | **Voice observation** — park with V2; no Voice reopen |
+
+### N6 — RCA LOCKED (PROD 2026-09-19T11:50:05Z / 11:52:45Z)
+
+**Turn 1 interpretation:** `parking` + `first_appointment_prep` (correct for the ask).  
+**Turn 1 actions:** `C4_info:parking`, `C4_info:first_appointment_prep`, `C3_booking`.
+
+| Component | Source |
+|---|---|
+| First parking block | `clinic-profile.parking` via `C4_info:parking` |
+| Prep + second parking | `first-visit-patient.appointmentPrep` — **parking sentence is embedded in the authorised prep blob** |
+
+**ID follow-up confirmed:** intents = `[first_appointment_prep]` only; actions = `C4_info:first_appointment_prep` only. Parking on that turn is **not** a second intent — it is the same embedded prep content.
+
+**Cause:** Foundation content overlap + naive multi-intent compose. Not an interpreter miss.
+
+**Candidate fixes (gate — do not implement yet):**
+1. **Preferred (presentation/composition):** when composing `parking` + `first_appointment_prep`, emit prep once and skip the standalone parking block (or strip duplicate parking paragraphs).
+2. **Foundation:** remove parking from `appointmentPrep` so parking only comes from the parking intent — needs authorisation (content change).
+
+### N6 — FIX AUTHORISED / implemented locally (pending PROD verify)
+
+Composition only: `parking` + `first_appointment_prep` → emit prep once (`N6_parking_subsumed_by_prep`); Foundation prep blob untouched. ID-only prep breadth accepted for pilot.
+
+### N7 — RCA LOCKED (PROD 2026-09-19T11:50:05Z)
 
 | | |
 |---|---|
-| Ask | `tell me more about services` |
-| Interpretation | `service_info` + `id: null` — **same shape as successful N2** |
-| Was | `D2_unresolved_service_info_clarify` (lexical cue miss) |
-| Fix | Extend `isServiceCatalogueAsk` only; keep N3b adjacent cues + D2 |
+| Ask | logistics only (“where park” / “what bring”) + narrative “planning my visit … 11AM tomorrow (sunday)” |
+| Intents | `parking`, `first_appointment_prep` — **no** `booking` intent |
+| Signal | `booking: soft` |
+| Policy | `wantBook` true → `C3_booking` appended; `primary_intent_label: booking_request` |
+| Patient effect | Unsolicited WhatsApp-booking refusal + contact schedule block |
 
-### N5 — RCA inventory → FIX AUTHORISED
+**Cause:** Soft-booking signal from planned-visit phrasing/time, not from an explicit book ask. Policy treats any non-`none` booking signal as compose-C3 (D3 path).
 
-| Shape | Count | Service IDs |
+**Not:** wrong info intents; Foundation miss.
+
+**Candidate fixes (gate — do not implement yet):**
+1. **Narrow policy:** suppress `C3_booking` when the only info intents are logistics (parking / first_appointment_prep / hours / location) and there is no explicit booking intent / hard book cue.
+2. Broader “soft booking” reinterpret — riskier; prefer (1) if authorised.
+
+### N7 — FIX AUTHORISED / implemented locally (pending PROD verify)
+
+Policy only: soft + exclusively logistics/info intents + no `booking` intent → suppress C3 (`N7_suppress_soft_booking_c3`). Hard / booking intent / availability / registration paths unchanged. Soft = booking *relevance*, not booking *request*.
+
+Positive regression: “I'm planning to visit… How do I book?” → still C3.
+
+### Follow-up turns (log-confirmed observations)
+
+| Ask | Interpretation | Note |
 |---|---|---|
-| Simple amount | 3 | `professional_hygiene`, `implants`, `extraction` |
-| Structured phrase | 5 | `teeth_whitening`, `physiotherapy`, `fillings`, `aesthetic_fillings`, `prosthetics` |
-| Hybrid | 4 | `orthodontics`, `paediatric_dentistry`, `root_canal`, `aesthetic_prosthetics` |
-| Pointer-only | 3 | `anaesthesia`, `diagnostics`, `periodontics` |
+| `do you work Sundays?` | `clinic_hours` only; `booking: none` | Governed hours; no closed-Sunday transform |
+| parking reservation | `parking` only; `booking: none` | Correct non-invention |
+| `what id documents…` | `first_appointment_prep` only | N6 embedded-content manifestation |
 
-Defect was presentation assuming every `amountText` completes “costs …”. Fix at `formatAuthorisedPrice` only.
-
-**Still parked / waived:** **V2** (accept for pilot). **N1/F5b** remain waived.
+**No fix without authorisation.**

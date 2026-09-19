@@ -107,6 +107,39 @@ const isServiceCatalogueAsk = (patientMessage: string): boolean => {
   return false;
 };
 
+/** C4 info intents that are logistics / visit-prep — not booking action. */
+const INFO_LOGISTICS_INTENT_TYPES = new Set([
+  "clinic_hours",
+  "clinic_location",
+  "parking",
+  "contact",
+  "first_appointment_prep",
+  "first_visit_expectations",
+  "assistant_capabilities",
+  "language_switch",
+  "about_clinic"
+]);
+
+/** True when every interpreted intent is logistics/visit-info (N7 soft-booking gate). */
+const intentsAreExclusivelyLogisticsInfo = (interp: InterpretationV1): boolean => {
+  if (!interp.intents.length) return false;
+  return interp.intents.every((i) => INFO_LOGISTICS_INTENT_TYPES.has(i.type));
+};
+
+/**
+ * N7: soft booking = contextual relevance, not a booking request.
+ * Suppress C3 when soft alone + logistics/info intents only; hard + booking intent unchanged.
+ */
+const wantBookingAction = (interp: InterpretationV1, clinicalJudgementActive: boolean): boolean => {
+  if (clinicalJudgementActive) return false;
+  if (hasIntent(interp, "booking")) return true;
+  if (interp.signals.booking === "hard") return true;
+  if (interp.signals.booking === "soft" && intentsAreExclusivelyLogisticsInfo(interp)) {
+    return false;
+  }
+  return interp.signals.booking !== "none";
+};
+
 /**
  * Explicit generic registration-information ask (N3a) — not “I want to book/register”.
  * Interpreter may still emit booking/soft; policy overrides to authorised registration info.
@@ -460,9 +493,16 @@ export const applyPolicyAndAssemble = (
   const wantAvail =
     !clinicalJudgementActive &&
     (interp.signals.availability || hasIntent(interp, "availability"));
-  const wantBook =
-    !clinicalJudgementActive &&
-    (interp.signals.booking !== "none" || hasIntent(interp, "booking"));
+  const wantBook = wantBookingAction(interp, clinicalJudgementActive);
+  if (
+    interp.signals.booking === "soft" &&
+    !hasIntent(interp, "booking") &&
+    intentsAreExclusivelyLogisticsInfo(interp) &&
+    !clinicalJudgementActive
+  ) {
+    suppressed.push("soft_booking_logistics_only");
+    actions.push("N7_suppress_soft_booking_c3");
+  }
   const sid = serviceId(interp);
 
   const infoMap: Array<{ type: string; intent: IntentResult["intent"] }> = [
@@ -476,8 +516,17 @@ export const applyPolicyAndAssemble = (
     { type: "language_switch", intent: "language_switch" }
   ];
 
+  // N6: prep blob already includes parking — do not also emit standalone parking
+  const prepSubsumesParking =
+    hasIntent(interp, "parking") && hasIntent(interp, "first_appointment_prep");
+
   for (const row of infoMap) {
     if (!hasIntent(interp, row.type)) continue;
+    if (row.type === "parking" && prepSubsumesParking) {
+      actions.push("N6_parking_subsumed_by_prep");
+      suppressed.push("parking_standalone");
+      continue;
+    }
     actions.push(`C4_info:${row.type}`);
     foundation_hits.push(row.type);
     const built = buildResponse(language, { intent: row.intent });
