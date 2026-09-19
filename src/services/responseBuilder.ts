@@ -179,10 +179,11 @@ export const buildResponse = (
       return {
         language,
         intent: "clinic_hours",
+        // N10: hours fact only — do not offer an unfulfillable “next step”
         reply:
           language === "lt"
-            ? `Mūsų darbo laikas: ${profile.workingHours.lt}.\n\nJei norite, galiu padėti rasti tinkamiausią kitą žingsnį.`
-            : `Our working hours: ${profile.workingHours.en}.\n\nIf you want, I can guide you to the next step.`,
+            ? `Mūsų darbo laikas: ${profile.workingHours.lt}.`
+            : `Our working hours: ${profile.workingHours.en}.`,
         escalated: false
       };
 

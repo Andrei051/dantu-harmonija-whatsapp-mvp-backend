@@ -513,7 +513,7 @@ No clinical inference or advice added. Schema / interpretation / S1 route unchan
 | 4 | What happens on 1st visit? | First-visit expectations | **PASS** |
 | 5 | Will my child need anaesthesia? | Clinical assessment | **PASS** — safe boundary |
 | 6 | How much will this cost? | Price clarify | **PASS** — ambiguous referent |
-| 7 | `anaesthesia for a child` (after clarify) | Assessment + re-clarify | **N9 — FIX AUTHORISED / implemented locally** |
+| 7 | `anaesthesia for a child` (after clarify) | Assessment + re-clarify | **N9 — CLOSED / PROD VERIFIED** 🔒 |
 
 ### N9 — RCA LOCKED (PROD 2026-09-19T12:29:39Z)
 
@@ -540,19 +540,86 @@ No clinical inference or advice added. Schema / interpretation / S1 route unchan
 
 **Contrast (same conversation):** `how much will this cost?` → `C1_price_clarify` only — correct. Failure is the **follow-up selection** turn.
 
-### N9 — FIX AUTHORISED / implemented locally (pending PROD verify)
+### N9 — CLOSED / PROD VERIFIED 🔒 (2026-09-19T12:37Z)
 
 **Scope:** F5a `matchExplicitFoundationServiceIds` only.
 
 When paediatric matches **only** via population stems (`child` / `children` / `kids` / LT `vaik*`) and another explicit service is also matched, demote paediatric (`N9_paediatric_population_demoted`) so the remaining single id can F5a-bridge.
 
-| Ask | Expected |
+**PROD retest:**
+| Ask | Result |
 |---|---|
-| `anaesthesia for a child` | Anaesthesia price |
-| `children's dental care and anaesthesia` | F5b clarify (genuine multi) |
-| `children's dental care price` | Paediatric price |
-| whitening + orthodontics | F5b unchanged |
+| `anaesthesia for a child` (no price job) | Capability + clinical boundary — OK (different job) |
+| `children's dental care and anaesthesia` | Both capabilities kept (genuine multi; not demoted to one) |
+| clarify → `then anaesthesia for a child` | **Anaesthesia price** + disclaimer — N9 gate PASS |
+| `children's dental care price` | Paediatric price alone |
+| `what about Anaesthesia?` | Anaesthesia price alone |
+| `and orthodontics price?` | Orthodontics price (clean switch) |
 
-No schema / interpreter / Foundation change. Clinical S1 prefix on the same turn left alone (separate question).
+F5b / multi-service distinction intact. No schema / interpreter / Foundation / general resolver change.
 
-**No general multi-service resolver.**
+**Secondary note:** identical surface phrase can be service/clinical vs price depending on prior turn state — desirable.
+
+### Readiness ledger (post N9)
+
+| Closed / PROD verified | Accepted / deferred | Pilot observation |
+|---|---|---|
+| F1, F2, F4, F5a, F6, N2, N3, N4, N5, N6, N7, N8, N9 | F3; F5b / N1 | V2; prep-blob breadth; fear/nervous presentation |
+
+---
+
+## Natural-use findings — tooth pain / unreachable clinic (2026-09-19)
+
+| Turn | Ask | Result | Disposition |
+|---|---|---|---|
+| 1 | Tooth hurting since yesterday | Non-urgent S1 assessment | **PASS** — F1 preserved |
+| 2 | Tried to call, no one picking up | Contact channels | **PASS** — limited usefulness; no invention |
+| 3 | Is it because Saturday? | Weekday hours | **PASS** — governed fact, indirect |
+| 4 | Hours trailing “guide you to the next step” | Voice promise | **Observation** — no governed next step in state |
+| 5 | `ok, please do` | C3 booking / contact | **N10 — FIX AUTHORISED / implemented locally** |
+| 6 | Tried calling again, no one picking up | Same contact block | **N11 — NO FIX** (clinic discovery) |
+
+### N10 — RCA LOCKED (PROD 2026-09-19T12:42:36Z)
+
+**Ask:** `ok, please do` — acceptance of assistant’s own “If you want, I can guide you to the next step.”
+
+| Field | Value |
+|---|---|
+| intents | **`booking` (0.8)** |
+| `signals.booking` | **`soft`** |
+| `references` | **`[]` empty** — no structured link to prior offer |
+| actions | `C3_booking` |
+| Reply | WhatsApp can’t book + contact phone |
+
+**Cause:**
+1. **Voice over-promise** — hours reply appends “guide you to the next step” with no authorised fulfilment for this state (pain + unreachable + Saturday).
+2. **Interpretation** — acceptance mapped to `booking` + soft without using `references`.
+3. **Policy** — C3 is correct *given* that interpretation (hard/booking path unchanged).
+
+**F3 relationship:** Meaning depends almost entirely on the assistant’s prior offer (continuation/reference). Schema `references` did not carry it; interpreter substituted booking. **F3-adjacent evidence**, not a classic correction/negation case. Do not reopen F3 as a build target from this alone.
+
+**Candidate (gate — no fix yet):** Remove/disable the hours “next step” trailer unless a governed next action exists (aligns with V2 / Voice fluff). Broader “accept my offer” handling needs care — risk of more phrase patches.
+
+### N10 — FIX AUTHORISED / implemented locally (pending PROD verify)
+
+**Presentation only:** clinic_hours EN/LT return authorised hours fact only — no “guide you to the next step” / “tinkamiausią kitą žingsnį” trailer. Interpreter / C3 / F3 untouched.
+
+### N11 — RCA LOCKED (PROD 2026-09-19T12:42:58Z)
+
+**Ask:** `I tried calling but noone is picking up` (repeat after contact already given).
+
+| Field | Value |
+|---|---|
+| intents | `contact` (0.9) — same as first failed-call turn |
+| actions | `C4_info:contact` |
+| Reply | Full contact block again (phone/email/web) |
+
+**Cause:** System treats failed-contact narrative as a fresh contact ask. No “already tried / unreachable” signal in Schema v1. No Foundation out-of-hours / closed-clinic pathway.
+
+### N11 — NO FIX AUTHORISED
+
+Preserve safe contact repetition for pilot. **Clinic discovery for Aušra:** what should a patient do with a dental concern outside stated hours when the clinic phone is unanswered? Do not invent an OOH/emergency pathway before clinic input.
+
+**No invent out-of-hours / emergency answer.** F1 non-escalation on ordinary tooth pain remains PASS.
+
+**Parked with V2:** fear/nervous presentation (hours next-step trailer removed via N10).

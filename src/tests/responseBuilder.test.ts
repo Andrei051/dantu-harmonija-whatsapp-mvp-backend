@@ -8,6 +8,15 @@ describe("responseBuilder", () => {
     expect(result.language).toBe("lt");
     expect(result.escalated).toBe(false);
     expect(result.reply).toContain("Mūsų darbo laikas");
+    expect(result.reply).not.toMatch(/kitą žingsnį|norite, galiu/i);
+  });
+
+  it("N10: English clinic_hours is hours fact only — no next-step invitation", () => {
+    const result = buildResponse("en", { intent: "clinic_hours" });
+    expect(result.intent).toBe("clinic_hours");
+    expect(result.reply).toMatch(/^Our working hours:/);
+    expect(result.reply).not.toMatch(/next step|guide you/i);
+    expect(result.reply).not.toMatch(/can't book appointments/i);
   });
 
   it("builds English clinic_location response", () => {
