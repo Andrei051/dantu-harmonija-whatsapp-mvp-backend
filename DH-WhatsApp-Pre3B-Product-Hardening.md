@@ -288,9 +288,9 @@ Owner free-play after Voice freeze (not in §21 acceptance set).
 | # | Patient ask | Observed reply | Classification | Note |
 |---|---|---|---|---|
 | **N1** | “Tell me about clinic services and prices” | Price clarification (“Which service's price…?”) | **Accepted Schema v1 / F5b-adjacent** 🔒 | Multi-need / catalogue-wide price ask collapses to single-slot clarify. **Untouched.** |
-| **N2** | “Which services do you provide?” | Unsupported clinic redirect | **CLOSED — policy fix authorised** | PROD RCA: `service_info` + `id: null` → `D2_unresolved_service_info_clarify`. Interpreter correct; Foundation sufficient; Voice unchanged. |
+| **N2** | “Which services do you provide?” | Unsupported clinic redirect → catalogue list | **CLOSED / PROD VERIFIED** 🔒 | PROD 2026-09-19: `N2_service_catalogue_list` → governed catalogue; escalated false. |
 
-### N2 — CLOSED (pending PROD verify)
+### N2 — CLOSED / PROD VERIFIED 🔒
 
 | | |
 |---|---|
@@ -299,5 +299,28 @@ Owner free-play after Voice freeze (not in §21 acceptance set).
 | **Foundation** | Sufficient (catalogue present) |
 | **Voice** | Unchanged |
 | **Fix** | Explicit generic service-list ask → existing `genericServicesReply` (`N2_service_catalogue_list`). Non-list `service_info`+null still → D2. |
+| **PROD** | `hello! which services do you provide?` → full Foundation catalogue list; action `N2_service_catalogue_list` |
 
 **N1 remains accepted / untouched.** 🔒
+
+### N3 — Generic registration-information / conversational correction (2026-09-19)
+
+| Symptom | Ask | Observed | Classification |
+|---|---|---|---|
+| **N3a** | “ok, tell me about registration” | Booking/contact block (no registration URL) | **RCA incomplete** — need Turn 1 `ai_path_interpretation` + policy actions. Reply shape implies booking→contact. |
+| **N3b** | Clarification + “I want to know more about the registration” | Full services catalogue | **FIX AUTHORISED / implemented locally** — N2 cue false positive |
+
+### N3b — FIX (pending PROD verify)
+
+**PROD RCA 2026-09-19T11:12:16Z**
+
+| | |
+|---|---|
+| Interpretation | `service_info` + `id: null`; `booking: none` |
+| References | `resolved_to: "registration"` (ignored by catalogue path) |
+| Policy | Was `N2_service_catalogue_list` |
+| Cause | N2 cue `\bwhat\b.*\bservices?\b` spanned quoted greeting |
+| Fix | Adjacent catalogue cues only (`what services` / `which services` / …); N3b-shaped negative regression |
+| Out of scope | Interpreter, Foundation, Voice, registration policy (N3a) |
+
+**N3a:** OPEN / RCA PENDING — need Turn 1 trace.

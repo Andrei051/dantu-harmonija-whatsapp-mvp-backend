@@ -84,15 +84,20 @@ const isLaboratoryAsk = (patientMessage: string): boolean => {
 /**
  * Explicit catalogue / list-services ask (N2) — not merely service_info + null.
  * Must not fire for unresolved specific treatment asks (“can you fix my tooth?”).
+ * Must not fire when “what … services” only appears via quoting the greeting (N3b).
  */
 const isServiceCatalogueAsk = (patientMessage: string): boolean => {
   const n = normalizeText(patientMessage);
   if (!n) return false;
-  if (/\b(which|what|list)\b.*\bservices?\b/.test(n)) return true;
-  if (/\bservices?\b.*\b(provide|offer|have|list|available)\b/.test(n)) return true;
-  if (/\b(provide|offer)\b.*\bservices?\b/.test(n)) return true;
-  if (/\bkokias?\b.*\bpaslaug/.test(n)) return true;
-  if (/\bpaslaug.*\b(teikiate|teikia|atliekate|siulote|siulo|turite|turit)\b/.test(n)) return true;
+  // Require catalogue focus on the current ask — no long-span what … services
+  if (/\b(which|what)\s+services?\b/.test(n)) return true;
+  if (/\blist\s+(of\s+)?(the\s+|your\s+|clinic\s+)?services?\b/.test(n)) return true;
+  if (/\bservices?\b\s+(do you\s+)?(provide|offer|have|list)\b/.test(n)) return true;
+  if (/\b(provide|offer)\s+(me\s+)?(a\s+)?(list\s+of\s+)?(your\s+|the\s+|clinic\s+)?services?\b/.test(n)) {
+    return true;
+  }
+  if (/\bkokias?\s+paslaug/.test(n)) return true;
+  if (/\bpaslaug\w*\s+(teikiate|teikia|atliekate|siulote|siulo|turite|turit)\b/.test(n)) return true;
   if (n.includes("paslaugu saras") || n.includes("paslaugu sarasa")) return true;
   return false;
 };

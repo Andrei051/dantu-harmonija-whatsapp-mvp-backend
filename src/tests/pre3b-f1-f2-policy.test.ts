@@ -566,4 +566,29 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.actions).not.toContain("N2_service_catalogue_list");
     expect(policy.escalated).toBe(true);
   });
+
+  it("N3b negative: quoting greeting what…services while asking registration → not catalogue", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "service_info", confidence: 0.9 }],
+        service_or_topic: {
+          id: null,
+          confidence: 0.8,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        },
+        references: [{ type: "service_info", resolved_to: "registration", source_turn: 1 }]
+      }),
+      "ok, I asked you about what can you do. You answered: I can help with information about clinic services, prices, registration, and your first visit.; I want to know more about the registration"
+    );
+
+    expect(policy.actions).not.toContain("N2_service_catalogue_list");
+    expect(policy.reply).not.toMatch(/Main services offered/i);
+  });
 });
