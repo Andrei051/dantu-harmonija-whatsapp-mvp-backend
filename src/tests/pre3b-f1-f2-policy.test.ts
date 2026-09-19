@@ -419,6 +419,73 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.actions).not.toContain("F5a_single_slot_price_bridge");
   });
 
+  it("N9: anaesthesia for a child → anaesthesia price (child is population, not F5b)", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "price", confidence: 0.9 }],
+        service_or_topic: { id: null, confidence: 0.7, source: "current_message" },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: true,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "anaesthesia for a child"
+    );
+
+    expect(policy.actions).toContain("N9_paediatric_population_demoted");
+    expect(policy.actions).toContain("F5a_single_slot_price_bridge");
+    expect(policy.actions).toContain("C1_price");
+    expect(policy.actions).not.toContain("F5b_multi_price_not_bridged");
+    expect(policy.reply).toMatch(/Anaesthesia|anesthesia|pricing|See price page/i);
+    expect(policy.reply).not.toMatch(/Which service's price/i);
+  });
+
+  it("N9 contrast: children's dental care and anaesthesia → still F5b", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "price", confidence: 0.9 }],
+        service_or_topic: { id: null, confidence: 0.7, source: "current_message" },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "children's dental care and anaesthesia"
+    );
+
+    expect(policy.actions).toContain("F5b_multi_price_not_bridged");
+    expect(policy.actions).not.toContain("N9_paediatric_population_demoted");
+    expect(policy.actions).not.toContain("F5a_single_slot_price_bridge");
+    expect(policy.reply).toMatch(/Which service's price/i);
+  });
+
+  it("N9: children's dental care alone still bridges paediatric price", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "price", confidence: 0.9 }],
+        service_or_topic: { id: null, confidence: 0.8, source: "current_message" },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "children's dental care price"
+    );
+
+    expect(policy.actions).toContain("F5a_single_slot_price_bridge");
+    expect(policy.actions).not.toContain("N9_paediatric_population_demoted");
+    expect(policy.reply).toMatch(/Children|paediatric|pricing|see price page/i);
+  });
+
   it("F6 name: about_clinic + name ask → clinicName only", () => {
     const policy = applyPolicyAndAssemble(
       base({

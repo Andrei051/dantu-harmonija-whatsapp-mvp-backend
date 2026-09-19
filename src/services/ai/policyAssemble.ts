@@ -275,9 +275,42 @@ const hasAuthorisedUrgencySignal = (patientMessage: string): boolean => {
  * - service_info: may surface multiple explicit capability facts (R7)
  * Not a general-purpose classifier; no symptom→service inference.
  */
-const matchExplicitFoundationServiceIds = (patientMessage: string): string[] => {
+/** Population/context stems for paediatric — alone must not compete with another priced service (N9). */
+const PAEDIATRIC_POPULATION_STEMS = new Set(
+  ["child", "children", "kids", "vaik", "vaiku", "vaikai", "mazyl", "mazyli"].map((s) =>
+    normalizeText(s)
+  )
+);
+
+/**
+ * N9: if paediatric only matched via child/children population stems while another
+ * explicit service is named, drop paediatric so F5a can recover the real price target.
+ * Preserves genuine multi-service asks (e.g. "children's dental care and anaesthesia").
+ */
+const demotePaediatricPopulationModifier = (normalizedMessage: string, matched: string[]): string[] => {
+  if (matched.length < 2 || !matched.includes("paediatric_dentistry")) return matched;
+  const paediatric = knowledgeService.getServices().find((s) => s.id === "paediatric_dentistry");
+  if (!paediatric) return matched;
+  const stems = [
+    ...paediatric.keywords.lt,
+    ...paediatric.keywords.en,
+    paediatric.name.lt,
+    paediatric.name.en
+  ]
+    .map((s) => normalizeText(s))
+    .filter((s) => s.length >= 4);
+  const hitting = stems.filter((stem) => normalizedMessage.includes(stem));
+  if (!hitting.length) return matched;
+  const onlyPopulation = hitting.every((stem) => PAEDIATRIC_POPULATION_STEMS.has(stem));
+  if (!onlyPopulation) return matched;
+  return matched.filter((id) => id !== "paediatric_dentistry");
+};
+
+const matchExplicitFoundationServiceIds = (
+  patientMessage: string
+): { ids: string[]; demotedPaediatricPopulation: boolean } => {
   const n = normalizeText(patientMessage);
-  if (!n) return [];
+  if (!n) return { ids: [], demotedPaediatricPopulation: false };
   const matched: string[] = [];
   for (const service of knowledgeService.getServices()) {
     const stems = [
@@ -289,7 +322,12 @@ const matchExplicitFoundationServiceIds = (patientMessage: string): string[] => 
     const hit = stems.some((stem) => n.includes(stem));
     if (hit) matched.push(service.id);
   }
-  return matched;
+  const ids = demotePaediatricPopulationModifier(n, matched);
+  return {
+    ids,
+    demotedPaediatricPopulation:
+      matched.includes("paediatric_dentistry") && !ids.includes("paediatric_dentistry")
+  };
 };
 
 const emitGovernedPrice = (
@@ -594,8 +632,11 @@ export const applyPolicyAndAssemble = (
     } else {
       // F5a — single-slot price bridge: exactly one explicit Foundation service in message
       const recovered = matchExplicitFoundationServiceIds(patientMessage);
-      if (recovered.length === 1) {
-        const bridged = emitGovernedPrice(language, recovered[0], {
+      if (recovered.demotedPaediatricPopulation) {
+        actions.push("N9_paediatric_population_demoted");
+      }
+      if (recovered.ids.length === 1) {
+        const bridged = emitGovernedPrice(language, recovered.ids[0], {
           wantAvail,
           wantBook,
           interp,
@@ -617,7 +658,7 @@ export const applyPolicyAndAssemble = (
         }
       } else {
         // 0 matches → clarify; 2+ matches → F5b multi-price (do not auto-compose)
-        if (recovered.length > 1) {
+        if (recovered.ids.length > 1) {
           actions.push("F5b_multi_price_not_bridged");
           foundation_misses.push("price:multi_explicit_services");
         }
@@ -694,7 +735,8 @@ export const applyPolicyAndAssemble = (
         parts.push(built.reply);
       } else {
       // Single-slot schema bridge: explicit Foundation names in current message (R7 / F6 children)
-      const recoveredIds = matchExplicitFoundationServiceIds(patientMessage);
+      const recoveredMatch = matchExplicitFoundationServiceIds(patientMessage);
+      const recoveredIds = recoveredMatch.ids;
       if (recoveredIds.length > 0) {
         actions.push(
           clinicalJudgementActive ? "F2_single_slot_schema_bridge" : "F6_single_slot_service_bridge"

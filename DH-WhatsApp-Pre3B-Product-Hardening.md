@@ -448,7 +448,7 @@ Positive regression: “I'm planning to visit… How do I book?” → still C3.
 | 1 | “I think I need an implant” | Assessment → contact | **PASS** — no treatment validation |
 | 2 | “the clinic provides dental implants, right?” | Capability fact | **PASS** — F2 holding |
 | 3 | “I may need … anesthesia during the procedure” | Same assessment primitive | **Accept** — safe boundary for “I may need” |
-| 4 | “what if I am allergic to anesthesia?” | Same generic treatment-assessment copy | **N8 — RCA LOCKED** (below) |
+| 4 | “what if I am allergic to anesthesia?” | Same generic treatment-assessment copy | **N8 — CLOSED / PROD VERIFIED** 🔒 |
 
 ### N8 — RCA LOCKED (PROD 2026-09-19T12:11:58Z)
 
@@ -473,7 +473,7 @@ Positive regression: “I'm planning to visit… How do I book?” → still C3.
 
 Not an unsafe clinical answer. Not an interpreter “miss” relative to Schema v1 — it correctly marks clinical and has nowhere else to put allergy.
 
-### N8 — FIX AUTHORISED / implemented locally (pending PROD verify)
+### N8 — CLOSED / PROD VERIFIED 🔒 (2026-09-19T12:20Z)
 
 **Presentation only** within existing `S1_clinical_assessment` (same contact route; no schema / interpreter / urgency change).
 
@@ -483,6 +483,76 @@ Not an unsafe clinical answer. Not an interpreter “miss” relative to Schema 
 | General | Default non-urgent clinical |
 | **Concern / tell-the-dentist** | Narrow current-message cue: EN `allerg*` / LT `alerg*` only |
 
-Copy acknowledges the concern and directs the patient to tell the dentist — no advice, safety claims, or treatment content. Not an allergy feature; cue only selects phrasing.
+**PROD retest:**
+| Ask | Result |
+|---|---|
+| `what if I am allergic to anesthesia?` | Concern copy + contact — not general treatment-assessment |
+| `I may need … anesthesia` | General assessment (cue did not leak) |
+| `I think I need an implant` | General assessment |
+| `the clinic provides dental implants, right?` | Foundation capability (F2) |
 
-**No fix without authorisation.** Do not invent clinical content.
+No clinical inference or advice added. Schema / interpretation / S1 route unchanged.
+
+**Positive pattern retained:** self-assessment → safe boundary → factual capability → concern → appropriate boundary.
+
+### Readiness ledger (post N8)
+
+| Closed / PROD verified | Accepted / deferred | Pilot observation |
+|---|---|---|
+| F1, F2, F4, F5a, F6, N2, N3, N4, N5, N6, N7, N8 | F3; F5b / N1 | V2; prep-blob breadth on ID asks |
+
+---
+
+## Natural-use findings — paediatric journey (2026-09-19)
+
+| Turn | Ask | Result | Disposition |
+|---|---|---|---|
+| 1 | Child scared of dentists | General S1 assessment | **Observation** — park with V2 (not N8; not medical-safety concern) |
+| 2 | Do you treat children? | Paediatric capability | **PASS** |
+| 3 | Can I stay with her during the procedure? | Unsupported clinic redirect | **PASS** — safe Foundation gap |
+| 4 | What happens on 1st visit? | First-visit expectations | **PASS** |
+| 5 | Will my child need anaesthesia? | Clinical assessment | **PASS** — safe boundary |
+| 6 | How much will this cost? | Price clarify | **PASS** — ambiguous referent |
+| 7 | `anaesthesia for a child` (after clarify) | Assessment + re-clarify | **N9 — FIX AUTHORISED / implemented locally** |
+
+### N9 — RCA LOCKED (PROD 2026-09-19T12:29:39Z)
+
+**Ask:** `anaesthesia for a child` — patient answering the assistant’s own price clarification.
+
+| Field | Value |
+|---|---|
+| intents | **`price` (0.9)** — price job **is** present |
+| `service_or_topic` | `id: null` (current_message) |
+| `clinical_or_suitability` | **`true`** |
+| actions | `S1_clinical_assessment`, **`F5b_multi_price_not_bridged`**, `C1_price_clarify` |
+| foundation_misses | `price:multi_explicit_services` |
+| Reply | General assessment + “Which service's price…?” again |
+
+**Cause (two stacked mechanisms):**
+
+1. **F5a lexical multi-match → F5b path:** `matchExplicitFoundationServiceIds("anaesthesia for a child")` hits **both** `anaesthesia` and `paediatric_dentistry` (`child` keyword). Exactly-one bridge refused → clarify loop. Patient meant one priced service + a patient-context modifier, not two price topics.
+2. **Clinical compose on a price-answer turn:** `clinical_or_suitability: true` → `S1_clinical_assessment` prepended even though the active job is completing price clarification.
+
+**Not:**
+- Classic **F3** — price intent *did* carry; this is not “price forgotten after clarification.”
+- Classic **N1/F5b multi-need** — assistant already asked for one service; patient named one. F5b false-positive from “child” co-occurrence.
+- Missing anaesthesia price data — N5 pointer exists; retrieval never reached a single id.
+
+**Contrast (same conversation):** `how much will this cost?` → `C1_price_clarify` only — correct. Failure is the **follow-up selection** turn.
+
+### N9 — FIX AUTHORISED / implemented locally (pending PROD verify)
+
+**Scope:** F5a `matchExplicitFoundationServiceIds` only.
+
+When paediatric matches **only** via population stems (`child` / `children` / `kids` / LT `vaik*`) and another explicit service is also matched, demote paediatric (`N9_paediatric_population_demoted`) so the remaining single id can F5a-bridge.
+
+| Ask | Expected |
+|---|---|
+| `anaesthesia for a child` | Anaesthesia price |
+| `children's dental care and anaesthesia` | F5b clarify (genuine multi) |
+| `children's dental care price` | Paediatric price |
+| whitening + orthodontics | F5b unchanged |
+
+No schema / interpreter / Foundation change. Clinical S1 prefix on the same turn left alone (separate question).
+
+**No general multi-service resolver.**
