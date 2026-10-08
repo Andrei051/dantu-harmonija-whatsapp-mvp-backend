@@ -63,6 +63,21 @@ const withPriceDisclaimer = (body: string, language: SupportedLanguage): string 
   return `${body}\n\n${disclaimer}`;
 };
 
+/** A3: hygiene only. Replaces the generic dentist disclaimer; does not append it. */
+const hygienePriceReply = (
+  language: SupportedLanguage,
+  profile: ClinicProfile,
+  priceBody: string
+): string => {
+  const note =
+    language === "lt"
+      ? "Kaina priklauso nuo burnos būklės ir procedūros sudėtingumo. Tikslią kainą vizito metu patikslina burnos higienistė."
+      : "The price depends on your oral condition and how complex the visit is. The hygienist confirms the exact fee during the visit.";
+  const registration = bookingOnlineRegistrationBlock(language, profile, "professional_hygiene");
+  const sentence = priceBody.endsWith(".") ? priceBody : `${priceBody}.`;
+  return `${sentence}\n\n${note}\n\n${registration}`;
+};
+
 /** Voice: turn authorised price fields into a patient sentence — do not stitch label onto raw detail. */
 const isPointerOnlyAmount = (amountText: string): boolean => {
   const a = amountText.trim();
@@ -400,11 +415,15 @@ export const buildResponse = (
       const withNotes = price.notes
         ? `${priceBody}\n\n${price.notes[language]}`
         : priceBody;
+      const priced =
+        intentResult.serviceId === "professional_hygiene"
+          ? hygienePriceReply(language, profile, priceBody)
+          : withPriceDisclaimer(withNotes, language);
 
       return {
         language,
         intent: "price_info",
-        reply: appendActionGuidance(withPriceDisclaimer(withNotes, language), language, profile, intentResult),
+        reply: appendActionGuidance(priced, language, profile, intentResult),
         escalated: false
       };
     }

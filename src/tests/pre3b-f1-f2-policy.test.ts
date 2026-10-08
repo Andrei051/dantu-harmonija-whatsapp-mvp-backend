@@ -395,6 +395,53 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.reply).not.toMatch(/Kokios paslaugos kainą/i);
   });
 
+  it("A3: hygiene price uses the hygienist note and registration link", () => {
+    const lt = applyPolicyAndAssemble(
+      base({
+        language: "lt",
+        intents: [{ type: "price", confidence: 0.95 }],
+        service_or_topic: {
+          id: "professional_hygiene",
+          confidence: 0.9,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Kiek kainuoja burnos higiena?"
+    );
+    expect(lt.reply).toContain("Burnos higiena kainuoja 80–100 EUR");
+    expect(lt.reply).toContain("patikslina burnos higienistė");
+    expect(lt.reply).toContain("https://dantuharmonija.lt/registracija/");
+    expect(lt.reply).not.toMatch(/gydytojas/i);
+
+    const en = applyPolicyAndAssemble(
+      base({
+        language: "en",
+        intents: [{ type: "price", confidence: 0.95 }],
+        service_or_topic: {
+          id: "professional_hygiene",
+          confidence: 0.9,
+          source: "current_message"
+        },
+        signals: {
+          booking: "none",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "How much is oral hygiene?"
+    );
+    expect(en.reply).toContain("Oral hygiene costs 80–100 EUR");
+    expect(en.reply).toContain("The hygienist confirms the exact fee");
+    expect(en.reply).not.toMatch(/dentist|preliminary/i);
+  });
+
   it("F5a: multi explicit services in price ask → clarify (F5b not bridged)", () => {
     const policy = applyPolicyAndAssemble(
       base({

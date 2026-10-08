@@ -100,6 +100,20 @@ describe("responseBuilder", () => {
     expect(result.reply).toContain("preliminary");
   });
 
+  it("A3: hygiene price replaces the dentist disclaimer and adds registration", () => {
+    const lt = buildResponse("lt", { intent: "price_info", serviceId: "professional_hygiene" });
+    expect(lt.reply).toBe(
+      "Burnos higiena kainuoja 80–100 EUR.\n\nKaina priklauso nuo burnos būklės ir procedūros sudėtingumo. Tikslią kainą vizito metu patikslina burnos higienistė.\n\nBurnos higienai Jums patogiu laiku galite užsiregistruoti internetu:\nhttps://dantuharmonija.lt/registracija/"
+    );
+    expect(lt.reply).not.toMatch(/gydytojas/i);
+
+    const en = buildResponse("en", { intent: "price_info", serviceId: "professional_hygiene" });
+    expect(en.reply).toBe(
+      "Oral hygiene costs 80–100 EUR.\n\nThe price depends on your oral condition and how complex the visit is. The hygienist confirms the exact fee during the visit.\n\nYou can register for oral hygiene online at a time that suits you:\nhttps://dantuharmonija.lt/registracija/"
+    );
+    expect(en.reply).not.toMatch(/dentist|preliminary/i);
+  });
+
   it("N5: pointer-only anaesthesia amountText is not 'costs See price page'", () => {
     const result = buildResponse("en", { intent: "price_info", serviceId: "anaesthesia" });
     expect(result.reply).toMatch(/For Anaesthesia pricing:/i);
@@ -123,6 +137,8 @@ describe("responseBuilder", () => {
     expect(result.reply).toContain("Trays: 214 EUR");
     expect(result.reply).not.toMatch(/Teeth whitening costs Trays/i);
     expect(result.reply).toMatch(/Teeth whitening:/i);
+    expect(result.reply).toMatch(/preliminary|dentist/i);
+    expect(result.reply).not.toContain("/registracija/");
   });
 
   it("N5: hybrid orthodontics preserves see-page clause without 'costs Orthodontist'", () => {

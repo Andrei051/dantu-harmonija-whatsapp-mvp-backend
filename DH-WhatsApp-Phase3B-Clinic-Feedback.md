@@ -17,10 +17,10 @@ Aušra is supplying clinic-owned routing, not sentence-level copy edits. Do not 
 |---|---|---|
 | **A1** Pirma pagalba | Acknowledge the incident and direct the patient to call the clinic | Behaviour confirmed for the examples discussed; **boundaries still open** |
 | **A2** Sąvokos / “Kas tai yra?” | One-sentence approved definition; follow-up stays on that term; suitability and urgency unchanged | **Contract accepted.** Content preparation next. **No code.** |
-| **A3** Hygiene pricing | Disclaimer that matches hygiene, plus online registration | Clinic feedback available; controlled content change |
-| **A4** Booking language | Online registration leads with the link; contact-only bookings still use the phone route | **Implemented locally** — pending owner check |
+| **A3** Hygiene pricing | Hygiene-only disclaimer and registration link; other prices unchanged | **Implemented locally** — pending production check |
+| **A4** Booking language | Online registration leads with the link; contact-only bookings still use the phone route | **CLOSED / PROD VERIFIED** 🔒 2026-10-08 |
 
-**Suggested order:** A2 and A4, then A3, then the bounded part of A1. Leave N11 and unresolved first-aid boundaries open.
+**Suggested order:** A3 wording next. A2 stays in content review. Leave N11 and unresolved first-aid boundaries open.
 
 ---
 
@@ -197,33 +197,55 @@ No further glossary terms until these three have been reviewed.
 
 ## A3 — Hygiene price and registration
 
-**Status:** OPEN — clinic correction available. After A2/A4.
+**Status:** IMPLEMENTED LOCALLY — pending deploy and production check.
+
+Only `professional_hygiene` uses the agreed hygienist note and the A4 hygiene registration link. That note replaces the generic dentist disclaimer. Other prices are unchanged.
 
 Current reply: `Burnos higiena kainuoja 80–100 EUR` plus “galutinę kainą įvardins tik gydytojas.”
 
-Aušra: that disclaimer does not fit hygiene. Price varies with complexity and oral condition; the **hygienist** clarifies it during the visit. She also wants the online registration route offered with the price.
+Aušra: that disclaimer does not fit hygiene. The €80–100 range stays. The price depends on complexity and oral condition. The hygienist clarifies it during the visit. The reply should also offer online registration.
 
-Online registration for hygiene already exists when the patient asks to book. This change is the price disclaimer and attaching that route. Exact sentences still need to be written from her feedback, not invented beyond it.
+**Deterministic exception:** only `professional_hygiene` replaces the generic dentist disclaimer. Every other price keeps “only the dentist will state the final fee.” The amount text stays `80–100 EUR`. The registration URL is the existing one. No other service gets this disclaimer or this link from the price path.
 
-**Acceptance, when built:** hygiene price states the 80–100 range, attributes variation to complexity/condition and the hygienist, and offers the registration link. Other services keep the existing dentist disclaimer.
+**Draft LT**
+
+```
+Burnos higiena kainuoja 80–100 EUR.
+
+Kaina priklauso nuo burnos būklės ir procedūros sudėtingumo. Tikslią kainą vizito metu patikslina burnos higienistė.
+
+Burnos higienai Jums patogiu laiku galite užsiregistruoti internetu:
+https://dantuharmonija.lt/registracija/
+```
+
+**Draft EN**
+
+```
+Oral hygiene costs 80–100 EUR.
+
+The price depends on your oral condition and how complex the visit is. The hygienist confirms the exact fee during the visit.
+
+You can register for oral hygiene online at a time that suits you:
+https://dantuharmonija.lt/registracija/
+```
+
+**Acceptance, once agreed and built:** `Kiek kainuoja burnos higiena?` and `How much is oral hygiene?` match those replies. An implant price still uses the dentist disclaimer and does not add the registration link.
 
 ---
 
 ## A4 — Booking language
 
-**Status:** IMPLEMENTED LOCALLY — pending owner check. No A2 code.
+**Status:** CLOSED / PROD VERIFIED 🔒 (2026-10-08).
 
-Online registration no longer adds “Per WhatsApp vizito užregistruoti negaliu.” Contact-only bookings (for example implants) still say the assistant cannot book on WhatsApp and give the phone number.
+Online registration leads with the link and does not add “Per WhatsApp vizito užregistruoti negaliu.” Contact-only bookings still open with that limitation and the phone number. That implant wording is inside the agreed A4 scope.
 
-| Route | Wording |
+| Route | PROD |
 |---|---|
-| Online, hygiene | `Burnos higienai Jums patogiu laiku galite užsiregistruoti internetu:` plus the registration URL |
-| Online, other bookable visits | `Jums patogiu laiku galite užsiregistruoti internetu:` plus the URL |
-| Contact only | Unchanged phone route, including the WhatsApp limitation |
+| Hygiene LT / EN | Hygiene-specific sentence plus registration link |
+| Orthodontist consultation LT / EN | Generic online-registration sentence plus link |
+| Implant LT / EN | Phone route and WhatsApp limitation; no registration link |
 
-Registration-information answers (what registration is, versus a booking ask) are unchanged. Who may register online is unchanged.
-
-**Acceptance:** hygiene and consultation booking replies contain the URL and do not contain the WhatsApp limitation. An implant booking still contains the phone and the limitation, and does not contain the registration URL.
+Local tests for the wording passed before deploy. This smoke did not re-test the urgent path.
 
 ---
 
@@ -243,8 +265,8 @@ Registration-information answers (what registration is, versus a booking ask) ar
 | Workstream | Status | Next action |
 |---|---|---|
 | **A2** Definitions | Contract accepted; three draft terms; no code | Review LT/EN wording and approve definitions |
-| **A4** Registration language | Implemented locally | Owner check: hygiene and consultation booking lead with the link; implant booking still uses the phone |
-| **A3** Hygiene pricing | Pending | After A2 content review and A4 check |
+| **A4** Registration language | **CLOSED / PROD VERIFIED** 🔒 2026-10-08 | None |
+| **A3** Hygiene pricing | Implemented locally | Deploy, then verify LT/EN hygiene price in production |
 | **A1** First aid | Partially confirmed | Keep unresolved boundaries open |
 | **A1c, A1d, N11** | Open | No implementation |
 
