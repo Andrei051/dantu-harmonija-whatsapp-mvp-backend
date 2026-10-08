@@ -69,8 +69,19 @@ describe("responseBuilder", () => {
       bookingRoute: "online_registration"
     });
     expect(result.escalated).toBe(false);
-    expect(result.reply).toContain("registruoti negaliu");
+    expect(result.reply).toContain("Jums patogiu laiku galite užsiregistruoti internetu");
     expect(result.reply).toContain("/registracija/");
+    expect(result.reply).not.toContain("registruoti negaliu");
+  });
+
+  it("A4: hygiene online booking names hygiene and omits the WhatsApp limitation", () => {
+    const result = buildResponse("lt", {
+      intent: "booking_request",
+      bookingRoute: "online_registration",
+      serviceId: "professional_hygiene"
+    });
+    expect(result.reply).toContain("Burnos higienai Jums patogiu laiku galite užsiregistruoti internetu");
+    expect(result.reply).not.toContain("registruoti negaliu");
   });
 
   it("builds service_info response", () => {

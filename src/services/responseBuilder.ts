@@ -15,20 +15,35 @@ const bookingContactBlock = (language: SupportedLanguage, profile: ClinicProfile
     ? `Per WhatsApp vizito užregistruoti negaliu.\n\nDėl vizito susisiekite su klinika:\n${profile.phone}`
     : `I can't book appointments on WhatsApp.\n\nPlease contact the clinic to schedule a visit:\n${profile.phone}`;
 
-const bookingOnlineRegistrationBlock = (language: SupportedLanguage, profile: ClinicProfile): string => {
+const bookingOnlineRegistrationBlock = (
+  language: SupportedLanguage,
+  profile: ClinicProfile,
+  serviceId?: string
+): string => {
   const url = profile.onlineRegistrationUrl ?? `${profile.website}registracija/`;
-  return language === "lt"
-    ? `Registruotis galite internetu:\n${url}\n\nPer WhatsApp vizito užregistruoti negaliu.`
-    : `You can register online:\n${url}\n\nI can't book appointments on WhatsApp.`;
+  // A4: lead with the route the patient can use. Contact-only bookings keep the limitation.
+  if (language === "lt") {
+    const lead =
+      serviceId === "professional_hygiene"
+        ? "Burnos higienai Jums patogiu laiku galite užsiregistruoti internetu:"
+        : "Jums patogiu laiku galite užsiregistruoti internetu:";
+    return `${lead}\n${url}`;
+  }
+  const lead =
+    serviceId === "professional_hygiene"
+      ? "You can register for oral hygiene online at a time that suits you:"
+      : "You can register online at a time that suits you:";
+  return `${lead}\n${url}`;
 };
 
 const bookingGuidanceBlock = (
   language: SupportedLanguage,
   profile: ClinicProfile,
-  route?: BookingRoute
+  route?: BookingRoute,
+  serviceId?: string
 ): string =>
   route === "online_registration"
-    ? bookingOnlineRegistrationBlock(language, profile)
+    ? bookingOnlineRegistrationBlock(language, profile, serviceId)
     : bookingContactBlock(language, profile);
 
 const availabilityLimitationBlock = (language: SupportedLanguage, profile: ClinicProfile): string => {
@@ -134,7 +149,7 @@ const appendActionGuidance = (
 ): string => {
   const parts = [body];
   if (intentResult.appendBookingGuidance === true) {
-    parts.push(bookingGuidanceBlock(language, profile, intentResult.bookingRoute));
+    parts.push(bookingGuidanceBlock(language, profile, intentResult.bookingRoute, intentResult.serviceId));
   } else if (intentResult.appendAvailabilityGuidance === true) {
     parts.push(availabilityLimitationBlock(language, profile));
   }
@@ -247,7 +262,7 @@ export const buildResponse = (
         reply:
           intentResult.availabilityOnly === true
             ? availabilityLimitationBlock(language, profile)
-            : bookingGuidanceBlock(language, profile, intentResult.bookingRoute),
+            : bookingGuidanceBlock(language, profile, intentResult.bookingRoute, intentResult.serviceId),
         escalated: false
       };
 

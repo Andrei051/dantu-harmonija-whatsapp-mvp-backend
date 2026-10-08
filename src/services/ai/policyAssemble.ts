@@ -703,7 +703,8 @@ export const applyPolicyAndAssemble = (
     primary_intent_label = "booking_request";
     const built = buildResponse(language, {
       intent: "booking_request",
-      bookingRoute: br
+      bookingRoute: br,
+      ...(sid ? { serviceId: sid } : {})
     });
     parts.push(built.reply);
   }

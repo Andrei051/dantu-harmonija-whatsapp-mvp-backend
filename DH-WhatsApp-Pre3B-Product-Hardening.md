@@ -576,8 +576,9 @@ F5b / multi-service distinction intact. No schema / interpreter / Foundation / g
 | 2 | Tried to call, no one picking up | Contact channels | **PASS** — limited usefulness; no invention |
 | 3 | Is it because Saturday? | Weekday hours | **PASS** — governed fact, indirect |
 | 4 | Hours trailing “guide you to the next step” | Voice promise | **Observation** — no governed next step in state |
-| 5 | `ok, please do` | C3 booking / contact | **N10 — FIX AUTHORISED / implemented locally** |
+| 5 | `ok, please do` | C3 booking / contact | **N10 — CLOSED / PROD VERIFIED** 🔒 |
 | 6 | Tried calling again, no one picking up | Same contact block | **N11 — NO FIX** (clinic discovery) |
+| — | First “ok, is it because Saturday?” → contact (later EN Saturday → hours) | Interp variance | **Observation** — not N12; reopen only if reproduced |
 
 ### N10 — RCA LOCKED (PROD 2026-09-19T12:42:36Z)
 
@@ -600,9 +601,16 @@ F5b / multi-service distinction intact. No schema / interpreter / Foundation / g
 
 **Candidate (gate — no fix yet):** Remove/disable the hours “next step” trailer unless a governed next action exists (aligns with V2 / Voice fluff). Broader “accept my offer” handling needs care — risk of more phrase patches.
 
-### N10 — FIX AUTHORISED / implemented locally (pending PROD verify)
+### N10 — CLOSED / PROD VERIFIED 🔒 (2026-09-19T12:52Z)
 
 **Presentation only:** clinic_hours EN/LT return authorised hours fact only — no “guide you to the next step” / “tinkamiausią kitą žingsnį” trailer. Interpreter / C3 / F3 untouched.
+
+**PROD retest:**
+| Ask | Result |
+|---|---|
+| `Koks jūsų darbo laikas?` | LT hours only — no next-step |
+| `is it because it is Saturday?` | `Our working hours: Weekdays 08:00–20:00.` — no next-step |
+| Earlier `ok, is it because it is Saturday?` → contact | **Observation** — interp variance; N10 presentation still verified by later EN/LT hours turns |
 
 ### N11 — RCA LOCKED (PROD 2026-09-19T12:42:58Z)
 
@@ -623,3 +631,9 @@ Preserve safe contact repetition for pilot. **Clinic discovery for Aušra:** wha
 **No invent out-of-hours / emergency answer.** F1 non-escalation on ordinary tooth pain remains PASS.
 
 **Parked with V2:** fear/nervous presentation (hours next-step trailer removed via N10).
+
+### Readiness ledger (post N10)
+
+| Closed / PROD verified | Accepted / deferred | Pilot observation / clinic discovery |
+|---|---|---|
+| F1, F2, F4, F5a, F6, N2–N10 | F3; F5b / N1 | V2; fear/nervous; Saturday→contact variance; **N11** OOH/failed-contact pathway |

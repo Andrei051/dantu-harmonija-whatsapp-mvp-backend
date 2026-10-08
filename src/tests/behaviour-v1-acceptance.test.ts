@@ -33,7 +33,8 @@ describe("Behaviour v1 acceptance", () => {
 
       expect(res.body.intent).toBe("booking_request");
       expect(res.body.escalated).toBe(false);
-      expect(String(res.body.response).toLowerCase()).toContain("registruoti negaliu");
+      expect(String(res.body.response).toLowerCase()).toContain("užsiregistruoti internetu");
+      expect(String(res.body.response).toLowerCase()).not.toContain("registruoti negaliu");
       expect(String(res.body.response).toLowerCase()).not.toContain("komandos narys");
       expect(String(res.body.response).toLowerCase()).not.toContain("atsakysime darbo dieną");
     });

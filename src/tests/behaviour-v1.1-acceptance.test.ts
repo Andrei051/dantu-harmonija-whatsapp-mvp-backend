@@ -42,7 +42,8 @@ describe("Behaviour v1.1 acceptance", () => {
       expect(res.body.intent).toBe("booking_request");
       expect(res.body.escalated).toBe(false);
       const reply = String(res.body.response);
-      expect(reply).toContain("registruoti negaliu");
+      expect(reply).toContain("patogiu laiku galite užsiregistruoti internetu");
+      expect(reply).not.toContain("registruoti negaliu");
       expect(reply).toContain(profile.onlineRegistrationUrl);
       expect(reply.toLowerCase()).not.toContain("atsakysime darbo dieną");
     });

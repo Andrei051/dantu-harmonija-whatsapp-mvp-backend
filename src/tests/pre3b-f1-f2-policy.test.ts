@@ -865,6 +865,37 @@ describe("Pre-3B F1/F2 clinical judgement vs urgency", () => {
     expect(policy.actions).toContain("C3_booking");
     expect(policy.actions).not.toContain("N3_registration_info");
     expect(policy.route).toBe("contact");
+    expect(policy.reply).toMatch(/can't book appointments on WhatsApp/i);
+    expect(policy.reply).not.toMatch(/registracija\//i);
+  });
+
+  it("A4: hygiene booking leads with online registration and omits the WhatsApp limitation", () => {
+    const policy = applyPolicyAndAssemble(
+      base({
+        language: "lt",
+        intents: [{ type: "booking", confidence: 0.95 }],
+        service_or_topic: {
+          id: "professional_hygiene",
+          confidence: 0.9,
+          source: "current_message"
+        },
+        signals: {
+          booking: "hard",
+          availability: false,
+          clinical_or_suitability: false,
+          unsupported_or_ambiguous: false
+        }
+      }),
+      "Reikia dantis išsivalyti"
+    );
+
+    expect(policy.actions).toContain("C3_booking");
+    expect(policy.route).toBe("online_registration");
+    expect(policy.reply).toContain(
+      "Burnos higienai Jums patogiu laiku galite užsiregistruoti internetu"
+    );
+    expect(policy.reply).toContain("/registracija/");
+    expect(policy.reply).not.toMatch(/registruoti negaliu/i);
   });
 
   it("N3a negative: availability tomorrow → still C2", () => {
